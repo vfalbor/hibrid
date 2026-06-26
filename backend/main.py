@@ -12,6 +12,7 @@ from __future__ import annotations
 import time
 import uuid
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import HTMLResponse
@@ -43,49 +44,22 @@ async def lifespan(app: FastAPI):
 app = FastAPI(title="hibrid", version="0.1.0", lifespan=lifespan)
 
 
-_LANDING = """<!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>hibrid — the router that knows your machine</title>
-<style>
-:root{--bg:#0d1117;--fg:#e6edf3;--mut:#8b949e;--ac:#3fb950;--card:#161b22;--bd:#30363d}
-*{box-sizing:border-box} body{margin:0;font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;
-background:var(--bg);color:var(--fg);line-height:1.6} .wrap{max-width:780px;margin:0 auto;padding:64px 24px}
-h1{font-size:40px;margin:0 0 8px;letter-spacing:-.02em} .tag{color:var(--ac);font-weight:600}
-p{color:var(--fg)} .mut{color:var(--mut)} code,pre{font-family:ui-monospace,Menlo,Consolas,monospace}
-pre{background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:16px;overflow-x:auto;font-size:14px}
-.grid{display:grid;gap:14px;grid-template-columns:1fr 1fr;margin:28px 0}
-.card{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:16px}
-.card b{color:var(--ac)} a{color:var(--ac)} .links a{margin-right:18px;font-weight:600}
-@media(max-width:600px){.grid{grid-template-columns:1fr}}
-</style></head><body><div class="wrap">
-<h1>hibrid</h1>
-<p class="tag">The router that knows your machine.</p>
-<p>Open-source, local-first router for LLM workloads. It detects what your hardware can run,
-measures its real speed, and decides — automatically and transparently — what runs locally
-and what goes to the cloud. Loops run free on your machine; your private data never leaves it.</p>
-<div class="grid">
-<div class="card"><b>Hardware-aware</b><br>Micro-benchmarks your machine's real tok/s and routes accordingly.</div>
-<div class="card"><b>Task-type profiles</b><br>Loops go local-first; the expensive model is saved for the final check.</div>
-<div class="card"><b>Privacy by default</b><br>Detected PII forces local execution — it's a rule, not a setting.</div>
-<div class="card"><b>OpenAI-compatible</b><br>Adopting hibrid is changing the URL. Nothing else.</div>
-</div>
-<pre>pip install hibrid
-hibrid serve
-curl localhost:8095/v1/node   # what it says about your machine</pre>
-<p class="links">
-<a href="https://github.com/vfalbor/hibrid">GitHub</a>
-<a href="https://tokenstree.eu/newsletter/2026-06-26-hibrid-router-that-knows-your-machine.html">Read the launch</a>
-<a href="/v1/node">/v1/node</a>
-<a href="/health">/health</a>
-</p>
-<p class="mut">Apache-2.0 · part of the tokenstree ecosystem · contribute your machine's benchmark on GitHub</p>
-</div></body></html>"""
+_LANDING_FILE = Path(__file__).parent / "static" / "index.html"
+_LANDING_FALLBACK = (
+    "<!doctype html><meta charset='utf-8'><title>hibrid</title>"
+    "<h1>hibrid</h1><p>The router that knows your machine. "
+    "<a href='https://github.com/vfalbor/hibrid'>GitHub</a></p>"
+)
 
 
 @app.get("/", response_class=HTMLResponse)
 async def landing():
-    return _LANDING
+    # Servido desde fichero estático: separa la presentación del código de la app
+    # y permite actualizar la landing sin reiniciar el servicio.
+    try:
+        return _LANDING_FILE.read_text(encoding="utf-8")
+    except OSError:
+        return _LANDING_FALLBACK
 
 
 @app.get("/health")

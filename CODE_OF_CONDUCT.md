@@ -1,11 +1,11 @@
-# Código de conducta
+# Code of Conduct
 
-Este proyecto adopta el [Contributor Covenant](https://www.contributor-covenant.org/)
-v2.1. En resumen:
+This project adopts the [Contributor Covenant](https://www.contributor-covenant.org/) v2.1.
+In short:
 
-- Trata a todo el mundo con respeto. Da por hecha la buena intención.
-- No se tolera el acoso, el lenguaje despectivo ni los ataques personales.
-- Las discusiones técnicas se centran en ideas, no en personas.
+- Treat everyone with respect. Assume good intent.
+- No harassment, demeaning language, or personal attacks.
+- Technical discussions are about ideas, not people.
 
-Para reportar un problema de conducta, escribe a los mantenedores del proyecto.
-Las decisiones de moderación las toman los mantenedores y son finales.
+To report a conduct issue, contact the maintainers. Moderation decisions are made by the
+maintainers and are final.

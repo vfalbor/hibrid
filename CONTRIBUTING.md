@@ -1,42 +1,45 @@
-# Contribuir a hibrid
+# Contributing to hibrid
 
-¡Gracias por querer mejorar **hibrid**! Hay tres formas de contribuir, de menos a más técnica.
+Thanks for helping make **hibrid** better. There are three ways to contribute, from easiest
+to most technical.
 
-## 1. Añade el benchmark de tu máquina 🖥️ (la más valiosa, ¡y la más fácil!)
+## 1. Add your machine's benchmark 🖥️ (most valuable, and the easiest)
 
-hibrid enruta mejor cuando conoce la velocidad **real** de cada máquina. Comparte la tuya:
+hibrid routes better when it knows the *real* speed of each machine. Share yours:
 
 ```bash
-hibrid serve            # arranca y mide tu hardware
-curl localhost:8095/v1/node   # copia el JSON resultante
+hibrid serve                  # starts up and benchmarks your hardware
+curl localhost:8095/v1/node   # copy the JSON it prints
 ```
 
-Abre un issue con la plantilla **"Add my machine benchmark"** y pega ese JSON (no contiene
-datos personales: solo hardware, modelos y tok/s). Tu aporte mejora los *priors* de todos
-los usuarios con hardware parecido. Es el corazón de la comunidad.
+Open an issue with the **"Add my machine benchmark"** template and paste that JSON. It contains
+no personal data — only hardware, models and tokens/sec. Your data point improves the routing
+priors for everyone with similar hardware. This is the heart of the project.
 
-## 2. Publica un perfil de ejecución (routing policy) 🔀
+## 2. Publish an execution profile (routing policy) 🔀
 
-¿Has afinado un perfil para tu caso (p.ej. "loop_refine para Mac 16GB" o "coding para RTX
-4090")? Compártelo. Ver `docs/EXECUTION_PROFILES.md`. Un PR que añade un perfil bien
-documentado es bienvenido.
+Tuned a profile for your case (say, `loop_refine` for a 16GB Mac, or a coding profile for an
+RTX 4090)? Share it. See [`docs/EXECUTION_PROFILES.md`](docs/EXECUTION_PROFILES.md). A PR that
+adds a well-documented profile is welcome.
 
-## 3. Código 🛠️
+## 3. Code 🛠️
 
 ```bash
-git clone <repo> && cd hibrid
+git clone https://github.com/vfalbor/hibrid && cd hibrid
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-python3 tests/test_router.py        # debe salir 10/10 OK
+python3 tests/test_router.py      # decision engine — should print 10/10 OK
+python3 tests/test_dialects.py    # API dialect translation — 4/4 OK
 ```
 
-- Mantén los **tests en verde** y añade tests para lo nuevo (el motor de decisión se prueba
-  sin red).
-- Estilo de commits: `feat(scope): ...`, `fix(scope): ...`, `docs: ...`.
-- Abre el PR contra `main`. La CI corre los tests automáticamente.
+- Keep the **tests green** and add tests for new behaviour (the decision engine is tested
+  without network access).
+- Commit style: `feat(scope): …`, `fix(scope): …`, `docs: …`.
+- Open the PR against `main`. CI runs the tests automatically.
 
-Busca issues etiquetados **`good first issue`** para empezar.
+Look for issues labelled **`good first issue`** to get started — especially "add your machine's
+benchmark."
 
-## Código de conducta
+## Code of conduct
 
-Este proyecto sigue el [Código de Conducta](CODE_OF_CONDUCT.md). Sé amable.
+This project follows the [Code of Conduct](CODE_OF_CONDUCT.md). Be kind.

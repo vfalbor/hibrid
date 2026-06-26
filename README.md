@@ -1,114 +1,115 @@
-# hibrid 🔀
+# hibrid
 
-**El primer router que conoce TU máquina.**
+**One router under all your AI tools. Keep the tools — cut the bill.**
 
-Orquestador transparente que combina, sin que el usuario lo note, modelos LLM en la
-nube (Claude Opus, Haiku, GPT…) con inferencia **local/on-premise**. Para cada petición
-decide *dónde* ejecutarla según:
+![License](https://img.shields.io/badge/license-Apache--2.0-176043)
+![Status](https://img.shields.io/badge/status-alpha%20·%20live-c2691c)
+![API](https://img.shields.io/badge/API-OpenAI%20%2B%20Anthropic-3b5b8c)
 
-- **capacidades reales de la máquina** del usuario (RAM, VRAM, chip Apple, CPU),
-- **modelos a los que tiene acceso** (locales detectados + claves de nube),
-- **complejidad de la tarea**,
-- **coste, latencia y privacidad**.
+hibrid slides underneath Claude Code, Gemini CLI, aider and Copilot and quietly sends
+each call to the cheapest model that can actually do the job — Opus when it matters,
+Haiku when it's plenty, and a model on **your own machine** for everything in between.
 
-Expone una **API local OpenAI-compatible**: adoptar hibrid es *cambiar la URL*. En la
-línea de `tokenstransfer` y `tokenstranslate`.
+Your tools don't change. Your token bill does. And anything private stays on your box.
 
-> Diseñado a partir de la investigación consolidada de un equipo de 3 agentes
-> (literatura científica, benchmarks de inferencia local y análisis de mercado).
-> Ver [`docs/INVESTIGACION.md`](docs/INVESTIGACION.md) y [`docs/ARQUITECTURA.md`](docs/ARQUITECTURA.md).
+> Live demo: **[hibrid.tokenstree.eu](https://hibrid.tokenstree.eu)** · Launch story:
+> [tokenstree.eu/newsletter](https://tokenstree.eu/newsletter/2026-06-26-hibrid-router-that-knows-your-machine.html)
 
 ---
 
-## Por qué hibrid (el hueco)
+## The problem
 
-| | Gateways cloud (OpenRouter, LiteLLM, Not Diamond…) | Apps locales (Ollama, LM Studio, Jan…) | **hibrid** |
-|---|---|---|---|
-| Routing automático por complejidad | ✅ | ❌ (manual) | ✅ |
-| Mira el **hardware local** | ❌ | parcial (recomienda descarga) | ✅ **mide tok/s reales** |
-| Local + nube **transparente y automático** | ❌ | ❌ (a mano) | ✅ |
-| **Privacidad** como override duro (PII no sale) | ❌ | parcial | ✅ |
+You point a coding agent at Opus and let it run. It writes, runs the tests, fails, fixes,
+runs again — fifty rounds, every one billed at frontier prices. Most of those rounds didn't
+need a frontier model. A small model on the machine in front of you would have handled them.
+They went to the cloud anyway, because your tooling can't tell "fix this typo" from
+"redesign this module."
 
-El cruce de esos ejes hoy **solo existe en papers** (Hybrid LLM, FrugalGPT, PRISM,
-Minions). hibrid lo empaqueta como producto.
+hibrid is the missing layer that can.
 
----
+## Drop it under the tools you already use
 
-## Cómo decide (resumen)
-
-1. **classify** — señales baratas de la petición: longitud, idioma, ¿código?, **PII**, complejidad 0–1.
-2. **router.decide** — `d* = argmax U(d)` con
-   `U(d) = calidad − λ_cost·coste − λ_lat·latencia − λ_priv·riesgo_privacidad`.
-   Overrides duros antes del argmax: **PII → local**, `allow_cloud=false` → local, `force`.
-3. **ejecuta** en el destino elegido (local OpenAI-compat / Anthropic / OpenAI).
-4. **cascada** — si fue local y la **confianza calibrada** < umbral, **escala a la nube**
-   (y el calibrador Platt aprende online).
-
-El perfil de hardware + un **micro-benchmark de arranque** (tok/s reales por modelo)
-se cachean por nodo: ningún competidor enruta por velocidad medida en *tu* máquina.
-
----
-
-## Arranque
+hibrid speaks both the **OpenAI** and the **Anthropic** dialect, so you point a tool's base
+URL at it and nothing else moves:
 
 ```bash
-cd hibrid
-python3 -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
-cp .env.example .env          # añade tus claves y endpoints locales
-bash run.sh                   # arranca en :8095
+# Claude Code  (Anthropic API)
+export ANTHROPIC_BASE_URL=https://hibrid.tokenstree.eu
+claude
+
+# aider / Copilot-style tools  (OpenAI API)
+export OPENAI_BASE_URL=https://hibrid.tokenstree.eu/v1
+aider
+
+# anything with an OpenAI-compatible mode (Gemini CLI, etc.) points here too
 ```
 
-Requiere (opcional pero recomendado) un runtime local OpenAI-compatible corriendo:
-`ollama serve` (11434), `llama-server` (8080) o LM Studio (1234).
+Underneath, hibrid moves the request across Opus → Haiku → a local model by task type —
+transparently. Every response carries a small `hibrid` block telling you where it actually ran.
 
-## Uso (cliente OpenAI estándar)
+## How it decides
+
+1. **It measures your machine.** On startup it detects RAM, VRAM and chip, then runs a
+   micro-benchmark that times the *real* tokens/sec of your local models. It doesn't guess
+   from a spec sheet — it times your hardware. No other router does this.
+2. **It keeps loops local.** A refine-and-retest loop is hundreds of cheap calls. hibrid runs
+   them on a local model and spends a paid token only on the one final check that earns it.
+   Tools can declare a task type (`"task_type": "loop_refine"`); if they don't, hibrid infers it.
+3. **It guards your data.** Spot an email, a key, an ID in the prompt and the request is pinned
+   to local — a rule, not a checkbox. Your text never reaches a third party.
+
+It all runs behind one decision: `argmax U(d)` where
+`U(d) = quality − λ_cost·cost − λ_lat·latency − λ_priv·privacy_risk`. The weights are knobs
+you (or a tool) can set per request.
+
+## Quickstart
 
 ```bash
-curl http://localhost:8095/v1/chat/completions -H 'Content-Type: application/json' -d '{
-  "model": "hibrid-auto",
-  "messages": [{"role":"user","content":"Traduce \"hola mundo\" al inglés"}]
-}'
+pip install git+https://github.com/vfalbor/hibrid.git
+cp .env.example .env        # add your cloud keys; point at a local runtime if you have one
+hibrid serve                # OpenAI + Anthropic compatible, on :8095
+curl localhost:8095/v1/node # see what it learned about your machine
 ```
 
-La respuesta incluye un bloque `hibrid` con la decisión tomada (destino, candidatos,
-utilidad, si escaló y por qué) — totalmente transparente; un cliente OpenAI normal lo ignora.
+A local runtime is optional but recommended — `ollama serve`, `llama-server`, or LM Studio.
+All of them speak the OpenAI dialect, so hibrid talks to them the same way it talks to the cloud.
 
-Perillas por petición:
-```json
-{ "model":"hibrid-auto", "messages":[...],
-  "hibrid": { "lambda_priv": 5.0, "allow_cloud": false, "force": "local" } }
-```
+## Why nothing else does this
 
-## Endpoints
+| | Cloud routers | Local apps | **hibrid** |
+|---|:--:|:--:|:--:|
+| Routes by task | ✅ | manual | ✅ |
+| Knows your hardware | ❌ | hints | **measures it** |
+| Local + cloud, automatic | ❌ | by hand | ✅ |
+| Private data stays local | ❌ | partial | **enforced** |
+| Sits under your existing tools | some | ❌ | ✅ |
 
-| Método | Ruta | Qué hace |
-|---|---|---|
-| POST | `/v1/chat/completions` | Inferencia con routing automático (OpenAI-compatible) |
-| GET | `/v1/models` | Modelos disponibles (local + nube) |
-| GET | `/v1/node` | Perfil de hardware + tok/s medidos (transparencia) |
-| POST | `/v1/node/refresh` | Re-detecta hardware y re-ejecuta el micro-benchmark |
-| GET | `/v1/metrics` | KPIs: % resuelto local, % escalado, coste nube, latencia media |
-| GET | `/health` | Healthcheck |
+The crossing of those rows lived only in research papers until now. hibrid ships it.
 
-## Tests
+## It belongs to the community
 
-```bash
-python3 tests/test_router.py     # 6/6 — decisión, PII, offline, force, cascada
-```
+hibrid routes better when it knows what each machine runs — and you know that, not us. The core
+piece is a shared benchmark registry: install hibrid, it measures your machine, and (if you opt
+in) you share the result — hardware and speed only, never your prompts. The next person with a
+laptop like yours routes well from minute one.
 
----
+The easiest, most useful contribution is **your machine's benchmark**. See
+[CONTRIBUTING.md](CONTRIBUTING.md).
 
-## Estado y roadmap
+## Status
 
-**MVP funcional** (este scaffold): profiler multiplataforma, micro-benchmark, registry,
-classifier, router por utilidad, cascada con calibración Platt online, API OpenAI-compat,
-persistencia SQLite, tests del motor de decisión.
+Day one, and honest about it. The decision engine is tested (`python tests/test_router.py`,
+`tests/test_dialects.py`), the OpenAI and Anthropic endpoints work, the benchmark registry is
+being seeded, and the confidence calibration sharpens with use. Streaming for the Anthropic
+endpoint is the next item. Tell us where it breaks.
 
-**Siguiente** (según los avisos del equipo):
-- Router **kNN** sobre embeddings del histórico (LitAgent: kNN bate a routers aprendidos).
-- Evaluación contra **RouterBench/RouterEval** → cifra publicable del KPI.
-- Modo **co-generación** (speculative decoding: borrador local + verificación nube).
-- Plantearse montar el transporte sobre **LiteLLM** y aportar solo la capa de decisión
-  (no reinventar la fontanería).
-- Calibración de confianza robusta (es el punto que más puede hundir el KPI).
+## Docs
+
+- [`docs/INVESTIGACION.md`](docs/INVESTIGACION.md) — research behind the design (a 3-agent study)
+- [`docs/ARQUITECTURA.md`](docs/ARQUITECTURA.md) — architecture
+- [`docs/EXECUTION_PROFILES.md`](docs/EXECUTION_PROFILES.md) — task-type routing & loop economics
+- [`docs/PLAN.md`](docs/PLAN.md) — roadmap and community plan
+
+## License
+
+Apache-2.0. Part of the [tokenstree](https://tokenstree.eu) ecosystem.

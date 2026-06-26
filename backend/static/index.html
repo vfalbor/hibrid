@@ -3,113 +3,122 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>hibrid — the router that knows your machine</title>
-<meta name="description" content="Open-source, local-first router for LLM workloads. hibrid measures your hardware and decides what runs locally and what goes to the cloud — automatically. Loops run free on your machine; private data never leaves it.">
+<title>hibrid — one router under all your AI tools</title>
+<meta name="description" content="hibrid sits under Claude Code, Gemini CLI, aider and Copilot and quietly routes each call to the cheapest model that can do the job — Opus, Haiku, or a model on your own machine. Same tools, smaller bill, private by default.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://hibrid.tokenstree.eu/">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://hibrid.tokenstree.eu/">
-<meta property="og:title" content="hibrid — the router that knows your machine">
-<meta property="og:description" content="Local-first LLM router: hardware-aware, loops stay local, private data never leaves your machine. Open source.">
+<meta property="og:title" content="hibrid — one router under all your AI tools">
+<meta property="og:description" content="Put it under Claude Code or aider. It routes Opus → Haiku → a model on your machine by task, cuts your token bill, and keeps private data local.">
 <meta property="og:image" content="https://tokenstree.eu/newsletter/hibrid-og.png">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2316a34a'/%3E%3Cpath d='M16 6 L16 26 M16 12 L9 18 M16 12 L23 18' stroke='%23fff' stroke-width='2.2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='7' cy='16' r='3.4' fill='%23176043'/%3E%3Cg fill='none' stroke='%23176043' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M9 15 C16 11, 19 9, 24 8'/%3E%3Cpath d='M10 16 H24'/%3E%3Cpath d='M9 17 C16 21, 19 23, 24 24'/%3E%3C/g%3E%3Ccircle cx='25' cy='8' r='2.4' fill='%23c2691c'/%3E%3Ccircle cx='25' cy='16' r='2.4' fill='%233b5b8c'/%3E%3Ccircle cx='25' cy='24' r='2.4' fill='%23176043'/%3E%3C/svg%3E">
 <style>
   :root{
-    --bg:#0b0f0c; --bg-soft:#0f1511; --surface:#141b16; --surface-2:#1a231c;
-    --border:#243029; --border-strong:#33433a;
-    --fg:#e9f0ea; --fg-soft:#b9c6bd; --muted:#7d8e83;
-    --accent:#34d058; --accent-strong:#2ea043; --accent-dim:#0f2a18;
-    --amber:#d9a441; --violet:#a371f7;
-    --r:14px; --r-sm:9px;
-    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Helvetica,Arial,sans-serif;
-    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
-    --maxw:1080px;
-    --step--1:clamp(.82rem,.78rem + .2vw,.92rem);
-    --step-0:clamp(1rem,.95rem + .25vw,1.12rem);
-    --step-1:clamp(1.2rem,1.1rem + .5vw,1.5rem);
-    --step-2:clamp(1.6rem,1.3rem + 1.4vw,2.4rem);
-    --step-3:clamp(2.2rem,1.6rem + 3vw,4rem);
+    --paper:#f4efe3; --paper-2:#efe8d7; --card:#fbf8f0; --ink:#22201b; --ink-2:#4b463c;
+    --muted:#857c68; --rule:#ddd3bd; --rule-2:#cabfa6;
+    --green:#176043; --green-ink:#0f4730; --clay:#bd6418; --slate:#3b5b8c;
+    --accent:var(--green);
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,"Times New Roman",serif;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    --mono:"SFMono-Regular",ui-monospace,Menlo,Consolas,monospace;
+    --maxw:1060px; --r:12px;
+    --s-1:clamp(.8rem,.76rem+.2vw,.9rem);
+    --s0:clamp(1rem,.96rem+.2vw,1.1rem);
+    --s1:clamp(1.15rem,1.05rem+.5vw,1.4rem);
+    --s2:clamp(1.5rem,1.2rem+1.3vw,2.2rem);
+    --s3:clamp(2.3rem,1.6rem+3.2vw,4.1rem);
+  }
+  @media (prefers-color-scheme:dark){
+    :root{--paper:#1c1915;--paper-2:#221e18;--card:#262119;--ink:#efe8d8;--ink-2:#cabfa6;
+      --muted:#9a8f78;--rule:#3a3429;--green:#5bbd8a;--green-ink:#7fd1a4;--clay:#e09a4e;--slate:#85a6d6;}
   }
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
   @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
-  body{font-family:var(--font);background:var(--bg);color:var(--fg);line-height:1.65;
-    font-size:var(--step-0);-webkit-font-smoothing:antialiased;
-    background-image:radial-gradient(60rem 30rem at 70% -10%,rgba(52,208,88,.07),transparent 60%);}
-  a{color:var(--accent);text-decoration:none}
+  body{font-family:var(--sans);background:var(--paper);color:var(--ink);font-size:var(--s0);line-height:1.6;-webkit-font-smoothing:antialiased}
+  a{color:var(--green-ink);text-decoration:none}
   a:hover{text-decoration:underline;text-underline-offset:3px}
-  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
-  .wrap{max-width:var(--maxw);margin-inline:auto;padding-inline:clamp(1rem,4vw,2rem)}
+  :focus-visible{outline:2px solid var(--green);outline-offset:2px;border-radius:3px}
+  .wrap{max-width:var(--maxw);margin-inline:auto;padding-inline:clamp(1.1rem,4vw,2rem)}
+  .mono{font-family:var(--mono)}
 
-  header{position:sticky;top:0;z-index:50;backdrop-filter:blur(10px);
-    background:rgba(11,15,12,.72);border-bottom:1px solid var(--border)}
-  .nav{display:flex;align-items:center;gap:clamp(.8rem,2vw,1.6rem);height:60px}
-  .brand{display:flex;align-items:center;gap:.55rem;font-weight:700;color:var(--fg);font-size:1.05rem;margin-right:auto}
-  .brand svg{width:26px;height:26px}
-  .nav a:not(.brand){color:var(--fg-soft);font-size:var(--step--1);font-weight:500}
-  .nav a:not(.brand):hover{color:var(--fg);text-decoration:none}
-  .nav .cta{padding:.5rem .9rem;border:1px solid var(--border-strong);border-radius:var(--r-sm);background:var(--surface)}
-  .status{display:inline-flex;align-items:center;gap:.4rem;font-size:var(--step--1);color:var(--muted)}
-  .dot{width:8px;height:8px;border-radius:50%;background:var(--muted);box-shadow:0 0 0 0 rgba(52,208,88,.5)}
-  .dot.live{background:var(--accent);animation:pulse 2s infinite}
-  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(52,208,88,.5)}70%{box-shadow:0 0 0 6px rgba(52,208,88,0)}100%{box-shadow:0 0 0 0 rgba(52,208,88,0)}}
+  /* nav */
+  header{border-bottom:1px solid var(--rule);background:color-mix(in srgb,var(--paper) 88%,transparent);backdrop-filter:blur(6px);position:sticky;top:0;z-index:40}
+  .nav{display:flex;align-items:center;gap:clamp(.7rem,2vw,1.5rem);height:62px}
+  .brand{display:flex;align-items:center;gap:.6rem;font-family:var(--serif);font-weight:700;font-size:1.4rem;color:var(--ink);letter-spacing:-.01em;margin-right:auto}
+  .brand svg{width:30px;height:30px}
+  .nav a:not(.brand){color:var(--ink-2);font-size:var(--s-1);font-weight:500}
+  .nav a:not(.brand):hover{color:var(--ink)}
+  .nav .ghbtn{display:inline-flex;align-items:center;gap:.4rem;border:1.5px solid var(--ink);color:var(--ink);padding:.42rem .85rem;border-radius:8px;font-weight:600}
+  .nav .ghbtn:hover{background:var(--ink);color:var(--paper);text-decoration:none}
+  .live{display:inline-flex;align-items:center;gap:.4rem;font-size:var(--s-1);color:var(--muted);font-family:var(--mono)}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--muted)}
+  .dot.on{background:var(--green)}
 
-  .hero{padding:clamp(3.5rem,8vw,6.5rem) 0 clamp(2rem,5vw,3.5rem)}
-  .eyebrow{display:inline-flex;align-items:center;gap:.5rem;font-size:var(--step--1);font-weight:600;
-    color:var(--accent);background:var(--accent-dim);border:1px solid #1c4429;
-    padding:.35rem .8rem;border-radius:999px;margin-bottom:1.4rem}
-  h1{font-size:var(--step-3);line-height:1.05;letter-spacing:-.025em;font-weight:800;max-width:18ch}
-  .lede{font-size:var(--step-1);color:var(--fg-soft);max-width:60ch;margin-top:1.2rem;line-height:1.5}
-  .hero-actions{display:flex;flex-wrap:wrap;gap:.8rem;margin-top:2rem}
-  .btn{display:inline-flex;align-items:center;gap:.5rem;font-weight:600;font-size:var(--step-0);
-    padding:.75rem 1.3rem;border-radius:var(--r-sm);border:1px solid transparent;transition:transform .12s ease,background .12s ease}
+  /* hero */
+  .hero{padding:clamp(3rem,7vw,5.5rem) 0 clamp(2rem,4vw,3rem)}
+  .kicker{font-family:var(--mono);font-size:var(--s-1);letter-spacing:.12em;text-transform:uppercase;color:var(--clay);font-weight:600}
+  h1{font-family:var(--serif);font-weight:700;font-size:var(--s3);line-height:1.02;letter-spacing:-.02em;margin:.7rem 0 0;max-width:16ch}
+  h1 em{font-style:italic;color:var(--green-ink)}
+  .deck{font-size:var(--s1);color:var(--ink-2);max-width:54ch;margin-top:1.3rem;line-height:1.45}
+  .actions{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:1.9rem}
+  .btn{display:inline-flex;align-items:center;gap:.5rem;font-weight:600;font-size:var(--s0);padding:.72rem 1.25rem;border-radius:9px;border:1.5px solid transparent;transition:transform .1s ease}
   .btn:hover{text-decoration:none;transform:translateY(-1px)}
-  .btn-primary{background:var(--accent);color:#04140a}
-  .btn-primary:hover{background:var(--accent-strong)}
-  .btn-ghost{background:var(--surface);border-color:var(--border-strong);color:var(--fg)}
+  .btn-fill{background:var(--green);color:#fbf8f0;border-color:var(--green)}
+  .btn-fill:hover{background:var(--green-ink)}
+  .btn-out{background:transparent;border-color:var(--rule-2);color:var(--ink)}
+  .btn-out:hover{border-color:var(--ink)}
 
-  .install{margin-top:2rem;background:#060907;border:1px solid var(--border);border-radius:var(--r);
-    overflow:hidden;max-width:560px}
-  .install-bar{display:flex;align-items:center;gap:.4rem;padding:.6rem .9rem;border-bottom:1px solid var(--border);background:var(--surface)}
-  .install-bar i{width:11px;height:11px;border-radius:50%;background:#39443c;display:inline-block}
-  .install-bar span{margin-left:auto;font-size:.74rem;color:var(--muted);font-family:var(--mono)}
-  pre{padding:1rem 1.1rem;overflow-x:auto}
-  code,pre{font-family:var(--mono);font-size:.86rem;line-height:1.7}
-  .install .c-dim{color:var(--muted)}
-  .install .c-ac{color:var(--accent)}
+  /* terminal */
+  .term{margin-top:2rem;max-width:620px;border:1px solid var(--rule);border-radius:var(--r);overflow:hidden;background:var(--card);box-shadow:0 1px 0 var(--rule),0 14px 30px -22px rgba(40,30,10,.5)}
+  .term-top{display:flex;gap:.4rem;align-items:center;padding:.55rem .85rem;border-bottom:1px solid var(--rule)}
+  .term-top i{width:10px;height:10px;border-radius:50%;display:inline-block;background:var(--rule-2)}
+  .term-top span{margin-left:auto;font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+  .term pre{padding:1rem 1.1rem;overflow-x:auto;font-family:var(--mono);font-size:.84rem;line-height:1.75;color:var(--ink)}
+  .term .c{color:var(--muted)}
+  .term .g{color:var(--green-ink)}
 
-  section{padding-block:clamp(2.5rem,6vw,4.5rem)}
-  .sec-title{font-size:var(--step-2);letter-spacing:-.02em;font-weight:700;margin-bottom:.5rem}
-  .sec-sub{color:var(--muted);max-width:60ch;margin-bottom:2.2rem}
+  section{padding-block:clamp(2.4rem,5vw,4rem);border-top:1px solid var(--rule)}
+  .lead{font-family:var(--serif);font-size:var(--s2);letter-spacing:-.01em;font-weight:700}
+  .sub{color:var(--muted);max-width:58ch;margin-top:.5rem;margin-bottom:2rem}
 
-  .node{display:grid;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;
-    grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
-  .node .cell{background:var(--surface);padding:1.1rem 1.2rem}
-  .node .k{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
-  .node .v{font-size:1.15rem;font-weight:600;margin-top:.3rem;font-family:var(--mono);color:var(--fg)}
-  .node .v.ac{color:var(--accent)}
+  /* under your tools */
+  .tools{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+  .tool{background:var(--card);border:1px solid var(--rule);border-radius:var(--r);padding:1.1rem 1.2rem}
+  .tool h3{font-size:1rem;margin-bottom:.5rem;display:flex;align-items:center;gap:.5rem}
+  .tool .tag{font-family:var(--mono);font-size:.66rem;color:var(--clay);border:1px solid var(--rule-2);padding:.1rem .4rem;border-radius:5px}
+  .tool pre{font-family:var(--mono);font-size:.76rem;line-height:1.6;color:var(--ink-2);white-space:pre-wrap;word-break:break-all}
 
-  .grid{display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
-  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.4rem;transition:border-color .15s ease}
-  .card:hover{border-color:var(--border-strong)}
-  .card h3{font-size:1.08rem;display:flex;align-items:center;gap:.55rem;margin-bottom:.5rem}
-  .card h3 .ic{width:30px;height:30px;display:grid;place-items:center;border-radius:8px;background:var(--accent-dim);color:var(--accent);flex:none}
-  .card p{color:var(--fg-soft);font-size:var(--step--1);line-height:1.6}
+  /* node */
+  .node{display:grid;gap:1px;background:var(--rule);border:1px solid var(--rule);border-radius:var(--r);overflow:hidden;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+  .node .cell{background:var(--card);padding:1rem 1.15rem}
+  .node .k{font-family:var(--mono);font-size:.68rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+  .node .v{font-family:var(--mono);font-size:1.05rem;font-weight:600;margin-top:.35rem;color:var(--ink)}
+  .node .v.ac{color:var(--green-ink)}
 
-  table.cmp{width:100%;border-collapse:collapse;font-size:var(--step--1);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
-  table.cmp th,table.cmp td{padding:.8rem 1rem;text-align:left;border-bottom:1px solid var(--border)}
-  table.cmp thead th{background:var(--surface-2);font-weight:600;color:var(--fg)}
-  table.cmp tbody td{color:var(--fg-soft)}
+  /* steps (editorial, no emoji) */
+  .steps{display:grid;gap:1.6rem;grid-template-columns:repeat(auto-fit,minmax(255px,1fr))}
+  .step{display:grid;grid-template-columns:auto 1fr;gap:.9rem;align-items:start}
+  .step .n{font-family:var(--serif);font-size:1.5rem;font-weight:700;color:var(--green);line-height:1;border-right:2px solid var(--rule-2);padding-right:.8rem}
+  .step h3{font-size:1.05rem;margin-bottom:.3rem}
+  .step p{color:var(--ink-2);font-size:var(--s-1);line-height:1.55}
+
+  /* compare */
+  table.cmp{width:100%;border-collapse:collapse;font-size:var(--s-1);border:1px solid var(--rule);border-radius:var(--r);overflow:hidden}
+  table.cmp th,table.cmp td{padding:.75rem .95rem;text-align:left;border-bottom:1px solid var(--rule)}
+  table.cmp thead th{background:var(--paper-2);font-weight:600}
+  table.cmp tbody td{color:var(--ink-2)}
   table.cmp tbody tr:last-child td{border-bottom:0}
-  table.cmp .yes{color:var(--accent);font-weight:700}
-  table.cmp .no{color:#e06c6c}
-  table.cmp .col-h{color:var(--fg);font-weight:600}
+  table.cmp .hi{color:var(--ink);font-weight:700}
+  table.cmp .y{color:var(--green-ink);font-weight:700}
+  table.cmp .n{color:var(--clay)}
 
-  footer{border-top:1px solid var(--border);padding-block:2.5rem;margin-top:2rem;color:var(--muted);font-size:var(--step--1)}
-  .foot{display:flex;flex-wrap:wrap;gap:1.2rem;align-items:center}
-  .foot a{color:var(--fg-soft);font-weight:500}
-  .foot .sep{margin-left:auto}
+  footer{border-top:1px solid var(--rule);padding-block:2.2rem;color:var(--muted);font-size:var(--s-1)}
+  .foot{display:flex;flex-wrap:wrap;gap:1.1rem;align-items:center}
+  .foot a{color:var(--ink-2);font-weight:500}
+  .foot .sp{margin-left:auto;font-family:var(--mono)}
 </style>
 </head>
 <body>
@@ -117,39 +126,64 @@
 <header>
   <nav class="nav wrap" aria-label="Primary">
     <a class="brand" href="/">
-      <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#16a34a"/><path d="M16 6 L16 26 M16 13 L9 19 M16 13 L23 19" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg>
+      <svg viewBox="0 0 32 32" aria-hidden="true">
+        <circle cx="7" cy="16" r="3.4" fill="var(--green)"/>
+        <g fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round">
+          <path d="M9 15 C16 11, 19 9, 24 8"/><path d="M10 16 H24"/><path d="M9 17 C16 21, 19 23, 24 24"/>
+        </g>
+        <circle cx="25" cy="8" r="2.4" fill="var(--clay)"/><circle cx="25" cy="16" r="2.4" fill="var(--slate)"/><circle cx="25" cy="24" r="2.4" fill="var(--green)"/>
+      </svg>
       hibrid
     </a>
+    <a href="#tools">Integrations</a>
     <a href="#how">How it works</a>
-    <a href="#why">Why</a>
-    <a href="https://tokenstree.eu/newsletter/2026-06-26-hibrid-router-that-knows-your-machine.html">Launch story</a>
-    <a class="cta" href="https://github.com/vfalbor/hibrid">GitHub</a>
-    <span class="status" title="Live status of this hibrid node"><span class="dot" id="dot"></span><span id="status-txt">checking…</span></span>
+    <a href="https://tokenstree.eu/newsletter/2026-06-26-hibrid-router-that-knows-your-machine.html">The story</a>
+    <a class="ghbtn" href="https://github.com/vfalbor/hibrid">★ GitHub</a>
+    <span class="live" title="Live status of this node"><span class="dot" id="dot"></span><span id="st">…</span></span>
   </nav>
 </header>
 
 <main>
-  <section class="hero wrap">
-    <span class="eyebrow">● Open source · Apache-2.0 · Live</span>
-    <h1>The router that knows your machine.</h1>
-    <p class="lede">hibrid measures what your hardware can actually run, then decides — automatically and transparently — what stays local and what goes to the cloud. Loops run free on your machine. Your private data never leaves it.</p>
-    <div class="hero-actions">
-      <a class="btn btn-primary" href="https://github.com/vfalbor/hibrid">★ Star on GitHub</a>
-      <a class="btn btn-ghost" href="#how">See how it routes</a>
+  <section class="hero wrap" style="border-top:0">
+    <p class="kicker">one router · every AI tool</p>
+    <h1>Keep your tools. <em>Cut the bill.</em></h1>
+    <p class="deck">hibrid slides underneath Claude Code, Gemini CLI, aider and Copilot and quietly sends each call to the cheapest model that can do the job — Opus when it matters, Haiku when it's plenty, a model on <em>your own machine</em> for everything in between. Your tools don't change. Your token bill does.</p>
+    <div class="actions">
+      <a class="btn btn-fill" href="https://github.com/vfalbor/hibrid">★ Star on GitHub</a>
+      <a class="btn btn-out" href="#tools">Put it under your tools</a>
     </div>
-    <div class="install" aria-label="Install instructions">
-      <div class="install-bar"><i></i><i></i><i></i><span>bash</span></div>
-<pre><code><span class="c-dim"># one local-first router, OpenAI-compatible</span>
-pip install hibrid
+    <div class="term" aria-label="install">
+      <div class="term-top"><i></i><i></i><i></i><span>bash</span></div>
+<pre><span class="c"># one local-first router, OpenAI- and Anthropic-compatible</span>
+pip install git+https://github.com/vfalbor/hibrid.git
 hibrid serve
-curl localhost:8095/v1/node   <span class="c-dim"># what it knows about your machine</span></code></pre>
+curl localhost:8095/v1/node   <span class="c"># what it knows about your machine</span></pre>
     </div>
   </section>
 
-  <section class="wrap" id="node" aria-labelledby="node-h">
-    <h2 class="sec-title" id="node-h">This node, live</h2>
-    <p class="sec-sub">The instance serving this page profiled its own hardware and benchmarked its models on startup. No marketing numbers — measured ones.</p>
-    <div class="node" id="node-grid" role="status" aria-live="polite">
+  <section class="wrap" id="tools">
+    <h2 class="lead">Drop it under the tools you already use</h2>
+    <p class="sub">hibrid speaks both the OpenAI and the Anthropic dialect. Point a tool's base URL at it and nothing else in your setup moves — it just starts spending less.</p>
+    <div class="tools">
+      <div class="tool"><h3>Claude Code <span class="tag">Anthropic API</span></h3>
+        <pre>export ANTHROPIC_BASE_URL=\
+  https://hibrid.tokenstree.eu
+claude</pre></div>
+      <div class="tool"><h3>aider · Copilot-style <span class="tag">OpenAI API</span></h3>
+        <pre>export OPENAI_BASE_URL=\
+  https://hibrid.tokenstree.eu/v1
+aider</pre></div>
+      <div class="tool"><h3>Gemini CLI &amp; others <span class="tag">OpenAI mode</span></h3>
+        <pre>any tool with an
+OpenAI-compatible mode
+points here too</pre></div>
+    </div>
+  </section>
+
+  <section class="wrap" id="node">
+    <h2 class="lead">This node, live</h2>
+    <p class="sub">The instance serving this page profiled its own hardware and benchmarked its models on boot. Measured numbers, not a brochure.</p>
+    <div class="node" role="status" aria-live="polite">
       <div class="cell"><div class="k">Machine class</div><div class="v" id="n-class">…</div></div>
       <div class="cell"><div class="k">Max local model</div><div class="v ac" id="n-max">…</div></div>
       <div class="cell"><div class="k">Local models</div><div class="v" id="n-models">…</div></div>
@@ -157,27 +191,27 @@ curl localhost:8095/v1/node   <span class="c-dim"># what it knows about your mac
     </div>
   </section>
 
-  <section class="wrap" id="how" aria-labelledby="how-h">
-    <h2 class="sec-title" id="how-h">How it routes</h2>
-    <p class="sec-sub">Three decisions, all automatic. A skill can declare its task type; if it doesn't, hibrid infers it. The response always tells you what it decided and why.</p>
-    <div class="grid">
-      <article class="card"><h3><span class="ic" aria-hidden="true">⚙</span>Hardware-aware</h3><p>Detects RAM, VRAM and chip, then micro-benchmarks the real tokens/sec of your models. It measures your machine instead of trusting a table.</p></article>
-      <article class="card"><h3><span class="ic" aria-hidden="true">↻</span>Loops stay local</h3><p>A refinement or QA loop is hundreds of cheap calls. hibrid keeps them on local models and saves the expensive cloud model for the one final check.</p></article>
-      <article class="card"><h3><span class="ic" aria-hidden="true">🔒</span>Privacy by default</h3><p>Detected personal data forces local execution. It's a rule, not a setting — your text never reaches a third party.</p></article>
-      <article class="card"><h3><span class="ic" aria-hidden="true">{}</span>Drop-in</h3><p>An OpenAI-compatible API. Adopting hibrid is changing the base URL. Nothing else in your code moves.</p></article>
+  <section class="wrap" id="how">
+    <h2 class="lead">How it decides</h2>
+    <p class="sub">Three moves, all automatic. A tool can declare the task type; if it doesn't, hibrid reads it. Every response tells you where it actually ran.</p>
+    <div class="steps">
+      <div class="step"><div class="n">1</div><div><h3>It measures your machine</h3><p>Detects RAM, VRAM and chip, then micro-benchmarks the real tokens/sec of your local models. It doesn't guess from a spec sheet — it times your hardware.</p></div></div>
+      <div class="step"><div class="n">2</div><div><h3>It keeps loops local</h3><p>A refine-and-retest loop is hundreds of cheap calls. hibrid runs them on a local model and spends a paid token only on the one final check that earns it.</p></div></div>
+      <div class="step"><div class="n">3</div><div><h3>It guards your data</h3><p>Spot an email, a key, an ID, and the request is pinned to local — a rule, not a checkbox. Your text never reaches a third party.</p></div></div>
     </div>
   </section>
 
-  <section class="wrap" id="why" aria-labelledby="why-h">
-    <h2 class="sec-title" id="why-h">The gap it fills</h2>
-    <p class="sec-sub">Cloud gateways ignore your hardware. Local apps don't route to the cloud on their own. hibrid is the crossing of the two.</p>
+  <section class="wrap" id="why">
+    <h2 class="lead">Why nothing else does this</h2>
+    <p class="sub">Cloud routers can't see your hardware. Local apps won't reach the cloud on their own. hibrid is the part in the middle.</p>
     <table class="cmp">
-      <thead><tr><th>&nbsp;</th><th>Cloud gateways</th><th>Local apps</th><th class="col-h">hibrid</th></tr></thead>
+      <thead><tr><th>&nbsp;</th><th>Cloud routers</th><th>Local apps</th><th class="hi">hibrid</th></tr></thead>
       <tbody>
-        <tr><td>Routes by task complexity</td><td class="yes">yes</td><td class="no">manual</td><td class="yes">yes</td></tr>
-        <tr><td>Knows your hardware</td><td class="no">no</td><td>partial</td><td class="yes">measures it</td></tr>
-        <tr><td>Local + cloud, automatic</td><td class="no">no</td><td class="no">by hand</td><td class="yes">yes</td></tr>
-        <tr><td>Private data stays local</td><td class="no">no</td><td>partial</td><td class="yes">enforced</td></tr>
+        <tr><td>Routes by task</td><td class="y">yes</td><td class="n">manual</td><td class="y">yes</td></tr>
+        <tr><td>Knows your hardware</td><td class="n">no</td><td>hints</td><td class="y">measures it</td></tr>
+        <tr><td>Local + cloud, automatic</td><td class="n">no</td><td class="n">by hand</td><td class="y">yes</td></tr>
+        <tr><td>Private data stays local</td><td class="n">no</td><td>partial</td><td class="y">enforced</td></tr>
+        <tr><td>Sits under your existing tools</td><td>some</td><td class="n">no</td><td class="y">yes</td></tr>
       </tbody>
     </table>
   </section>
@@ -186,10 +220,10 @@ curl localhost:8095/v1/node   <span class="c-dim"># what it knows about your mac
 <footer>
   <div class="wrap foot">
     <a href="https://github.com/vfalbor/hibrid">GitHub</a>
-    <a href="https://tokenstree.eu/newsletter/2026-06-26-hibrid-router-that-knows-your-machine.html">Launch story</a>
+    <a href="https://tokenstree.eu/newsletter/2026-06-26-hibrid-router-that-knows-your-machine.html">The story</a>
     <a href="/v1/node">/v1/node</a>
     <a href="/health">/health</a>
-    <span class="sep">Apache-2.0 · part of the tokenstree ecosystem</span>
+    <span class="sp">Apache-2.0 · tokenstree</span>
   </div>
 </footer>
 
@@ -198,23 +232,15 @@ curl localhost:8095/v1/node   <span class="c-dim"># what it knows about your mac
     const set = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
     try {
       const r = await fetch('/v1/node', { headers: { 'Accept': 'application/json' } });
-      if (!r.ok) throw new Error('node ' + r.status);
-      const n = await r.json();
-      const hw = n.hardware || {};
+      if (!r.ok) throw 0;
+      const n = await r.json(), hw = n.hardware || {};
       set('n-class', hw.machine_class || '—');
-      set('n-max', (hw.max_local_params_b ? '≈' + hw.max_local_params_b + 'B' : '—'));
-      const models = n.local_models || [];
-      set('n-models', models.length ? models.join(', ') : 'none loaded');
-      const tps = n.tok_s || {};
-      const keys = Object.keys(tps);
-      set('n-tps', keys.length ? (tps[keys[0]] + ' tok/s · ' + keys[0]) : 'n/a');
-      const dot = document.getElementById('dot');
-      dot.classList.add('live');
-      set('status-txt', 'node online');
-    } catch (e) {
-      set('status-txt', 'node offline');
-      ['n-class','n-max','n-models','n-tps'].forEach(id => set(id, '—'));
-    }
+      set('n-max', hw.max_local_params_b ? '≈' + hw.max_local_params_b + 'B' : '—');
+      const m = n.local_models || []; set('n-models', m.length ? m.join(', ') : 'none');
+      const t = n.tok_s || {}, k = Object.keys(t);
+      set('n-tps', k.length ? t[k[0]] + ' tok/s · ' + k[0] : 'n/a');
+      document.getElementById('dot').classList.add('on'); set('st', 'online');
+    } catch (e) { set('st', 'offline'); ['n-class','n-max','n-models','n-tps'].forEach(id => set(id,'—')); }
   })();
 </script>
 </body>

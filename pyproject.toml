@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hibrid"
+version = "0.1.0"
+description = "One router under all your AI tools: AI-agnostic, local-first LLM routing that cuts your token bill and keeps private data on your machine."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Apache-2.0" }
+authors = [{ name = "hibrid maintainers" }]
+keywords = ["llm", "router", "local-first", "ollama", "anthropic", "openai", "privacy", "agents"]
+dependencies = [
+  "fastapi>=0.111",
+  "uvicorn[standard]>=0.30",
+  "httpx>=0.27",
+  "pydantic>=2.7",
+  "psutil>=5.9",
+]
+
+[project.urls]
+Homepage = "https://hibrid.tokenstree.eu"
+Repository = "https://github.com/vfalbor/hibrid"
+
+[project.scripts]
+hibrid = "backend.cli:main"
+
+[tool.setuptools]
+packages = ["backend"]
+
+[tool.setuptools.package-data]
+backend = ["static/*"]

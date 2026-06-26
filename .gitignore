@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
+
+# hibrid runtime artifacts (perfil de nodo, benchmark, calibrador, histórico)
+backend/hibrid.db
+backend/node_profile.json
+backend/node_profile.json.platt
+*.db
+
+# entorno
+.env
+.env.local
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/

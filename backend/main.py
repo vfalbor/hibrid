@@ -14,15 +14,15 @@ import uuid
 from contextlib import asynccontextmanager
 from pathlib import Path
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import HTMLResponse
 
-from . import classifier, db, profiles, providers, router
+from . import classifier, db, dialects, profiles, providers, router
 from .confidence import PlattCalibrator, raw_confidence
 from .config import settings
 from .registry import NodeProfile, build_node_profile
 from .schemas import (ChatCompletionRequest, ChatCompletionResponse, ChatMessage,
-                      Choice, Destination, RouteDecision, Usage)
+                      Choice, Destination, HibridOptions, RouteDecision, Usage)
 
 STATE: dict = {}
 
@@ -102,38 +102,36 @@ async def _run(dest: Destination, messages: list[dict], temperature: float,
                                           temperature, max_tokens)
 
 
-@app.post("/v1/chat/completions", response_model=ChatCompletionResponse)
-async def chat_completions(req: ChatCompletionRequest):
+async def _route_and_run(messages: list[ChatMessage], opts, temperature: float,
+                         max_tokens: int | None):
+    """Núcleo común a todos los dialectos: clasifica, decide, ejecuta y aplica la
+    cascada de escalado. Devuelve (result, decision, confidence, escalated, latency)."""
     node: NodeProfile = STATE["node"]
     cal: PlattCalibrator = STATE["calibrator"]
 
-    feat = classifier.classify(req.messages)
+    feat = classifier.classify(messages)
     try:
-        decision: RouteDecision = router.decide(node, feat, req.hibrid)
+        decision: RouteDecision = router.decide(node, feat, opts)
     except RuntimeError as e:
         raise HTTPException(status_code=503, detail=str(e))
 
-    messages = [{"role": m.role, "content": m.content} for m in req.messages]
-    allow_cloud = req.hibrid.allow_cloud if req.hibrid else True
+    raw_messages = [{"role": m.role, "content": m.content} for m in messages]
+    allow_cloud = opts.allow_cloud if opts else True
 
-    # --- ejecución del destino elegido ---
     t0 = time.perf_counter()
-    result = await _run(decision.chosen, messages, req.temperature, req.max_tokens)
+    result = await _run(decision.chosen, raw_messages, temperature, max_tokens)
     confidence = None
     escalated = False
 
-    # --- CASCADA: verificación por confianza calibrada (sólo si fue local) ---
-    # El perfil de ejecución limita HASTA dónde escala: un loop_refine no salta al
-    # modelo caro por iteración (escalate_to=paid_cheap).
-    if decision.chosen.kind == "local" and allow_cloud and not (req.hibrid and req.hibrid.force):
+    # CASCADA: el perfil de ejecución limita hasta dónde escala (un loop no salta
+    # al modelo caro por iteración).
+    if decision.chosen.kind == "local" and allow_cloud and not (opts and opts.force):
         prof = profiles.get_profile(
-            (req.hibrid.profile or req.hibrid.task_type) if req.hibrid else None
-        ) if (req.hibrid and (req.hibrid.profile or req.hibrid.task_type)) \
-            else profiles.get_profile(feat.task_type)
+            (opts.profile or opts.task_type) if opts else None
+        ) if (opts and (opts.profile or opts.task_type)) else profiles.get_profile(feat.task_type)
         raw = raw_confidence(result.logprob_avg, result.text)
         confidence = cal.calibrate(raw)
         if confidence < settings.escalation_confidence and node.cloud_models:
-            # Sólo se permite escalar a tiers <= escalate_to del perfil.
             allowed = ["local_free", "paid_cheap", "paid_strong"]
             cap = allowed.index(prof.escalate_to)
             target = None
@@ -143,34 +141,60 @@ async def chat_completions(req: ChatCompletionRequest):
                     target = cand
                     break
             if target:
-                result = await _run(target, messages, req.temperature, req.max_tokens)
+                result = await _run(target, raw_messages, temperature, max_tokens)
                 escalated = True
                 decision.escalated = True
                 decision.chosen = target
                 decision.reason += (f" | escalado a {target.tier} (conf {confidence:.2f}"
                                     f" < {settings.escalation_confidence}, tope perfil={prof.escalate_to})")
-                cal.update(raw, correct=False)   # el local no bastó
+                cal.update(raw, correct=False)
         else:
-            cal.update(raw, correct=True)        # el local sí bastó
+            cal.update(raw, correct=True)
 
     total_latency = time.perf_counter() - t0
     decision.confidence = confidence
-
-    cost = decision.chosen.est_cost_usd
     db.log_route(feat, decision, escalated=escalated, confidence=confidence,
-                 latency_s=total_latency, cost_usd=cost,
-                 prompt_tokens=result.prompt_tokens,
-                 completion_tokens=result.completion_tokens)
+                 latency_s=total_latency, cost_usd=decision.chosen.est_cost_usd,
+                 prompt_tokens=result.prompt_tokens, completion_tokens=result.completion_tokens)
+    return result, decision, confidence, escalated
 
+
+@app.post("/v1/chat/completions", response_model=ChatCompletionResponse)
+async def chat_completions(req: ChatCompletionRequest):
+    """Dialecto OpenAI (aider, Copilot-like, Gemini en modo OpenAI)."""
+    result, decision, _conf, _esc = await _route_and_run(
+        req.messages, req.hibrid, req.temperature, req.max_tokens)
     return ChatCompletionResponse(
         id=f"hibrid-{uuid.uuid4().hex[:12]}",
         created=int(time.time()),
-        model=f"hibrid-auto>{decision.chosen.kind}/{decision.chosen.model}",
+        model=f"hibrid-auto>{decision.chosen.tier}/{decision.chosen.model}",
         choices=[Choice(message=ChatMessage(role="assistant", content=result.text))],
         usage=Usage(prompt_tokens=result.prompt_tokens,
                     completion_tokens=result.completion_tokens,
                     total_tokens=result.prompt_tokens + result.completion_tokens),
         hibrid=decision,
+    )
+
+
+@app.post("/v1/messages")
+async def anthropic_messages(req: Request):
+    """Dialecto Anthropic Messages. Permite apuntar Claude Code a hibrid con
+    ANTHROPIC_BASE_URL=https://hibrid.tokenstree.eu y enrutar Opus->Haiku->local
+    de forma transparente, devolviendo la respuesta en formato Anthropic."""
+    body = await req.json()
+    messages = dialects.anthropic_to_messages(body)
+    hopts = HibridOptions(**body["hibrid"]) if isinstance(body.get("hibrid"), dict) else None
+    temperature = float(body.get("temperature", 0.7))
+    max_tokens = body.get("max_tokens")
+    result, decision, _conf, _esc = await _route_and_run(messages, hopts, temperature, max_tokens)
+    return dialects.result_to_anthropic(
+        msg_id=f"msg_hibrid_{uuid.uuid4().hex[:16]}",
+        text=result.text,
+        model=f"hibrid-auto>{decision.chosen.tier}/{decision.chosen.model}",
+        input_tokens=result.prompt_tokens,
+        output_tokens=result.completion_tokens,
+        hibrid_meta={"tier": decision.chosen.tier, "model": decision.chosen.model,
+                     "escalated": decision.escalated, "reason": decision.reason},
     )
 
 

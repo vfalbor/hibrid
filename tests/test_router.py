@@ -3,9 +3,16 @@ import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from backend import classifier, router
+from backend.backends import Backend
 from backend.profiler import HardwareProfile
 from backend.registry import NodeProfile
 from backend.schemas import ChatMessage, HibridOptions
+
+
+def _fake_backend(models):
+    """Un backend de orquestación disponible (simula un agente CLI logueado, sin red)."""
+    return Backend(id="cli:claude", mechanism="cli", agent="claude",
+                   models=list(models), available=True, latency_s=2.5)
 
 
 def _node(local=True, cloud=True, tps=50.0):
@@ -20,7 +27,9 @@ def _node(local=True, cloud=True, tps=50.0):
         n.local_default = "qwen2.5:14b"
         n.tok_s = {"qwen2.5:14b": tps}
     if cloud:
+        # Modelos orquestados servibles por un backend disponible (sin API key).
         n.cloud_models = ["claude-opus-4-8", "claude-haiku-4-5-20251001"]
+        n.backends = [_fake_backend(n.cloud_models)]
     return n
 
 

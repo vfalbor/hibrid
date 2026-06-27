@@ -118,3 +118,78 @@ def best_local_for(axis: str, available: list[str], max_params_b: float) -> str 
         return None
     scored.sort(reverse=True)
     return scored[0][2]
+
+
+# ---------------------------------------------------------------------------
+# Catálogo de modelos ORQUESTADOS (tier de pago) — alcanzados vía un backend de
+# agente (claude/codex/opencode/copilot) con la SUSCRIPCIÓN del usuario, NO con una
+# API key de pago por token. Cada modelo tiene competencia por eje y un peso de coste
+# relativo (0..1) que el router usa para preferir el más barato a igual competencia.
+# El tier ("paid_cheap"/"paid_strong") sitúa el modelo en la escalera de coste.
+# ---------------------------------------------------------------------------
+@dataclass(frozen=True)
+class OrchestratedModel:
+    name: str
+    tier: str             # "paid_cheap" | "paid_strong"
+    caps: dict            # {"general":x,"code":y,"reasoning":z} en 0..1
+    cost_weight: float    # 0..1 relativo (no es $; pondera "consumo de cuota/seat")
+    note: str = ""
+
+
+ORCHESTRATED: list[OrchestratedModel] = [
+    OrchestratedModel("claude-opus-4-8", "paid_strong",
+                      {"general": 0.97, "code": 0.95, "reasoning": 0.98}, 1.00,
+                      "Frontier reasoning/code."),
+    OrchestratedModel("claude-sonnet-4-6", "paid_strong",
+                      {"general": 0.93, "code": 0.92, "reasoning": 0.93}, 0.55,
+                      "Strong, cheaper than Opus."),
+    OrchestratedModel("gpt-4o", "paid_strong",
+                      {"general": 0.95, "code": 0.92, "reasoning": 0.94}, 0.80),
+    OrchestratedModel("claude-haiku-4-5-20251001", "paid_cheap",
+                      {"general": 0.85, "code": 0.80, "reasoning": 0.80}, 0.18,
+                      "Fast, cheap, capable."),
+    OrchestratedModel("gpt-4o-mini", "paid_cheap",
+                      {"general": 0.80, "code": 0.76, "reasoning": 0.76}, 0.10),
+]
+
+_ORCH_BY_NAME = {m.name: m for m in ORCHESTRATED}
+
+
+def orchestrated(name: str) -> OrchestratedModel | None:
+    if name in _ORCH_BY_NAME:
+        return _ORCH_BY_NAME[name]
+    n = name.lower()
+    for m in ORCHESTRATED:
+        head = m.name.split("-")[0]
+        if head in n:
+            return m
+    return None
+
+
+def orchestrated_capability(name: str, axis: str = "general") -> float:
+    m = orchestrated(name)
+    if m:
+        return m.caps.get(axis, m.caps.get("general", 0.85))
+    return 0.85 if axis == "general" else 0.82  # prior genérico para un modelo de pago
+
+
+def orchestrated_cost(name: str) -> float:
+    m = orchestrated(name)
+    return m.cost_weight if m else 0.5
+
+
+def orchestrated_tier(name: str) -> str:
+    m = orchestrated(name)
+    return m.tier if m else "paid_strong"
+
+
+def best_orchestrated_for(axis: str, available: list[str], tier: str | None = None) -> str | None:
+    """Mejor modelo orquestado DISPONIBLE para el eje (y, si se da, dentro del tier).
+    Ordena por competencia en el eje; ante un EMPATE cercano (~0.02) prefiere el de
+    menor coste de cuota. El trade-off coste entre tiers lo resuelve la utilidad del
+    router (λ_cost), así que aquí no se vuelve a penalizar el coste salvo en empates."""
+    pool = [m for m in available if (tier is None or orchestrated_tier(m) == tier)]
+    if not pool:
+        return None
+    return max(pool, key=lambda m: (round(orchestrated_capability(m, axis) / 0.02),
+                                    -orchestrated_cost(m)))

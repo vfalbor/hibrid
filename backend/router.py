@@ -12,11 +12,15 @@ Reglas duras (overrides) antes del argmax:
 """
 from __future__ import annotations
 
-from . import models_catalog
+from . import backends as backends_mod
+from . import models_catalog, task_policy
 from .config import settings
 from .profiles import KIND_TO_TIER, ExecutionProfile, get_profile
-from .registry import NodeProfile, cloud_cost, cloud_quality, local_quality, params_b
+from .registry import NodeProfile, local_quality
 from .schemas import Destination, HibridOptions, RouteDecision, TaskFeatures
+
+# tier de pago -> kind interno (la otra cara de KIND_TO_TIER).
+_TIER_TO_KIND = {"paid_cheap": "cloud_cheap", "paid_strong": "cloud_strong"}
 
 # Coste estimado de salida en tokens (para estimar $ por petición).
 _EST_OUTPUT_TOKENS = 400
@@ -48,7 +52,7 @@ def _local_destination(node: NodeProfile, feat: TaskFeatures) -> Destination | N
         return None
     # Elige el mejor modelo DISPONIBLE para el eje de la tarea que quepa en la máquina
     # (no sólo el que tenga más parámetros): coding -> modelo competente en código, etc.
-    axis = models_catalog.axis_for_task(feat.task_type, feat.has_code)
+    axis = task_policy.axis_for(feat.task_type, feat.has_code)
     model = (models_catalog.best_local_for(axis, node.local_models,
                                            node.hardware.max_local_params_b)
              or node.local_default or node.local_models[0])
@@ -67,17 +71,29 @@ def _local_destination(node: NodeProfile, feat: TaskFeatures) -> Destination | N
     )
 
 
-def _cloud_destination(kind: str, model: str, feat: TaskFeatures) -> Destination:
-    cost = cloud_cost(model) * (_EST_OUTPUT_TOKENS / 1_000_000)
+def _orchestrated_destination(tier: str, node: NodeProfile,
+                              feat: TaskFeatures) -> Destination | None:
+    """Construye el candidato del tier de pago para el eje de la tarea, eligiendo el
+    MEJOR modelo orquestado disponible y el backend (adaptativo) que lo sirve."""
+    axis = task_policy.axis_for(feat.task_type, feat.has_code)
+    model = models_catalog.best_orchestrated_for(axis, node.cloud_models, tier)
+    if not model:
+        return None
+    backend = backends_mod.pick_backend(node.backends, model)
+    if backend is None:
+        return None
+    # Coste = peso de cuota relativo escalado al rango de est_cost_usd previo (~$0.006 max).
+    cost = models_catalog.orchestrated_cost(model) * 0.006
     return Destination(
-        kind=kind,
-        tier=KIND_TO_TIER[kind],
+        kind=_TIER_TO_KIND[tier],
+        tier=tier,
         model=model,
         endpoint=None,
-        est_quality=cloud_quality(model),
+        backend=backend.id,
+        est_quality=models_catalog.orchestrated_capability(model, axis),
         est_cost_usd=round(cost, 6),
-        est_latency_s=1.5 if kind == "cloud_cheap" else 3.0,  # prior; afinable
-        privacy_risk=1.0,                 # sale a un tercero
+        est_latency_s=backend.latency_s,
+        privacy_risk=1.0,                 # sale de la máquina (a la capa orquestada)
         tok_s=0.0,
     )
 
@@ -103,10 +119,12 @@ def decide(node: NodeProfile, feat: TaskFeatures,
     if local:
         candidates.append(local)
     if allow_cloud and node.cloud_models:
-        if settings.cloud_cheap_model in node.cloud_models:
-            candidates.append(_cloud_destination("cloud_cheap", settings.cloud_cheap_model, feat))
-        if settings.cloud_strong_model in node.cloud_models:
-            candidates.append(_cloud_destination("cloud_strong", settings.cloud_strong_model, feat))
+        # Un candidato por tier de pago: el mejor modelo orquestado para el eje, servido
+        # por el backend disponible de menor latencia (sin API key).
+        for tier in ("paid_cheap", "paid_strong"):
+            dest = _orchestrated_destination(tier, node, feat)
+            if dest:
+                candidates.append(dest)
 
     if not candidates:
         raise RuntimeError("No hay destinos disponibles (ni local ni nube configurada).")

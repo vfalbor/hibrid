@@ -47,7 +47,8 @@ class NodeProfile:
         self.local_models: list[str] = []
         self.local_default: str | None = None
         self.tok_s: dict[str, float] = {}   # modelo local -> tok/s medidos
-        self.cloud_models: list[str] = []
+        self.cloud_models: list[str] = []    # modelos orquestados servibles (sin API key)
+        self.backends: list = []             # backends de orquestación descubiertos
 
     def to_dict(self) -> dict:
         return {
@@ -57,6 +58,11 @@ class NodeProfile:
             "local_default": self.local_default,
             "tok_s": self.tok_s,
             "cloud_models": self.cloud_models,
+            "backends": [
+                {"id": b.id, "mechanism": b.mechanism, "agent": b.agent,
+                 "available": b.available, "models": b.models, "latency_s": b.latency_s}
+                for b in self.backends
+            ],
         }
 
 
@@ -67,6 +73,13 @@ def _estimate_params_b(model_name: str) -> float:
     if m:
         return float(m.group(1))
     return 7.0  # por defecto asume ~7B
+
+
+def _discover_orchestration(np: "NodeProfile") -> None:
+    """Puebla np.backends y np.cloud_models con la capa de orquestación disponible."""
+    from . import backends as backends_mod
+    np.backends = backends_mod.discover_backends()
+    np.cloud_models = backends_mod.available_orchestrated_models(np.backends)
 
 
 async def _micro_benchmark(endpoint: str, model: str) -> float:
@@ -94,7 +107,9 @@ async def build_node_profile(use_cache: bool = True, benchmark: bool = True) -> 
             np.local_models = d.get("local_models", [])
             np.local_default = d.get("local_default")
             np.tok_s = d.get("tok_s", {})
-            np.cloud_models = d.get("cloud_models", [])
+            # Los backends (qué agentes hay logueados) se RE-DESCUBREN siempre: es barato
+            # y puede cambiar entre arranques sin tener que re-medir el hardware.
+            _discover_orchestration(np)
             return np
         except Exception:
             pass
@@ -105,11 +120,9 @@ async def build_node_profile(use_cache: bool = True, benchmark: bool = True) -> 
     endpoint, models = await providers.list_local_models()
     np.local_endpoint, np.local_models = endpoint, models
 
-    # Modelos de nube según claves disponibles.
-    if settings.anthropic_api_key:
-        np.cloud_models += [settings.cloud_strong_model, settings.cloud_cheap_model]
-    if settings.openai_api_key:
-        np.cloud_models += ["gpt-4o", "gpt-4o-mini"]
+    # Tier de pago SIN API key: se descubren los backends de orquestación disponibles
+    # (claude/codex/opencode/copilot logueados, servicio de skills, passthrough).
+    _discover_orchestration(np)
 
     # Micro-benchmark de los modelos locales -> tok/s real.
     if benchmark and endpoint and models:

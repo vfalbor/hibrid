@@ -79,6 +79,8 @@ class Destination(BaseModel):
     tier: str = ""  # local_free | paid_cheap | paid_strong (mapeo libre/pago)
     model: str
     endpoint: Optional[str] = None  # url OpenAI-compat (local) o None (cloud nativo)
+    backend: Optional[str] = None   # backend de orquestación del tier de pago
+                                    # (cli:claude | cli:codex | service | passthrough)
     # Estimaciones usadas por la función de utilidad.
     est_quality: float = 0.0       # 0..1
     est_cost_usd: float = 0.0      # coste estimado de la petición

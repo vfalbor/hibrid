@@ -17,6 +17,7 @@ from pathlib import Path
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import HTMLResponse
 
+from . import backends as backends_mod
 from . import classifier, db, dialects, profiles, providers, router
 from .confidence import PlattCalibrator, raw_confidence
 from .config import settings
@@ -93,12 +94,28 @@ async def metrics():
     return db.metrics()
 
 
+@app.get("/v1/policy")
+async def policy():
+    """La matriz explícita task_type -> (eje, escalera de tiers): qué LLM por tarea."""
+    from . import task_policy
+    return {"task_policy": task_policy.as_table(),
+            "backends": [b for b in STATE["node"].to_dict()["backends"]]}
+
+
 async def _run(dest: Destination, messages: list[dict], temperature: float,
                max_tokens: int | None) -> providers.GenerationResult:
     if dest.kind == "local":
         return await providers.generate_local(dest.endpoint, dest.model, messages,
                                               temperature, max_tokens)
-    return await providers.generate_cloud(dest.kind, dest.model, messages,
+    # Tier de pago: se ejecuta vía el backend de orquestación elegido (sin API key).
+    node: NodeProfile = STATE["node"]
+    backend = next((b for b in node.backends if b.id == dest.backend), None)
+    if backend is None:
+        backend = backends_mod.pick_backend(node.backends, dest.model)
+    if backend is None:
+        raise HTTPException(status_code=503,
+                            detail=f"sin backend de orquestación para {dest.model}")
+    return await backends_mod.run_backend(backend, dest.model, messages,
                                           temperature, max_tokens)
 
 

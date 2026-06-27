@@ -53,9 +53,14 @@ transparently. Every response carries a small `hibrid` block telling you where i
    micro-benchmark that times the *real* tokens/sec of your local models. It doesn't guess
    from a spec sheet — it times your hardware. No other router does this.
 2. **It keeps loops local.** A refine-and-retest loop is hundreds of cheap calls. hibrid runs
-   them on a local model and spends a paid token only on the one final check that earns it.
+   them on a local model and spends a strong call only on the one final check that earns it.
    Tools can declare a task type (`"task_type": "loop_refine"`); if they don't, hibrid infers it.
-3. **It guards your data.** Spot an email, a key, an ID in the prompt and the request is pinned
+3. **No API keys.** For anything beyond the local model, hibrid delegates to an orchestration
+   layer you're *already* signed into — a headless agent CLI (`claude -p`, `codex exec`,
+   `opencode run`, `copilot`), a local skills service, or your harness's own session — and picks
+   whichever is available and fastest. Your subscription, not a pay-per-token key. See
+   [docs/ORCHESTRATION.md](docs/ORCHESTRATION.md).
+4. **It guards your data.** Spot an email, a key, an ID in the prompt and the request is pinned
    to local — a rule, not a checkbox. Your text never reaches a third party.
 
 It all runs behind one decision: `argmax U(d)` where
@@ -66,13 +71,17 @@ you (or a tool) can set per request.
 
 ```bash
 pip install git+https://github.com/vfalbor/hibrid.git
-cp .env.example .env        # add your cloud keys; point at a local runtime if you have one
-hibrid serve                # OpenAI + Anthropic compatible, on :8095
-curl localhost:8095/v1/node # see what it learned about your machine
+hibrid serve                  # OpenAI + Anthropic compatible, on :8095
+curl localhost:8095/v1/node   # what it learned about your machine + which backends it found
+curl localhost:8095/v1/policy # the task → LLM matrix it routes by
 ```
 
-A local runtime is optional but recommended — `ollama serve`, `llama-server`, or LM Studio.
-All of them speak the OpenAI dialect, so hibrid talks to them the same way it talks to the cloud.
+No keys to configure. hibrid discovers what's already on your machine:
+- a **local runtime** (`ollama serve`, `llama-server`, or LM Studio) for the local tier — optional
+  but recommended; they all speak the OpenAI dialect.
+- an **orchestration backend** for the strong tier — any logged-in agent CLI
+  (`claude` / `codex` / `opencode` / `copilot`), a skills service (`HIBRID_SKILLS_URL`), or a
+  harness session token. Whatever is present, hibrid uses adaptively.
 
 ## Why nothing else does this
 
@@ -80,7 +89,8 @@ All of them speak the OpenAI dialect, so hibrid talks to them the same way it ta
 |---|:--:|:--:|:--:|
 | Routes by task | ✅ | manual | ✅ |
 | Knows your hardware | ❌ | hints | **measures it** |
-| Local + cloud, automatic | ❌ | by hand | ✅ |
+| Local + strong, automatic | ❌ | by hand | ✅ |
+| Strong tier with **no API key** | ❌ | ❌ | **your subscription, via your agent** |
 | Private data stays local | ❌ | partial | **enforced** |
 | Sits under your existing tools | some | ❌ | ✅ |
 
@@ -106,11 +116,12 @@ endpoint is the next item. Tell us where it breaks.
 ## Docs
 
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — how the layers fit together
+- [`docs/ORCHESTRATION.md`](docs/ORCHESTRATION.md) — the task→LLM matrix & no-API-key backends
 - [`docs/EXECUTION_PROFILES.md`](docs/EXECUTION_PROFILES.md) — task-type routing & loop economics
 - [`docs/MODELS.md`](docs/MODELS.md) — the curated local-model catalog & task-axis matching
 - [`docs/RESEARCH.md`](docs/RESEARCH.md) — research behind the design (a 3-agent study)
 - [`docs/ROADMAP.md`](docs/ROADMAP.md) — phases, the hub, and the community flywheel
-- [`docs/PLAN.md`](docs/PLAN.md) — deep community & hosting plan (original, Spanish)
+- [`docs/PLAN.md`](docs/PLAN.md) — deep community & hosting plan ([Spanish original](docs/PLAN.es.md))
 
 ## License
 

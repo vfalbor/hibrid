@@ -16,11 +16,14 @@ with **execution profiles**.
 | Tier | What | Cost | Privacy |
 |---|---|---|---|
 | `local_free` | open-weights on the user's machine (Ollama/llama.cpp/vLLM) | ~0 | maximal |
-| `paid_cheap` | low-cost paid models (Haiku, gpt-4o-mini) | low | external |
-| `paid_strong` | top paid models (Opus, gpt-4o) | high | external |
+| `paid_cheap` | low-cost models (Haiku, gpt-4o-mini) via your agent | low | external |
+| `paid_strong` | top models (Opus, gpt-4o, Sonnet) via your agent | high | external |
 
 The registry resolves each tier to a concrete model available on this machine/account. Profiles
-speak in tiers, so the same profile works on any hardware.
+speak in tiers, so the same profile works on any hardware. The **paid tiers carry no API key**:
+they're reached through an orchestration backend you're already signed into (an agent CLI, a
+skills service, or harness passthrough), and within a tier hibrid picks the best model for the
+task axis. See [ORCHESTRATION.md](ORCHESTRATION.md) for the full task→LLM matrix.
 
 ## Built-in profiles
 

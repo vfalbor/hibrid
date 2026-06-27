@@ -196,8 +196,9 @@ points here too</pre></div>
     <p class="sub">Three moves, all automatic. A tool can declare the task type; if it doesn't, hibrid reads it. Every response tells you where it actually ran.</p>
     <div class="steps">
       <div class="step"><div class="n">1</div><div><h3>It measures your machine</h3><p>Detects RAM, VRAM and chip, then micro-benchmarks the real tokens/sec of your local models. It doesn't guess from a spec sheet — it times your hardware.</p></div></div>
-      <div class="step"><div class="n">2</div><div><h3>It keeps loops local</h3><p>A refine-and-retest loop is hundreds of cheap calls. hibrid runs them on a local model and spends a paid token only on the one final check that earns it.</p></div></div>
-      <div class="step"><div class="n">3</div><div><h3>It guards your data</h3><p>Spot an email, a key, an ID, and the request is pinned to local — a rule, not a checkbox. Your text never reaches a third party.</p></div></div>
+      <div class="step"><div class="n">2</div><div><h3>It keeps loops local</h3><p>A refine-and-retest loop is hundreds of cheap calls. hibrid runs them on a local model and spends a strong call only on the one final check that earns it.</p></div></div>
+      <div class="step"><div class="n">3</div><div><h3>No API keys</h3><p>For anything beyond the local model, hibrid delegates to an agent you're already signed into — <code>claude -p</code>, <code>codex</code>, <code>opencode</code>, <code>copilot</code>, a skills service, or your harness session — and uses whichever is fastest. Your subscription, not a pay-per-token key.</p></div></div>
+      <div class="step"><div class="n">4</div><div><h3>It guards your data</h3><p>Spot an email, a key, an ID, and the request is pinned to local — a rule, not a checkbox. Your text never reaches a third party.</p></div></div>
     </div>
   </section>
 
@@ -209,7 +210,8 @@ points here too</pre></div>
       <tbody>
         <tr><td>Routes by task</td><td class="y">yes</td><td class="n">manual</td><td class="y">yes</td></tr>
         <tr><td>Knows your hardware</td><td class="n">no</td><td>hints</td><td class="y">measures it</td></tr>
-        <tr><td>Local + cloud, automatic</td><td class="n">no</td><td class="n">by hand</td><td class="y">yes</td></tr>
+        <tr><td>Local + strong, automatic</td><td class="n">no</td><td class="n">by hand</td><td class="y">yes</td></tr>
+        <tr><td>Strong tier with no API key</td><td class="n">no</td><td class="n">no</td><td class="y">your subscription</td></tr>
         <tr><td>Private data stays local</td><td class="n">no</td><td>partial</td><td class="y">enforced</td></tr>
         <tr><td>Sits under your existing tools</td><td>some</td><td class="n">no</td><td class="y">yes</td></tr>
       </tbody>

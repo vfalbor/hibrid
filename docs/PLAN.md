@@ -1,197 +1,194 @@
-# hibrid — Plan de trabajo, implementación y estrategia de comunidad
+# hibrid — work plan, implementation & community strategy
 
-> Cómo pasar del scaffold actual a una **plataforma de comunidad** open-source,
-> alojada en el servidor de tokenstree.eu bajo `hibrid.tokenstree.eu`, integrada
-> de forma coherente en GitHub y con un motor de crecimiento de comunidad.
-
----
-
-## 0. Idea en una frase
-
-hibrid es una **herramienta local open-source** ("el router que conoce tu máquina")
-+ un **servicio de comunidad** que agrega, de forma anónima y opt-in, las velocidades
-reales (tok/s) que cada máquina obtiene con cada modelo. Esa base de datos colaborativa
-mejora el routing de **todos** → efecto de red. Ese es el corazón de la comunidad.
-
-**Por qué funciona como comunidad:** el valor que cada usuario aporta (su benchmark real)
-beneficia a los demás, y a cambio recibe mejores recomendaciones de qué correr en su
-hardware. Es el mismo patrón que los "Home GPU LLM Leaderboards", pero accionable desde
-el propio router.
+> How to go from the current scaffold to a **community platform**: open-source, hosted on the
+> tokenstree.eu server under `hibrid.tokenstree.eu`, integrated coherently with GitHub, with a
+> community growth engine. (Spanish original: [PLAN.es.md](PLAN.es.md).)
 
 ---
 
-## 1. Las dos mitades del sistema
+## 0. The idea in one sentence
 
-hibrid NO es un gateway central (la inferencia local corre en la máquina de cada usuario).
-Por eso se separa en dos componentes con responsabilidades distintas:
+hibrid is an **open-source local tool** ("the router that knows your machine") + a **community
+service** that aggregates, anonymously and opt-in, the real speeds (tok/s) each machine gets with
+each model. That collaborative database improves routing for **everyone** → a network effect.
+That is the heart of the community.
 
-### A) `hibrid-engine` (lo que corre en la máquina del usuario) — YA construido
-El scaffold actual: FastAPI local, API OpenAI-compatible, profiler, micro-benchmark,
-router por utilidad, cascada con calibración. Es el **producto open-source** que la gente
-descarga y ejecuta. No requiere cuenta. Privacidad por defecto.
+**Why it works as a community:** the value each user contributes (their real benchmark) benefits
+the others, and in return they get better recommendations for their hardware. It's the same
+pattern as the "Home GPU LLM Leaderboards", but actionable from inside the router.
 
-### B) `hibrid-hub` (lo que se aloja en `hibrid.tokenstree.eu`) — a construir
-El **servicio de comunidad**. NO procesa prompts de nadie. Solo:
-1. **Benchmark Registry / Leaderboard** — recibe envíos opt-in `(máquina, modelo, quant, tok/s)`
-   y los agrega; sirve "priors" de velocidad para que un usuario nuevo enrute bien *antes*
-   de su primer micro-benchmark.
-2. **Policy Registry** — comparte presets de routing (perfiles de λ: "privacy-first",
-   "low-cost", "low-latency", "coding") que la comunidad publica y descarga.
-3. **Landing + Docs** — la cara pública, instalación en 1 línea, narrativa.
-4. **Dashboard opcional** — para quien quiera telemetría agregada de su propio uso.
+---
+
+## 1. The two halves of the system
+
+hibrid is NOT a central gateway (local inference runs on each user's machine). So it splits into
+two components with distinct responsibilities:
+
+### A) `hibrid-engine` (runs on the user's machine) — ALREADY built
+The current scaffold: local FastAPI, OpenAI- and Anthropic-compatible API, profiler, micro-
+benchmark, utility router, cascade with calibration, and the **adaptive orchestration layer**
+(reach the paid tier through an agent CLI / skills service / harness passthrough — no API key).
+This is the **open-source product** people download and run. No account required. Private by
+default.
+
+### B) `hibrid-hub` (hosted on `hibrid.tokenstree.eu`) — to build
+The **community service**. It processes nobody's prompts. Only:
+1. **Benchmark Registry / Leaderboard** — receives opt-in submissions `(machine, model, quant,
+   tok/s)` and aggregates them; serves speed "priors" so a new user routes well *before* their
+   first micro-benchmark.
+2. **Policy Registry** — shares routing presets (λ profiles: "privacy-first", "low-cost",
+   "low-latency", "coding") published and downloaded by the community.
+3. **Landing + Docs** — the public face, one-line install, the narrative.
+4. **Optional dashboard** — for anyone who wants aggregated telemetry of their own usage.
 
 ```
-   Máquina del usuario                      hibrid.tokenstree.eu (comunidad)
+   User's machine                          hibrid.tokenstree.eu (community)
    ┌──────────────────┐   opt-in submit     ┌─────────────────────────────┐
-   │  hibrid-engine    │ ── (máquina,modelo, │  hibrid-hub                  │
+   │  hibrid-engine    │ ── (machine,model,  │  hibrid-hub                  │
    │  (OSS, local)     │     tok/s) ───────► │  • Benchmark Registry/Board  │
-   │  prompts NUNCA    │ ◄── priors / policies│ • Policy Registry            │
-   │  salen de aquí    │                     │  • Landing + Docs + Dashboard│
+   │  prompts NEVER    │ ◄── priors/policies │  • Policy Registry            │
+   │  leave here       │                     │  • Landing + Docs + Dashboard│
    └──────────────────┘                     └─────────────────────────────┘
 ```
 
-Privacidad como principio fundacional: **los prompts y datos del usuario jamás llegan al
-hub**; solo métricas de hardware/velocidad anónimas y *si el usuario lo activa*.
+Privacy as a founding principle: **the user's prompts and data never reach the hub**; only
+anonymous hardware/speed metrics, and only *if the user turns it on*.
 
 ---
 
-## 2. Partes principales del sistema (mapa de componentes)
+## 2. Main parts of the system (component map)
 
-| Componente | Dónde corre | Estado | Tecnología |
+| Component | Where it runs | Status | Tech |
 |---|---|---|---|
-| Router + utilidad + cascada | engine (local) | ✅ hecho | FastAPI/Python |
-| **Perfiles de ejecución por tipo de tarea** (loops local-first) | engine (local) | ✅ hecho | ver `EXECUTION_PROFILES.md` |
-| Profiler hardware + micro-benchmark | engine (local) | ✅ hecho | psutil/pynvml/system_profiler |
-| Providers local+nube (OpenAI-compat) | engine (local) | ✅ hecho | httpx |
-| Calibración confianza (Platt online) | engine (local) | ✅ hecho | Python |
-| Router **kNN** sobre histórico | engine (local) | ⬜ siguiente | embeddings + SQLite |
-| Eval RouterBench/RouterEval | engine (CI) | ⬜ siguiente | dataset público |
-| **Benchmark Registry + Leaderboard** | hub (.eu) | ⬜ a construir | FastAPI + Postgres |
-| **Policy Registry** | hub (.eu) | ⬜ a construir | FastAPI + Postgres |
-| **Landing + Docs + Dashboard web** | hub (.eu) | ⬜ a construir | React/Vite o Astro |
-| Despliegue (Docker + nginx + certbot) | .eu server | ⬜ a construir | docker-compose |
+| Router + utility + cascade | engine (local) | ✅ done | FastAPI/Python |
+| **Execution profiles by task type** (loops local-first) | engine (local) | ✅ done | see `EXECUTION_PROFILES.md` |
+| **Task → LLM policy matrix** | engine (local) | ✅ done | `task_policy.py`, see `ORCHESTRATION.md` |
+| **Adaptive orchestration backends (no API key)** | engine (local) | ✅ done | `backends.py` (CLI/service/passthrough) |
+| Hardware profiler + micro-benchmark | engine (local) | ✅ done | psutil/pynvml/system_profiler |
+| Local provider (OpenAI-compat) | engine (local) | ✅ done | httpx |
+| Confidence calibration (online Platt) | engine (local) | ✅ done | Python |
+| kNN router over history | engine (local) | ⬜ next | embeddings + SQLite |
+| RouterBench/RouterEval eval | engine (CI) | ⬜ next | public dataset |
+| **Benchmark Registry + Leaderboard** | hub (.eu) | ⬜ to build | FastAPI + Postgres |
+| **Policy Registry** | hub (.eu) | ⬜ to build | FastAPI + Postgres |
+| **Landing + Docs + Dashboard web** | hub (.eu) | ⬜ to build | React/Vite or Astro |
+| Deployment (Docker + nginx + certbot) | .eu server | ⬜ to build | docker-compose |
 
 ---
 
-## 3. Hosting en el servidor de tokenstree.eu (concreto, según su infra real)
+## 3. Hosting on the tokenstree.eu server
 
-Servidor: la máquina que sirve `tokenstree.eu` (IP en el inventario privado de infra, no
-en este repo). Convención detectada: nginx en host con `sites-available/`, **certbot**
-para certs, apps en **Docker Compose** proxiadas a `127.0.0.1:<puerto>` (como hnreviewer
-→ :3000). Replicamos ese molde.
+Server: the machine serving `tokenstree.eu` (IP in the private infra inventory, not in this
+repo). Detected convention: nginx on host with `sites-available/`, **certbot** for certs, apps in
+**Docker Compose** proxied to `127.0.0.1:<port>`. We replicate that mould.
 
-**Subdominio propuesto: `hibrid.tokenstree.eu`** (coherente con `androidwars.tokenstree.eu`,
-`speaker.tokenstree.eu`).
+**Proposed subdomain: `hibrid.tokenstree.eu`** (consistent with the rest of the ecosystem).
 
-Pasos de despliegue (mismo patrón que hnreviewer):
-1. **DNS**: A record `hibrid.tokenstree.eu` → IP del servidor de tokenstree.eu.
-2. **Repo en el server**: `git clone` en `/home/vfalbor/hibrid` (o `/opt/hibrid`).
-3. **Docker Compose** del hub: contenedor `hibrid-hub` (FastAPI) en `127.0.0.1:8096`
-   + `postgres` (registry). El **engine local NO se aloja aquí** — es lo que descarga el usuario.
-4. **nginx vhost** `/etc/nginx/sites-available/hibrid` →
-   `proxy_pass http://127.0.0.1:8096;` + `location /.well-known/acme-challenge/ { root /var/www/html; }`.
-   `ln -s` a `sites-enabled/`.
-5. **Certbot**: `certbot --nginx -d hibrid.tokenstree.eu` (renovación automática, ya configurada en la caja).
-6. **CI/CD** (ver §4): un workflow que en cada release hace `ssh` + `docker compose pull && up -d`.
+Deploy steps (same pattern as the other apps):
+1. **DNS**: A record `hibrid.tokenstree.eu` → server IP.
+2. **Repo on the server**: `git clone` into `/opt/hibrid`.
+3. **Docker Compose** for the hub: `hibrid-hub` (FastAPI) on `127.0.0.1:8096` + `postgres`
+   (registry). The local **engine is NOT hosted here** — it's what the user downloads.
+4. **nginx vhost** `/etc/nginx/sites-available/hibrid` → `proxy_pass http://127.0.0.1:8096;` +
+   the ACME challenge location. `ln -s` into `sites-enabled/`.
+5. **Certbot**: `certbot --nginx -d hibrid.tokenstree.eu` (auto-renew).
+6. **CI/CD** (§4): a workflow that on each release does `ssh` + `docker compose pull && up -d`.
 
-> Nota: el engine y el hub son **repos/imágenes distintos**. En `.eu` solo vive el **hub**.
-> El engine se distribuye por PyPI/Docker Hub/`pip install hibrid` para correr en local.
+> The engine and the hub are **different repos/images**. Only the **hub** lives on `.eu`. The
+> engine is distributed via PyPI / Docker Hub / `pip install hibrid` to run locally.
 
 ---
 
-## 4. Integración coherente con GitHub
+## 4. Coherent GitHub integration
 
-Espejo de la estructura ya usada en hnreviewer (Dockerfile + docker-compose + CONTRIBUTING
-+ LICENSE + README), elevada a estándar de proyecto de comunidad.
+Mirror the structure already used across the ecosystem (Dockerfile + docker-compose +
+CONTRIBUTING + LICENSE + README), raised to a community-project standard.
 
-**Estructura de repos (recomendada): monorepo `hibrid`** con carpetas claras, para que
-engine y hub evolucionen juntos y compartan esquemas:
+**Recommended repo structure: a `hibrid` monorepo** with clear folders, so engine and hub evolve
+together and share schemas:
 
 ```
-hibrid/                      (github.com/<org>/hibrid)
-├── engine/                  # el OSS local (lo ya construido)
-├── hub/                     # backend de comunidad (FastAPI + Postgres)
+hibrid/                      (github.com/vfalbor/hibrid)
+├── engine/                  # the local OSS (what's built)
+├── hub/                     # community backend (FastAPI + Postgres)
 ├── web/                     # landing + docs + dashboard
-├── docs/                    # investigación, arquitectura, este plan
-├── .github/
-│   ├── workflows/ci.yml     # tests del engine + lint en cada PR
-│   ├── workflows/deploy.yml # despliegue a hibrid.tokenstree.eu en release
-│   ├── ISSUE_TEMPLATE/      # bug / feature / "add my machine benchmark"
-│   └── PULL_REQUEST_TEMPLATE.md
+├── docs/                    # research, architecture, this plan
+├── .github/                 # CI, deploy, issue/PR templates
 ├── CONTRIBUTING.md · CODE_OF_CONDUCT.md · LICENSE (Apache-2.0) · SECURITY.md
-└── README.md                # ✅ ya escrito
+└── README.md                # ✅ written
 ```
 
-**Higiene GitHub que crea confianza y comunidad:**
-- **Licencia permisiva** (Apache-2.0): clave para adopción y contribuciones.
-- **CI verde visible**: badge de tests (ya hay `tests/test_router.py`, 6/6).
-- **Releases semánticas** + changelog; el engine publicado en **PyPI** (`pip install hibrid`)
-  y **Docker Hub** para arranque en 1 línea.
-- **GitHub Discussions** activado (canal de comunidad sin fricción).
-- **Issues etiquetados `good first issue`** — sobre todo: "añade el benchmark de tu máquina".
-- **Plantilla de contribución de benchmark**: un PR o un issue estructurado que añade
-  `(máquina, modelo, quant, tok/s)` al registry → convierte a usuarios en contribuyentes.
-- **Org `tokenstree`** en GitHub que agrupe hibrid, tokenstransfer, tokenstranslate →
-  presencia coherente de marca y descubrimiento cruzado.
+**GitHub hygiene that builds trust and community:**
+- **Permissive licence** (Apache-2.0): key to adoption and contributions.
+- **Visible green CI**: a tests badge (the engine suite already runs).
+- **Semantic releases** + changelog; the engine published to **PyPI** (`pip install hibrid`) and
+  **Docker Hub** for one-line startup.
+- **GitHub Discussions** enabled (a frictionless community channel).
+- **Issues labelled `good first issue`** — above all: "add your machine's benchmark".
+- **Benchmark contribution template**: a structured PR/issue that adds `(machine, model, quant,
+  tok/s)` to the registry → turns users into contributors.
+- A **`tokenstree` GitHub org** grouping hibrid with the rest → coherent brand presence and
+  cross-discovery.
 
 ---
 
-## 5. Plan de trabajo por fases
+## 5. Phased work plan
 
-### Fase 0 — Consolidar el engine (1 semana) · *casi hecho*
-- [x] Scaffold engine + tests + docs de investigación/arquitectura.
-- [ ] Empaquetar: `pyproject.toml`, publicar en PyPI y Docker Hub.
-- [ ] `pip install hibrid && hibrid serve` funcionando en 1 línea.
-- [ ] CI en GitHub Actions (tests + lint).
+### Phase 0 — Consolidate the engine (≈1 week) · *almost done*
+- [x] Scaffold engine + tests + research/architecture docs.
+- [x] AI-agnostic (Anthropic + OpenAI dialects) and the **no-API-key orchestration layer**.
+- [ ] Packaging: `pyproject.toml`, publish to PyPI and Docker Hub.
+- [ ] `pip install hibrid && hibrid serve` working in one line.
+- [x] CI on GitHub Actions (tests).
 
-### Fase 1 — Calidad del router (2-3 semanas)
-- [ ] Router **kNN** sobre histórico de la propia máquina (mejora con el uso).
-- [ ] Evaluación contra **RouterBench/RouterEval** → cifra publicable del KPI
-      ("% resuelto local a paridad"). Es el dato que da credibilidad técnica.
-- [ ] Endurecer la **calibración de confianza** (el riesgo nº1 señalado por el equipo).
-- [ ] (Opcional) modo **co-generación** (speculative decoding) detrás de un flag.
+### Phase 1 — Router quality (2–3 weeks)
+- [ ] **kNN router** over the machine's own history (improves with use).
+- [ ] Evaluation against **RouterBench/RouterEval** → a publishable KPI ("% resolved locally at
+      parity"). This is the number that earns technical credibility.
+- [ ] Harden the **confidence calibration** (the #1 risk the team flagged).
+- [ ] (optional) **co-generation** mode (speculative decoding) behind a flag.
 
-### Fase 2 — El hub de comunidad (3-4 semanas) · *aquí nace la plataforma*
-- [ ] `hub/` FastAPI + Postgres: endpoints `POST /benchmarks`, `GET /benchmarks/leaderboard`,
-      `GET /priors?machine=...`, `GET/POST /policies`.
-- [ ] El engine: opt-in para **enviar** su micro-benchmark y **descargar** priors al arrancar.
-- [ ] `web/` landing + leaderboard público + docs (Astro o React/Vite).
-- [ ] Despliegue en `hibrid.tokenstree.eu` (Docker + nginx + certbot, §3).
+### Phase 2 — The community hub (3–4 weeks) · *the platform is born here*
+- [ ] `hub/` FastAPI + Postgres: `POST /benchmarks`, `GET /benchmarks/leaderboard`,
+      `GET /priors?machine=…`, `GET|POST /policies`.
+- [ ] The engine: opt-in to **submit** its micro-benchmark and **download** priors at startup.
+- [ ] `web/` landing + public leaderboard + docs.
+- [ ] Deploy to `hibrid.tokenstree.eu` (Docker + nginx + certbot, §3).
 
-### Fase 3 — Lanzamiento y comunidad (continuo)
-- [ ] Lanzar en GitHub (público), Show HN, r/LocalLLaMA, Product Hunt.
-- [ ] Leaderboard como gancho viral ("mira qué rinde tu Mac/RTX vs la media").
-- [ ] Programa de contribución de benchmarks y de *routing policies*.
-- [ ] Discord/Discussions; releases frecuentes; responder issues rápido.
-
----
-
-## 6. Cómo se crea la comunidad (el flywheel)
-
-1. **Gancho de entrada**: "instala hibrid y descubre qué LLM corre de verdad en TU máquina"
-   → el micro-benchmark da un resultado personal e inmediato que la gente quiere compartir.
-2. **Aporte que beneficia a todos**: ese benchmark alimenta el leaderboard y los priors →
-   el siguiente usuario con el mismo hardware enruta bien desde el minuto cero.
-3. **Estatus y comparación**: el leaderboard público ("tu M3 Max hace X tok/s, top 12%")
-   es contenido compartible y competitivo — el motor de viralidad de los GPU leaderboards.
-4. **Contribución profunda**: routing policies, nuevos backends locales, calibradores →
-   contribuidores técnicos (vía `good first issue` y CONTRIBUTING claro).
-5. **Coherencia de marca tokenstree**: enlazado desde tokenstree.eu y el resto del ecosistema;
-   misma estética y narrativa de "herramientas de usuario, privacidad primero".
-
-**Diferenciador defendible** (confirmado por el equipo de investigación): nadie más enruta
-por velocidad **medida** en la máquina del usuario, ni ofrece privacidad como override duro.
-La comunidad de benchmarks reales es además un **foso de datos** que un gateway cloud no puede
-replicar.
+### Phase 3 — Launch & community (continuous)
+- [ ] Launch on GitHub (public), Show HN, r/LocalLLaMA, Product Hunt.
+- [ ] The leaderboard as the viral hook ("see how your Mac/RTX does vs the average").
+- [ ] Programs for benchmark and routing-policy contributions.
+- [ ] Discord/Discussions; frequent releases; fast issue response.
 
 ---
 
-## 7. Riesgos y mitigaciones
+## 6. How the community is built (the flywheel)
 
-| Riesgo | Mitigación |
+1. **Entry hook**: "install hibrid and find out which LLM really runs on YOUR machine" → the
+   micro-benchmark gives a personal, immediate result people want to share.
+2. **A contribution that benefits everyone**: that benchmark feeds the leaderboard and the priors
+   → the next user with the same hardware routes well from minute zero.
+3. **Status and comparison**: the public leaderboard ("your M3 Max does X tok/s, top 12%") is
+   shareable, competitive content — the virality engine of GPU leaderboards.
+4. **Deeper contribution**: routing policies, new local backends, calibrators → technical
+   contributors (via `good first issue` and a clear CONTRIBUTING).
+5. **tokenstree brand coherence**: linked from tokenstree.eu and the rest of the ecosystem; same
+   "user tools, privacy first" aesthetic and narrative.
+
+**Defensible differentiator** (confirmed by the research team): nobody else routes by **measured**
+speed on the user's machine, offers privacy as a hard override, **and** reaches strong models
+through the user's existing agent subscription with no API key. The community of real benchmarks
+is also a **data moat** a cloud gateway cannot replicate.
+
+---
+
+## 7. Risks and mitigations
+
+| Risk | Mitigation |
 |---|---|
-| Calibración de confianza pobre → escala mal | Tests y eval dedicados (Fase 1); es la prioridad técnica |
-| Ollama añade routing automático y nos invade | Multi-proveedor + perilla privacidad/utilidad + comunidad de datos; moverse rápido |
-| Reinventar fontanería (gateways ya la tienen) | Montar transporte sobre LiteLLM si conviene; centrarse en la *capa de decisión* |
-| Privacidad: que los benchmarks filtren datos | Solo métricas de hardware/velocidad, anónimas y opt-in; nunca prompts |
-| Comunidad que no arranca | Gancho del leaderboard + 1-línea de instalación + `good first issue` de benchmarks |
+| Poor confidence calibration → bad escalation | Dedicated tests + eval (Phase 1); it's the top technical priority |
+| Ollama adds auto-routing and invades us | Multi-backend + privacy/utility knobs + data community; move fast |
+| Reinventing plumbing (gateways have it) | Build transport on LiteLLM if useful; focus on the *decision layer* |
+| Privacy: benchmarks leak data | Only anonymous hardware/speed metrics, opt-in; never prompts |
+| Community doesn't take off | Leaderboard hook + one-line install + `good first issue` benchmarks |

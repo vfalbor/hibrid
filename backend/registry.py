@@ -135,8 +135,12 @@ async def build_node_profile(use_cache: bool = True, benchmark: bool = True) -> 
 
 
 # Helpers de coste/calidad usados por el router.
-def local_quality(model: str, complexity: float) -> float:
-    return _local_quality(_estimate_params_b(model), complexity)
+def local_quality(model: str, complexity: float, axis: str = "general") -> float:
+    # Calidad = competencia conocida del modelo en el eje de la tarea (catálogo curado),
+    # degradada por la complejidad (un modelo pequeño sufre más en tareas difíciles).
+    from .models_catalog import capability
+    cap = capability(model, axis)
+    return max(0.05, cap - complexity * (1.0 - cap) * 0.8)
 
 
 def cloud_cost(model: str) -> float:

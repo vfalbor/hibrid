@@ -12,6 +12,7 @@ Reglas duras (overrides) antes del argmax:
 """
 from __future__ import annotations
 
+from . import models_catalog
 from .config import settings
 from .profiles import KIND_TO_TIER, ExecutionProfile, get_profile
 from .registry import NodeProfile, cloud_cost, cloud_quality, local_quality, params_b
@@ -43,9 +44,14 @@ def _select_profile(feat: TaskFeatures, opts: HibridOptions | None) -> Execution
 
 
 def _local_destination(node: NodeProfile, feat: TaskFeatures) -> Destination | None:
-    model = node.local_default or (node.local_models[0] if node.local_models else None)
-    if not model or not node.local_endpoint:
+    if not node.local_endpoint or not node.local_models:
         return None
+    # Elige el mejor modelo DISPONIBLE para el eje de la tarea que quepa en la máquina
+    # (no sólo el que tenga más parámetros): coding -> modelo competente en código, etc.
+    axis = models_catalog.axis_for_task(feat.task_type, feat.has_code)
+    model = (models_catalog.best_local_for(axis, node.local_models,
+                                           node.hardware.max_local_params_b)
+             or node.local_default or node.local_models[0])
     tps = node.tok_s.get(model, settings.min_local_tps)
     est_latency = _EST_OUTPUT_TOKENS / tps if tps > 0 else 999.0
     return Destination(
@@ -53,7 +59,7 @@ def _local_destination(node: NodeProfile, feat: TaskFeatures) -> Destination | N
         tier="local_free",
         model=model,
         endpoint=node.local_endpoint,
-        est_quality=local_quality(model, feat.complexity),
+        est_quality=local_quality(model, feat.complexity, axis),
         est_cost_usd=0.0,                 # local = sin coste de tokens
         est_latency_s=round(est_latency, 2),
         privacy_risk=0.0,                 # el dato no sale de la máquina

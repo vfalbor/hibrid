@@ -103,6 +103,18 @@ def test_skill_can_declare_profile():
     assert d.chosen.tier == "local_free"
 
 
+def test_task_aware_model_selection():
+    """Con varios modelos locales, una tarea de código elige el modelo competente en código."""
+    node = _node()
+    node.local_models = ["llama3.2:1b", "qwen2.5-coder:1.5b", "gemma2:2b"]
+    node.local_default = "gemma2:2b"
+    node.tok_s = {"llama3.2:1b": 30, "qwen2.5-coder:1.5b": 25, "gemma2:2b": 20}
+    feat = _feat("```python\ndef f(x): return x\n```\nFix and refactor this function.")
+    d = router.decide(node, feat, HibridOptions(allow_cloud=False))
+    assert d.chosen.kind == "local"
+    assert d.chosen.model == "qwen2.5-coder:1.5b"  # el especialista en código gana
+
+
 def test_deep_reason_allows_strong():
     node = _node(tps=40.0)
     feat = _feat("Diseña la arquitectura distribuida y analiza los trade-offs de "

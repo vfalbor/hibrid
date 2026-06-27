@@ -105,10 +105,12 @@ endpoint is the next item. Tell us where it breaks.
 
 ## Docs
 
-- [`docs/INVESTIGACION.md`](docs/INVESTIGACION.md) — research behind the design (a 3-agent study)
-- [`docs/ARQUITECTURA.md`](docs/ARQUITECTURA.md) — architecture
+- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — how the layers fit together
 - [`docs/EXECUTION_PROFILES.md`](docs/EXECUTION_PROFILES.md) — task-type routing & loop economics
-- [`docs/PLAN.md`](docs/PLAN.md) — roadmap and community plan
+- [`docs/MODELS.md`](docs/MODELS.md) — the curated local-model catalog & task-axis matching
+- [`docs/RESEARCH.md`](docs/RESEARCH.md) — research behind the design (a 3-agent study)
+- [`docs/ROADMAP.md`](docs/ROADMAP.md) — phases, the hub, and the community flywheel
+- [`docs/PLAN.md`](docs/PLAN.md) — deep community & hosting plan (original, Spanish)
 
 ## License
 

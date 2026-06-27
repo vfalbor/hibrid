@@ -1,0 +1,59 @@
+{
+  "machines": {
+    "eu": {
+      "label": "tokenstree.eu (idle)",
+      "profile": {
+        "host": "ubuntu",
+        "os": "Linux",
+        "arch": "x86_64",
+        "cpu": "AMD EPYC-Milan Processor",
+        "cores": 4,
+        "ram_gb": 8.3
+      },
+      "models": [
+        "llama3.2:1b",
+        "llama3.2:3b",
+        "qwen2.5-coder:1.5b",
+        "qwen2.5:0.5b",
+        "qwen2.5:1.5b"
+      ],
+      "mean_tok_s": 13.1,
+      "n_calls": 35
+    },
+    "es": {
+      "label": "tokenstree.es (trading)",
+      "profile": {
+        "host": "ubuntu",
+        "os": "Linux",
+        "arch": "x86_64",
+        "cpu": "AMD EPYC-Milan Processor",
+        "cores": 4,
+        "ram_gb": 8.3
+      },
+      "models": [
+        "llama3.2:1b",
+        "qwen2.5-coder:1.5b",
+        "qwen2.5:0.5b",
+        "qwen2.5:1.5b"
+      ],
+      "mean_tok_s": 23.6,
+      "n_calls": 28
+    },
+    "com": {
+      "label": "tokenstree.com (live primary)",
+      "profile": {
+        "host": "mail.tokenstree.com",
+        "os": "Linux",
+        "arch": "x86_64",
+        "cpu": "AMD EPYC-Milan Processor",
+        "cores": 4,
+        "ram_gb": 8.3
+      },
+      "models": [
+        "qwen2.5:0.5b"
+      ],
+      "mean_tok_s": 24.2,
+      "n_calls": 7
+    }
+  }
+}

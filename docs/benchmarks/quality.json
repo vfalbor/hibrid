@@ -1,0 +1,43 @@
+{
+  "_note": "Quality 0..1 judged by the orchestration/strong tier (no API key), at temperature 0, so machine-independent. Reference answers: translate='The cat sat on the carpet and watched the rain through the window'; classify=NEGATIVE; extract=[ana@acme.io,finance@acme.io]; summarize=faithful one sentence; code_fix=init r=1 (bug was r=0); code_write=correct is_palindrome; reason=ball=0.05. NOTE: max_tokens was 256, which truncated several 'reason' answers before the final number — see threats to validity.",
+
+  "qwen2.5:0.5b|translate": 1.0,
+  "qwen2.5:0.5b|classify": 1.0,
+  "qwen2.5:0.5b|extract": 0.0,
+  "qwen2.5:0.5b|summarize": 0.7,
+  "qwen2.5:0.5b|code_fix": 0.4,
+  "qwen2.5:0.5b|code_write": 0.3,
+  "qwen2.5:0.5b|reason": 0.5,
+
+  "llama3.2:1b|translate": 0.6,
+  "llama3.2:1b|classify": 1.0,
+  "llama3.2:1b|extract": 0.1,
+  "llama3.2:1b|summarize": 0.9,
+  "llama3.2:1b|code_fix": 0.6,
+  "llama3.2:1b|code_write": 1.0,
+  "llama3.2:1b|reason": 0.5,
+
+  "qwen2.5:1.5b|translate": 1.0,
+  "qwen2.5:1.5b|classify": 1.0,
+  "qwen2.5:1.5b|extract": 1.0,
+  "qwen2.5:1.5b|summarize": 0.9,
+  "qwen2.5:1.5b|code_fix": 0.6,
+  "qwen2.5:1.5b|code_write": 0.95,
+  "qwen2.5:1.5b|reason": 0.6,
+
+  "qwen2.5-coder:1.5b|translate": 1.0,
+  "qwen2.5-coder:1.5b|classify": 1.0,
+  "qwen2.5-coder:1.5b|extract": 1.0,
+  "qwen2.5-coder:1.5b|summarize": 0.9,
+  "qwen2.5-coder:1.5b|code_fix": 0.9,
+  "qwen2.5-coder:1.5b|code_write": 0.95,
+  "qwen2.5-coder:1.5b|reason": 0.6,
+
+  "llama3.2:3b|translate": 1.0,
+  "llama3.2:3b|classify": 1.0,
+  "llama3.2:3b|extract": 1.0,
+  "llama3.2:3b|summarize": 0.95,
+  "llama3.2:3b|code_fix": 1.0,
+  "llama3.2:3b|code_write": 1.0,
+  "llama3.2:3b|reason": 0.7
+}

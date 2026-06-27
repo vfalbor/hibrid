@@ -108,9 +108,10 @@ The easiest, most useful contribution is **your machine's benchmark**. See
 
 ## Status
 
-Day one, and honest about it. The decision engine is tested (`python tests/test_router.py`,
-`tests/test_dialects.py`), the OpenAI and Anthropic endpoints work, the benchmark registry is
-being seeded, and the confidence calibration sharpens with use. Streaming for the Anthropic
+Day one, and honest about it. The decision engine is tested (26 passing tests), the OpenAI and
+Anthropic endpoints work, the no-API-key orchestration layer is in, and a first
+[benchmark study](docs/benchmarks/) on three real CPU servers shows local models handling
+43–100 % of a task suite at parity (the fraction set by the machine). Streaming for the Anthropic
 endpoint is the next item. Tell us where it breaks.
 
 ## Docs
@@ -120,6 +121,7 @@ endpoint is the next item. Tell us where it breaks.
 - [`docs/EXECUTION_PROFILES.md`](docs/EXECUTION_PROFILES.md) — task-type routing & loop economics
 - [`docs/MODELS.md`](docs/MODELS.md) — the curated local-model catalog & task-axis matching
 - [`docs/RESEARCH.md`](docs/RESEARCH.md) — research behind the design (a 3-agent study)
+- [`docs/benchmarks/`](docs/benchmarks/) — **benchmark study**: local routing on three real CPU servers (charts + data)
 - [`docs/ROADMAP.md`](docs/ROADMAP.md) — phases, the hub, and the community flywheel
 - [`docs/PLAN.md`](docs/PLAN.md) — deep community & hosting plan ([Spanish original](docs/PLAN.es.md))
 

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Newsletter — LLM Daily Review — tokenstree.eu</title>
+  <meta name="description" content="Articles and findings from building an automated daily reviewer for HN tools. Weekly Top 5, trends, and lessons learned.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://tokenstree.eu/newsletter/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://tokenstree.eu/newsletter/">
+  <meta property="og:title" content="Newsletter — LLM Daily Review">
+  <meta property="og:description" content="Articles and findings from building an automated daily reviewer for HN tools. Weekly Top 5, trends, and lessons learned.">
+  <meta property="og:site_name" content="LLM Daily Review">
+
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Newsletter — LLM Daily Review">
+  <meta name="twitter:description" content="Articles and findings from building an automated daily reviewer for HN tools.">
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%232563eb'/%3E%3Ccircle cx='16' cy='10' r='3' fill='%23fff'/%3E%3Ccircle cx='9' cy='22' r='3' fill='%23fff'/%3E%3Ccircle cx='23' cy='22' r='3' fill='%23fff'/%3E%3Cline x1='16' y1='13' x2='9' y2='19' stroke='%23fff' stroke-width='1.5'/%3E%3Cline x1='16' y1='13' x2='23' y2='19' stroke='%23fff' stroke-width='1.5'/%3E%3C/svg%3E">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #fafaf8;
+      --surface: #fff;
+      --border: #e4e2da;
+      --text: #1a1a18;
+      --muted: #6b6a65;
+      --accent: #2563eb;
+      --accent-light: #dbeafe;
+      --radius: 10px;
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #111110;
+        --surface: #1c1c1a;
+        --border: #2e2e2b;
+        --text: #e8e6df;
+        --muted: #9a9891;
+        --accent-light: #1e3a5f;
+      }
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    nav {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      height: 52px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .brand {
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--text);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-right: auto;
+    }
+    .brand-logo { width: 26px; height: 26px; flex-shrink: 0; }
+    nav a { color: var(--muted); font-size: 13px; text-decoration: none; white-space: nowrap; }
+    nav a:hover { color: var(--text); }
+    nav a.active { color: var(--accent); }
+
+    .page { max-width: 720px; margin: 0 auto; padding: 48px 20px 80px; }
+
+    .page-header {
+      margin-bottom: 48px;
+    }
+    .page-header h1 {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+    .page-header p {
+      font-size: 14px;
+      color: var(--muted);
+      max-width: 500px;
+    }
+
+    .article-list {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .article-card {
+      display: block;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      text-decoration: none;
+      color: var(--text);
+      transition: border-color 0.15s;
+    }
+    .article-card:hover {
+      border-color: var(--accent);
+    }
+
+    .article-card-tag {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    .article-card-title {
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 1.4;
+      margin-bottom: 8px;
+    }
+    .article-card-summary {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+    .article-card-meta {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="brand">
+    <svg class="brand-logo" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+      <rect width="32" height="32" rx="8" fill="#2563eb"/>
+      <circle cx="16" cy="10" r="3" fill="#fff"/>
+      <circle cx="9" cy="22" r="3" fill="#fff"/>
+      <circle cx="23" cy="22" r="3" fill="#fff"/>
+      <line x1="16" y1="13" x2="9" y2="19" stroke="#fff" stroke-width="1.5"/>
+      <line x1="16" y1="13" x2="23" y2="19" stroke="#fff" stroke-width="1.5"/>
+      <line x1="9" y1="22" x2="23" y2="22" stroke="#fff" stroke-width="1.5"/>
+    </svg>
+    LLM Daily Review
+  </a>
+  <a href="https://github.com/vfalbor/llm-daily-review" target="_blank">GitHub</a>
+  <a href="https://github.com/vfalbor/llm-daily-review/tree/main/skills" target="_blank">Skills</a>
+  <a href="/newsletter/" class="active">Newsletter</a>
+</nav>
+
+<div class="page">
+  <div class="page-header">
+    <h1>Newsletter</h1>
+    <p>Articles and findings from building an automated daily reviewer for Hacker News tools. Open source, CC BY 4.0.</p>
+  </div>
+
+  <div class="article-list">
+    <a href="/newsletter/2026-W25-top-llm-tools-hacker-news.html" class="article-card">
+      <div class="article-card-tag">Weekly Top 5</div>
+      <div class="article-card-title">Top LLM &amp; AI Tools on Hacker News: Week of June 22 – June 28, 2026</div>
+      <div class="article-card-summary">We auto-tested 43 tools posted on HN the week of June 22 – June 28, 2026. Here are the top 5 — scored across 11 criteria including novelty, functionality, UX, and community.</div>
+      <div class="article-card-meta">June 28, 2026 · Weekly Top 5</div>
+    </a>
+
+    <a href="/newsletter/2026-06-27-three-servers-no-gpu-benchmark.html" class="article-card">
+      <div class="article-card-tag">Benchmark</div>
+      <div class="article-card-title">Two identical servers. One ran twice as fast.</div>
+      <div class="article-card-summary">We ran 70 LLM calls on three GPU-less production servers, no API keys. Same spec sheet, up to 2× the real speed. Small local models handled 43–100% of the work at parity — the share set by the machine, not the chip. A 0.5B model invented email addresses; a 1.5B coder topped code at its size. Charts, raw data and the method, including the parts that don&#x27;t flatter us.</div>
+      <div class="article-card-meta">June 27, 2026 · Benchmark</div>
+    </a>
+
+    <a href="/newsletter/2026-06-26-hibrid-router-that-knows-your-machine.html" class="article-card">
+      <div class="article-card-tag">Build report</div>
+      <div class="article-card-title">Your laptop already paid for a GPU. Your AI loops ignore it.</div>
+      <div class="article-card-summary">hibrid is an open-source router that knows what your machine can run and decides, automatically, what runs locally and what goes to the cloud. Loops run free on your hardware; the expensive model is saved for the one call that needs it.</div>
+      <div class="article-card-meta">June 26, 2026 · Build report</div>
+    </a>
+
+    <a href="/newsletter/2026-W24-top-llm-tools-hacker-news.html" class="article-card">
+      <div class="article-card-tag">Weekly Top 5</div>
+      <div class="article-card-title">Top LLM &amp; AI Tools on Hacker News: Week of June 15 – June 21, 2026</div>
+      <div class="article-card-summary">We auto-tested 30 tools posted on HN the week of June 15 – June 21, 2026. Here are the top 5 — scored across 11 criteria including novelty, functionality, UX, and community.</div>
+      <div class="article-card-meta">June 21, 2026 · Weekly Top 5</div>
+    </a>
+
+    <a href="/newsletter/2026-W23-top-llm-tools-hacker-news.html" class="article-card">
+      <div class="article-card-tag">Weekly Top 5</div>
+      <div class="article-card-title">Top LLM &amp; AI Tools on Hacker News: Week of June 8 – June 14, 2026</div>
+      <div class="article-card-summary">We auto-tested 30 tools posted on HN the week of June 8 – June 14, 2026. Here are the top 5 — scored across 11 criteria including novelty, functionality, UX, and community.</div>
+      <div class="article-card-meta">June 14, 2026 · Weekly Top 5</div>
+    </a>
+
+    <a href="/newsletter/2026-W22-top-llm-tools-hacker-news.html" class="article-card">
+      <div class="article-card-tag">Weekly Top 5</div>
+      <div class="article-card-title">Top LLM &amp; AI Tools on Hacker News: Week of June 1 – June 7, 2026</div>
+      <div class="article-card-summary">We auto-tested 34 tools posted on HN the week of June 1 – June 7, 2026. Here are the top 5 — scored across 11 criteria including novelty, functionality, UX, and community.</div>
+      <div class="article-card-meta">June 7, 2026 · Weekly Top 5</div>
+    </a>
+
+    <a href="/newsletter/2026-W21-top-llm-tools-hacker-news.html" class="article-card">
+      <div class="article-card-tag">Weekly Top 5</div>
+      <div class="article-card-title">Top LLM &amp; AI Tools on Hacker News: Week of May 25 – May 31, 2026</div>
+      <div class="article-card-summary">We auto-tested 29 tools posted on HN the week of May 25 – May 31, 2026. Here are the top 5 — scored across 11 criteria including novelty, functionality, UX, and community.</div>
+      <div class="article-card-meta">May 31, 2026 · Weekly Top 5</div>
+    </a>
+
+    <a href="/newsletter/2026-W20-top-llm-tools-hacker-news.html" class="article-card">
+      <div class="article-card-tag">Weekly Top 5</div>
+      <div class="article-card-title">Top LLM &amp; AI Tools on Hacker News: Week of May 18 – May 24, 2026</div>
+      <div class="article-card-summary">We auto-tested 22 tools posted on HN the week of May 18 – May 24, 2026. Here are the top 5 — scored across 11 criteria including novelty, functionality, UX, and community.</div>
+      <div class="article-card-meta">May 24, 2026 · Weekly Top 5</div>
+    </a>
+
+    <a href="/newsletter/2026-W19-top-llm-tools-hacker-news.html" class="article-card">
+      <div class="article-card-tag">Weekly Top 5</div>
+      <div class="article-card-title">Top LLM &amp; AI Tools on Hacker News: Week of May 11 – May 17, 2026</div>
+      <div class="article-card-summary">We auto-tested 38 tools posted on HN the week of May 11 – May 17, 2026. Here are the top 5 — scored across 11 criteria including novelty, functionality, UX, and community.</div>
+      <div class="article-card-meta">May 17, 2026 · Weekly Top 5</div>
+    </a>
+
+    <a href="/newsletter/2026-W18-top-llm-tools-hacker-news.html" class="article-card">
+      <div class="article-card-tag">Weekly Top 5</div>
+      <div class="article-card-title">Top LLM &amp; AI Tools on Hacker News: Week of May 4 – May 10, 2026</div>
+      <div class="article-card-summary">We auto-tested 28 tools posted on HN the week of May 4 – May 10, 2026. Here are the top 5 — scored across 11 criteria including novelty, functionality, UX, and community.</div>
+      <div class="article-card-meta">May 10, 2026 · Weekly Top 5</div>
+    </a>
+
+    <a href="/newsletter/2026-W17-top-llm-tools-hacker-news.html" class="article-card">
+      <div class="article-card-tag">Weekly Top 5</div>
+      <div class="article-card-title">Top LLM &amp; AI Tools on Hacker News: Week of April 27 – May 3, 2026</div>
+      <div class="article-card-summary">We auto-tested 30 tools posted on HN the week of April 27 – May 3, 2026. Here are the top 5 — scored across 11 criteria including novelty, functionality, UX, and community.</div>
+      <div class="article-card-meta">May 3, 2026 · Weekly Top 5</div>
+    </a>
+
+    <a href="/newsletter/2026-04-27-androidwars-agent-training.html" class="article-card">
+      <div class="article-card-tag">Build report</div>
+      <div class="article-card-title">I&#x27;m training combat agents in a hex-grid RTS so they&#x27;re ready when the drones are real</div>
+      <div class="article-card-summary">AndroidWars is a tick-based, API-driven RTS where the players are agents. They join mid-match, fight over houses with workers and drones, and carry their score across games. The skill stack — perception, target selection, resource pacing — is the same one I&#x27;d want piloting something with rotor blades.</div>
+      <div class="article-card-meta">April 27, 2026 · Build report</div>
+    </a>
+
+    <a href="/newsletter/2026-W16-top-llm-tools-hacker-news.html" class="article-card">
+      <div class="article-card-tag">Weekly Top 5</div>
+      <div class="article-card-title">Top LLM &amp; AI Tools on Hacker News: Week of April 20 – April 26, 2026</div>
+      <div class="article-card-summary">We auto-tested 35 tools posted on HN the week of April 20 – April 26, 2026. Here are the top 5 — scored across 11 criteria including novelty, functionality, UX, and community.</div>
+      <div class="article-card-meta">April 26, 2026 · Weekly Top 5</div>
+    </a>
+
+    <a href="/newsletter/2026-04-21-400-line-pipeline.html" class="article-card">
+      <div class="article-card-tag">Build report</div>
+      <div class="article-card-title">I wrote a 400-line pipeline that installs and scores every LLM tool on HN overnight</div>
+      <div class="article-card-summary">A Groq-backed pipeline boots a fresh Alpine container for every LLM launch on HN, installs the repo, runs an LLM-generated QA script, and scores the result across 11 criteria. Output is public. The hn_sentiment criterion is the one I most doubt.</div>
+      <div class="article-card-meta">April 21, 2026 · Build report</div>
+    </a>
+
+    <a href="/newsletter/2026-W14-top-llm-tools-hacker-news.html" class="article-card">
+      <div class="article-card-tag">Weekly Top 5</div>
+      <div class="article-card-title">Top LLM &amp; AI Tools on Hacker News: Week of April 13 – April 19, 2026</div>
+      <div class="article-card-summary">We auto-tested 55 tools posted on HN the week of April 13 – April 19, 2026. Here are the top 5 — scored across 11 criteria including novelty, functionality, UX, and community.</div>
+      <div class="article-card-meta">April 19, 2026 · Weekly Top 5</div>
+    </a>
+
+    <a href="/newsletter/2026-W15-top-llm-tools-hacker-news.html" class="article-card">
+      <div class="article-card-tag">Weekly Top 5</div>
+      <div class="article-card-title">Top LLM Tools on Hacker News: Week of April 7–14, 2026</div>
+      <div class="article-card-summary">The 5 best AI and LLM tools posted on Hacker News the week of April 7–14, 2026. Scored across 11 criteria: novelty, functionality, UX, community, documentation and more.</div>
+      <div class="article-card-meta">April 7, 2026 · Weekly Top 5</div>
+    </a>
+
+    <a href="/newsletter/2026-04-15-hn-overload.html" class="article-card">
+      <div class="article-card-tag">Behind the build</div>
+      <div class="article-card-title">I&#x27;ve been auto-scoring every tool that hits HN for weeks – here&#x27;s what I found — tokenstree.eu</div>
+      <div class="article-card-summary">A few weeks ago I built a pipeline to deal with HN overload. I didn&#x27;t expect the data to be interesting on its own.</div>
+      <div class="article-card-meta">January 1, 2026 · Behind the build</div>
+    </a>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your laptop already paid for a GPU. Your AI loops ignore it.</title>
+  <meta name="description" content="hibrid is an open-source router that knows what your machine can run and decides, automatically, what runs locally and what goes to the cloud. Loops run free on your hardware; the expensive model is saved for the one call that needs it.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://tokenstree.eu/newsletter/2026-06-26-hibrid-router-that-knows-your-machine.html">
+
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://tokenstree.eu/newsletter/2026-06-26-hibrid-router-that-knows-your-machine.html">
+  <meta property="og:title" content="Your laptop already paid for a GPU. Your AI loops ignore it.">
+  <meta property="og:description" content="A router that knows your hardware and splits LLM work local vs cloud automatically. Loops run free on your machine; private data never leaves it. Open source.">
+  <meta property="og:site_name" content="LLM Daily Review">
+  <meta property="article:published_time" content="2026-06-26">
+  <meta property="article:author" content="https://tokenstree.eu">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Your laptop already paid for a GPU. Your AI loops ignore it.">
+  <meta name="twitter:description" content="hibrid routes LLM work between local and cloud by task type. Loops go local-first; sensitive data stays on your machine. Open source.">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Your laptop already paid for a GPU. Your AI loops ignore it.",
+    "description": "hibrid: an open-source router that knows your hardware and splits LLM work between local and cloud automatically. Loops run local-first; private data stays on your machine.",
+    "datePublished": "2026-06-26",
+    "author": { "@type": "Organization", "name": "TokensTree", "url": "https://tokenstree.eu" },
+    "publisher": { "@type": "Organization", "name": "LLM Daily Review", "url": "https://tokenstree.eu" },
+    "url": "https://tokenstree.eu/newsletter/2026-06-26-hibrid-router-that-knows-your-machine.html",
+    "mainEntityOfPage": "https://tokenstree.eu/newsletter/2026-06-26-hibrid-router-that-knows-your-machine.html",
+    "keywords": ["LLM routing", "local LLM", "Ollama", "hybrid inference", "privacy", "open source", "AI agents", "cost optimization"]
+  }
+  </script>
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%232563eb'/%3E%3Ccircle cx='16' cy='10' r='3' fill='%23fff'/%3E%3Ccircle cx='9' cy='22' r='3' fill='%23fff'/%3E%3Ccircle cx='23' cy='22' r='3' fill='%23fff'/%3E%3Cline x1='16' y1='13' x2='9' y2='19' stroke='%23fff' stroke-width='1.5'/%3E%3Cline x1='16' y1='13' x2='23' y2='19' stroke='%23fff' stroke-width='1.5'/%3E%3Cline x1='9' y1='22' x2='23' y2='22' stroke='%23fff' stroke-width='1.5'/%3E%3C/svg%3E">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #fafaf8; --surface: #fff; --border: #e4e2da;
+      --text: #1a1a18; --muted: #6b6a65;
+      --accent: #2563eb; --accent-light: #dbeafe;
+      --radius: 10px;
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #111110; --surface: #1c1c1a; --border: #2e2e2b; --text: #e8e6df; --muted: #9a9891; --accent-light: #1e3a5f; }
+    }
+    body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.7; min-height: 100vh; }
+    nav {
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      padding: 0 24px; display: flex; align-items: center; gap: 24px;
+      height: 52px; position: sticky; top: 0; z-index: 100;
+    }
+    .brand { font-weight: 700; font-size: 15px; color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 8px; margin-right: auto; }
+    .brand-logo { width: 26px; height: 26px; flex-shrink: 0; }
+    nav a { color: var(--muted); font-size: 13px; text-decoration: none; white-space: nowrap; }
+    nav a:hover { color: var(--text); }
+    nav a.active { color: var(--accent); }
+
+    .page { max-width: 720px; margin: 0 auto; padding: 48px 20px 80px; }
+
+    .back-link { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); text-decoration: none; margin-bottom: 36px; }
+    .back-link:hover { color: var(--text); }
+
+    .article-meta { margin-bottom: 32px; }
+    .article-tag { display: inline-block; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--accent); background: var(--accent-light); padding: 3px 10px; border-radius: 20px; margin-bottom: 16px; }
+    .article-title { font-size: 30px; font-weight: 700; line-height: 1.25; letter-spacing: -0.02em; margin-bottom: 12px; }
+    .article-date { font-size: 13px; color: var(--muted); }
+
+    .article-body { font-size: 16px; line-height: 1.75; }
+    .article-body p { margin-bottom: 20px; }
+    .article-body h2 { font-size: 19px; font-weight: 600; margin: 40px 0 14px; letter-spacing: -0.01em; }
+    .article-body strong { font-weight: 600; color: var(--text); }
+    .article-body a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+    .article-body a:hover { opacity: 0.8; }
+    .article-body ol, .article-body ul { padding-left: 22px; margin-bottom: 20px; }
+    .article-body li { margin-bottom: 8px; }
+    .article-body code { background: var(--accent-light); color: var(--accent); padding: 2px 6px; border-radius: 4px; font-size: 13px; font-family: var(--mono); }
+    .article-body em { color: var(--text); font-style: italic; }
+    figure.chart { margin: 26px 0; }
+    figure.chart img { width: 100%; height: auto; border: 1px solid var(--border); border-radius: 8px; background: #fff; }
+    figure.chart figcaption { color: var(--muted); font-size: 13px; margin-top: 8px; line-height: 1.5; }
+
+    .review-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin: 28px 0;
+      font-size: 14px;
+    }
+    .review-head {
+      display: flex; justify-content: space-between; align-items: baseline;
+      gap: 12px; margin-bottom: 4px; flex-wrap: wrap;
+    }
+    .review-title { font-size: 16px; font-weight: 700; letter-spacing: -0.01em; }
+    .review-title a { color: var(--text); text-decoration: none; }
+    .review-title a:hover { color: var(--accent); }
+    .review-score { font-variant-numeric: tabular-nums; font-weight: 700; color: var(--accent); white-space: nowrap; }
+    .review-tag { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 14px; font-family: var(--mono); }
+    .review-scores {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 4px 16px; margin: 10px 0 14px;
+      font-family: var(--mono); font-size: 13px;
+    }
+    .review-scores span { color: var(--muted); }
+    .review-scores b { color: var(--text); font-weight: 600; float: right; }
+    .review-quote {
+      border-top: 1px solid var(--border);
+      padding-top: 12px;
+      color: var(--muted);
+      font-style: italic;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .divider { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+
+    .footer-cta { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-top: 48px; text-align: center; }
+    .footer-cta p { font-size: 14px; color: var(--muted); margin-bottom: 12px; }
+    .footer-cta .links { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+    .footer-cta .links a { font-size: 13px; color: var(--accent); text-decoration: none; font-weight: 500; }
+    .footer-cta .links a:hover { opacity: 0.8; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="brand">
+    <svg class="brand-logo" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+      <rect width="32" height="32" rx="8" fill="#2563eb"/>
+      <circle cx="16" cy="10" r="3" fill="#fff"/>
+      <circle cx="9" cy="22" r="3" fill="#fff"/>
+      <circle cx="23" cy="22" r="3" fill="#fff"/>
+      <line x1="16" y1="13" x2="9" y2="19" stroke="#fff" stroke-width="1.5"/>
+      <line x1="16" y1="13" x2="23" y2="19" stroke="#fff" stroke-width="1.5"/>
+      <line x1="9" y1="22" x2="23" y2="22" stroke="#fff" stroke-width="1.5"/>
+    </svg>
+    LLM Daily Review
+  </a>
+  <a href="https://github.com/vfalbor/llm-daily-review" target="_blank">GitHub</a>
+  <a href="https://github.com/vfalbor/llm-daily-review/tree/main/skills" target="_blank">Skills</a>
+  <a href="/newsletter/" class="active">Newsletter</a>
+</nav>
+
+<div class="page">
+  <a href="/newsletter/" class="back-link">← All articles</a>
+
+
+  <div class="article-meta">
+    <span class="article-tag">Build report</span>
+    <h1 class="article-title">Your laptop already paid for a GPU. Your AI loops ignore it.</h1>
+    <span class="article-date">June 26, 2026 · Open source · Apache-2.0 · Local-first</span>
+  </div>
+
+  <div class="article-body">
+
+    <p>You've got an agent refining code. It writes, runs the tests, fails, fixes, runs again. Twenty rounds. Fifty. Every round is a call to a paid model.</p>
+
+    <p>None of those rounds needed the best model in the world. Most of them a small open-weights model running on the machine in front of you would have handled. But they all went to the cloud, at premium rates, because your tooling couldn't tell the difference.</p>
+
+    <p>That's the thing we built to fix. It's called <strong>hibrid</strong>, it's open source, and the idea is easy to say and oddly hard to find: <strong>a router that knows what your machine can run and decides, on its own, what runs locally and what goes to the cloud. Without you thinking about it.</strong></p>
+
+    <h2>the gap nobody looks at</h2>
+
+    <p>The market split in two.</p>
+
+    <p>On one side, the cloud gateways — OpenRouter, LiteLLM and the rest. They route well between paid models. But your computer doesn't exist to them: your GPU, your 32GB of RAM, the Mac with unified memory that can hold a 70B — none of it enters the math.</p>
+
+    <p>On the other side, the local apps — Ollama, LM Studio. They run models on your machine beautifully. But deciding when to use local and when to use the cloud is on you, by hand, model by model.</p>
+
+    <p>The crossing of the two — an automatic router that looks at your hardware <em>and</em> your access to paid models and splits the work by task — until now only lived in research papers. Not in something you can install.</p>
+
+    <h2>what hibrid does</h2>
+
+    <p>Three decisions, all automatic, all transparent.</p>
+
+    <p><strong>It knows what your machine runs, for real.</strong> On startup hibrid detects your RAM, your VRAM, your chip, and runs a micro-benchmark that measures the <em>actual</em> tokens-per-second of the models you have. It doesn't trust a table off the internet. It measures your machine. As far as we can tell, no other router does this.</p>
+
+    <p><strong>It splits by the type of task, not just the question.</strong> This is the piece that changes the bill. A one-off hard task can earn the expensive model: you pay for it once. But a <em>loop</em> — refining code, iterative QA — is dozens or hundreds of calls. hibrid sends those <strong>local first</strong> and saves the paid model for the one moment it earns its keep: the final check. The loop runs free; the expensive model signs off. Once.</p>
+
+    <p><strong>Your sensitive data doesn't leave your machine.</strong> If hibrid spots personal data in what you're about to send — an email, an ID number, a key — it forces local execution. It's not a preference you can forget to turn on. It's the rule. A cloud gateway can't promise you that: your text already traveled to a third party before anything was decided.</p>
+
+    <p>And all of this speaks the language you already use: an OpenAI-compatible API. Adopting hibrid is changing the URL. That's it.</p>
+
+    <h2>update — we measured it on three real servers</h2>
+
+    <p>Since this went out we ran hibrid's first benchmark on three of our own CPU-only servers (4 cores, 8GB, no GPU). Two findings worth pinning here.</p>
+
+    <figure class="chart">
+      <img src="/newsletter/img/tps.png" alt="Measured tokens per second per model across three identical-spec servers">
+      <figcaption>Same spec sheet, up to ~2× difference in real tokens/second. No router that trusts the spec can know this — hibrid measures it at startup.</figcaption>
+    </figure>
+
+    <figure class="chart">
+      <img src="/newsletter/img/local_parity.png" alt="Percent of tasks solved locally at parity per machine">
+      <figcaption>How much each machine kept off the paid tier: 100% on the box that could hold a 3B model, down to 43% on the one stuck with a 0.5B. The machine decides how much is free.</figcaption>
+    </figure>
+
+    <p>One more change since launch: the strong tier no longer needs an API key. hibrid now reaches stronger models through an agent you're already signed into — <code>claude -p</code>, <code>codex</code>, <code>opencode</code>, <code>copilot</code> — so it's your subscription doing the work, not a metered key. The <a href="/newsletter/2026-06-27-three-servers-no-gpu-benchmark.html">full benchmark write-up is here</a>, with the third chart and the parts that don't flatter us.</p>
+
+    <h2>why this belongs to the community, not to us</h2>
+
+    <p>hibrid gets better when it knows what each machine runs. And we don't know that — you do, each of you with your own hardware.</p>
+
+    <p>So the core piece is a shared benchmark registry. You install hibrid, it measures your machine, and — if you want — you share the result: hardware and speed only, never your prompts. In return, the next person who shows up with a laptop like yours routes well from minute one, without waiting to measure.</p>
+
+    <p>You contribute a data point that costs you nothing and saves the next person money. The next person does the same for you. That's a community, not a user list. The code is Apache-2.0; the routing profiles are shared and improved together. If you've got an unusual machine, your benchmark is exactly what the project is missing.</p>
+
+    <h2>how we built it — in an afternoon, with a team of agents</h2>
+
+    <p>One detail that says something about the moment we're in. hibrid's design didn't come out of a single head. We stood up a team of three AI agents working in parallel: one swept the scientific literature on cloud-local routing, one mapped which models run on which hardware and at what real speed, and a third compared everything already on the market and crossed its findings with the other two.</p>
+
+    <p>The design came out of that, and the code came out of the design. Three agents researching as a team, not as three separate searches. It's also exactly the kind of work — long research and refinement loops — that hibrid is built for.</p>
+
+    <h2>a fair warning</h2>
+
+    <p>This is day one. The engine works and the decision logic is tested, but the benchmark registry is just being seeded and the confidence calibration will get sharper the more it's used. If you route something hard to a local model that can't handle it, the cascade is supposed to catch it and escalate — that's the part I'd push on hardest if you're kicking the tires. Tell me where it breaks.</p>
+
+    <h2>try it</h2>
+
+    <pre style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px 16px;overflow-x:auto;font-family:var(--mono);font-size:13px;line-height:1.6;margin-bottom:20px;"><code style="background:none;color:var(--text);padding:0;">pip install hibrid
+hibrid serve
+curl localhost:8095/v1/node   # see what it says about your machine</code></pre>
+
+    <p>Point your usual client at <code>localhost:8095</code> and let it decide. If it saves you a bill, pay it back: share your machine's benchmark in the repo. It's the easiest contribution and the most useful one.</p>
+
+    <p><strong>The router that knows your machine. Open source. Yours.</strong></p>
+
+  </div>
+
+  <div class="footer-cta">
+    <p>hibrid is an open-source local-first router for LLM workloads. Run it on your own machine; it decides what stays local and what goes to the cloud, and your private data never leaves your box.</p>
+    <div class="links">
+      <a href="https://hibrid.tokenstree.eu">hibrid.tokenstree.eu</a>
+      <a href="/newsletter/">Newsletter</a>
+      <a href="https://tokenstree.eu/">tokenstree.eu</a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

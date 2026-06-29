@@ -20,9 +20,11 @@ from __future__ import annotations
 
 import asyncio
 import os
+import re
 import shutil
+import subprocess
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 from .providers import GenerationResult, _approx_tokens
 
@@ -30,25 +32,45 @@ from .providers import GenerationResult, _approx_tokens
 # Cada entrada define: binario, cómo construir el comando para un prompt+modelo, y los
 # modelos (lógicos) que sirve y a qué tier. Las plantillas usan {model}; el prompt va por
 # stdin para no chocar con el quoting del shell.
+# Algunos CLIs aceptan alias de modelo en lugar del id completo (p.ej. la CLI de Claude
+# espera "haiku"/"sonnet"/"opus", no "claude-haiku-4-5-20251001"). Se mapea aquí.
+MODEL_ALIASES: dict[str, str] = {
+    "claude-opus-4-8": "opus",
+    "claude-sonnet-4-6": "sonnet",
+    "claude-haiku-4-5-20251001": "haiku",
+}
+
+# Texto que delata que el agente NO está autenticado / sin acceso aunque salga con código 0.
+# Si aparece en la salida, el backend se considera caído (se reenruta / se descarta).
+_ERROR_MARKERS = re.compile(
+    r"(?i)(does not have access|please login|not logged in|log in to|unauthorized|"
+    r"authentication|invalid api key|no api key|forbidden|quota|rate limit|"
+    r"usage limit|credit balance|command not found)")
+
+
 @dataclass(frozen=True)
 class CliSpec:
     agent: str
     binary: str
     args: list[str]                 # plantilla; {model} se sustituye, prompt por stdin
     models: list[str]               # modelos orquestados que ofrece (ver models_catalog)
-    version_args: list[str] = field(default_factory=lambda: ["--version"])
+    aliased: bool = True            # ¿sustituir el id por su alias de MODEL_ALIASES?
 
 
 CLI_SPECS: list[CliSpec] = [
     CliSpec("claude", "claude", ["-p", "--model", "{model}"],
             ["claude-opus-4-8", "claude-sonnet-4-6", "claude-haiku-4-5-20251001"]),
     CliSpec("codex", "codex", ["exec", "--model", "{model}", "-"],
-            ["gpt-4o", "gpt-4o-mini"]),
+            ["gpt-4o", "gpt-4o-mini"], aliased=False),
     CliSpec("opencode", "opencode", ["run", "--model", "{model}"],
-            ["claude-sonnet-4-6", "gpt-4o", "gpt-4o-mini"]),
+            ["claude-sonnet-4-6", "gpt-4o", "gpt-4o-mini"], aliased=False),
     CliSpec("copilot", "copilot", ["-p", "--model", "{model}"],
-            ["gpt-4o", "gpt-4o-mini"]),
+            ["gpt-4o", "gpt-4o-mini"], aliased=False),
 ]
+
+
+def _model_arg(spec: CliSpec, model: str) -> str:
+    return MODEL_ALIASES.get(model, model) if spec.aliased else model
 
 
 @dataclass
@@ -69,18 +91,24 @@ class Backend:
 # --------------------------- descubrimiento -------------------------------------
 
 def _cli_available(spec: CliSpec) -> bool:
-    """¿El binario existe? (La auth real se asume si está instalado; un health-prompt
-    se puede activar con HIBRID_BACKEND_HEALTHCHECK=1 para verificar login.)"""
+    """¿El agente está instalado Y operativo? No basta con que exista el binario: un CLI
+    presente pero SIN login responde con un error de acceso (a veces con código 0) y haría
+    fallar el routing. Por defecto se hace un health-prompt real y se descarta el backend si
+    la salida delata falta de acceso. Desactivable con HIBRID_BACKEND_HEALTHCHECK=0 (sólo
+    comprueba el binario; entonces la robustez recae en el fallback de ejecución)."""
     if not shutil.which(spec.binary):
         return False
-    if os.getenv("HIBRID_BACKEND_HEALTHCHECK", "0") == "1":
-        try:
-            p = __import__("subprocess").run(
-                [spec.binary, *spec.version_args], capture_output=True, timeout=20)
-            return p.returncode == 0
-        except Exception:
-            return False
-    return True
+    if os.getenv("HIBRID_BACKEND_HEALTHCHECK", "1") == "0":
+        return True
+    model = _model_arg(spec, spec.models[-1])  # el más barato (último de la lista)
+    args = [a.replace("{model}", model) for a in spec.args]
+    try:
+        p = subprocess.run([spec.binary, *args], input=b"ping",
+                           capture_output=True, timeout=45)
+    except Exception:
+        return False
+    out = (p.stdout + p.stderr).decode(errors="replace")
+    return p.returncode == 0 and not _ERROR_MARKERS.search(out) and bool(out.strip())
 
 
 def discover_backends() -> list[Backend]:
@@ -152,7 +180,7 @@ async def run_backend(backend: Backend, model: str, messages: list[dict],
 
 async def _run_cli(backend: Backend, model: str, messages: list[dict]) -> GenerationResult:
     assert backend.spec is not None
-    args = [a.replace("{model}", model) for a in backend.spec.args]
+    args = [a.replace("{model}", _model_arg(backend.spec, model)) for a in backend.spec.args]
     prompt = _messages_to_prompt(messages)
     t0 = time.perf_counter()
     proc = await asyncio.create_subprocess_exec(
@@ -168,9 +196,12 @@ async def _run_cli(backend: Backend, model: str, messages: list[dict]) -> Genera
         proc.kill()
         raise RuntimeError(f"backend cli:{backend.agent} timeout")
     dt = time.perf_counter() - t0
-    if proc.returncode != 0:
-        raise RuntimeError(f"backend cli:{backend.agent} error: {err.decode()[:200]}")
-    text = out.decode().strip()
+    text = out.decode(errors="replace").strip()
+    combined = text + "\n" + err.decode(errors="replace")
+    # Algunos agentes (p.ej. claude sin login) imprimen el error en stdout con código 0.
+    if proc.returncode != 0 or not text or _ERROR_MARKERS.search(combined):
+        snippet = (combined.strip() or "sin salida")[:200]
+        raise RuntimeError(f"backend cli:{backend.agent} error: {snippet}")
     return GenerationResult(text, _approx_tokens(prompt), _approx_tokens(text), dt)
 
 

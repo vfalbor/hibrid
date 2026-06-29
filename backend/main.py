@@ -119,6 +119,43 @@ async def _run(dest: Destination, messages: list[dict], temperature: float,
                                           temperature, max_tokens)
 
 
+def _mark_backend_down(node: NodeProfile, backend_id: str | None) -> None:
+    """Marca un backend de orquestación como no disponible y purga de cloud_models los
+    modelos que ya no sirve ningún backend disponible, para no volver a enrutar ahí."""
+    for b in node.backends:
+        if backend_id and b.id == backend_id:
+            b.available = False
+    served = backends_mod.available_orchestrated_models(node.backends)
+    node.cloud_models = [m for m in node.cloud_models if m in served]
+
+
+async def _run_resilient(dest: Destination, node: NodeProfile, messages: list[dict],
+                         temperature: float, max_tokens: int | None,
+                         candidates: list[Destination]):
+    """Ejecuta `dest`; si es de pago y su backend falla (CLI sin login, timeout, etc.),
+    marca el backend caído y CAE a local — un backend roto nunca debe tumbar la petición.
+    Devuelve (result, used_dest, note). Lanza HTTPException sólo si no queda nada."""
+    try:
+        return await _run(dest, messages, temperature, max_tokens), dest, ""
+    except HTTPException:
+        raise
+    except Exception as e:
+        if dest.kind == "local":
+            raise HTTPException(status_code=502, detail=f"local inference failed: {e}")
+        _mark_backend_down(node, dest.backend)
+        note = (f" | backend {dest.backend or dest.tier} failed "
+                f"({str(e)[:80]}) → fell back to local")
+        local = next((c for c in candidates if c.kind == "local"), None)
+        if local is not None:
+            try:
+                return await _run(local, messages, temperature, max_tokens), local, note
+            except Exception as e2:
+                raise HTTPException(status_code=502,
+                                    detail=f"local fallback also failed: {e2}")
+        raise HTTPException(status_code=503,
+                            detail=f"backend {dest.backend} failed and no local fallback: {e}")
+
+
 async def _route_and_run(messages: list[ChatMessage], opts, temperature: float,
                          max_tokens: int | None):
     """Núcleo común a todos los dialectos: clasifica, decide, ejecuta y aplica la
@@ -136,7 +173,11 @@ async def _route_and_run(messages: list[ChatMessage], opts, temperature: float,
     allow_cloud = opts.allow_cloud if opts else True
 
     t0 = time.perf_counter()
-    result = await _run(decision.chosen, raw_messages, temperature, max_tokens)
+    result, used, note = await _run_resilient(
+        decision.chosen, node, raw_messages, temperature, max_tokens, decision.candidates)
+    if used is not decision.chosen:           # hubo fallback: refleja el destino REAL
+        decision.chosen = used
+        decision.reason += note
     confidence = None
     escalated = False
 
@@ -158,13 +199,23 @@ async def _route_and_run(messages: list[ChatMessage], opts, temperature: float,
                     target = cand
                     break
             if target:
-                result = await _run(target, raw_messages, temperature, max_tokens)
-                escalated = True
-                decision.escalated = True
-                decision.chosen = target
-                decision.reason += (f" | escalado a {target.tier} (conf {confidence:.2f}"
-                                    f" < {settings.escalation_confidence}, tope perfil={prof.escalate_to})")
-                cal.update(raw, correct=False)
+                # Si el backend de escalado falla, NO tumbamos la petición: nos quedamos
+                # con el resultado local ya obtenido.
+                try:
+                    result = await _run(target, raw_messages, temperature, max_tokens)
+                    escalated = True
+                    decision.escalated = True
+                    decision.chosen = target
+                    decision.reason += (f" | escalado a {target.tier} (conf {confidence:.2f}"
+                                        f" < {settings.escalation_confidence}, tope perfil={prof.escalate_to})")
+                    cal.update(raw, correct=False)
+                except Exception as e:
+                    _mark_backend_down(node, target.backend)
+                    decision.reason += (f" | escalado a {target.tier} falló "
+                                        f"({str(e)[:60]}); se mantiene local")
+                    cal.update(raw, correct=True)
+            else:
+                cal.update(raw, correct=True)
         else:
             cal.update(raw, correct=True)
 

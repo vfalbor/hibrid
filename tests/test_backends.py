@@ -61,12 +61,80 @@ def test_discover_handles_no_agents(monkeypatch):
 
 
 def test_discover_finds_logged_in_cli(monkeypatch):
+    # Modo barato (sin health-prompt real): disponibilidad por presencia del binario.
+    monkeypatch.setenv("HIBRID_BACKEND_HEALTHCHECK", "0")
     monkeypatch.setattr(B.shutil, "which", lambda b: f"/usr/bin/{b}" if b == "claude" else None)
     monkeypatch.delenv("HIBRID_SKILLS_URL", raising=False)
     bks = B.discover_backends()
     claude = next(b for b in bks if b.id == "cli:claude")
     assert claude.available
     assert "claude-opus-4-8" in B.available_orchestrated_models(bks)
+
+
+# ----------------------- healthcheck real + alias + detección de error -----------------------
+
+class _FakeProc:
+    def __init__(self, stdout=b"", stderr=b"", returncode=0):
+        self.stdout, self.stderr, self.returncode = stdout, stderr, returncode
+
+
+def test_cli_available_rejects_unauthed(monkeypatch):
+    """Un CLI presente pero SIN login (imprime el error de acceso, a veces con código 0)
+    NO debe anunciarse como disponible."""
+    monkeypatch.setenv("HIBRID_BACKEND_HEALTHCHECK", "1")
+    monkeypatch.setattr(B.shutil, "which", lambda b: f"/usr/bin/{b}" if b == "claude" else None)
+    monkeypatch.setattr(B.subprocess, "run", lambda *a, **k: _FakeProc(
+        stdout=b"Your organization does not have access to Claude. Please login again."))
+    bks = B.discover_backends()
+    assert not next(b for b in bks if b.id == "cli:claude").available
+    assert B.available_orchestrated_models(bks) == []
+
+
+def test_cli_available_accepts_working(monkeypatch):
+    monkeypatch.setenv("HIBRID_BACKEND_HEALTHCHECK", "1")
+    monkeypatch.setattr(B.shutil, "which", lambda b: f"/usr/bin/{b}" if b == "claude" else None)
+    monkeypatch.setattr(B.subprocess, "run", lambda *a, **k: _FakeProc(stdout=b"pong"))
+    bks = B.discover_backends()
+    assert next(b for b in bks if b.id == "cli:claude").available
+
+
+def test_model_alias_mapping():
+    claude = next(s for s in B.CLI_SPECS if s.agent == "claude")
+    codex = next(s for s in B.CLI_SPECS if s.agent == "codex")
+    assert B._model_arg(claude, "claude-haiku-4-5-20251001") == "haiku"
+    assert B._model_arg(claude, "claude-opus-4-8") == "opus"
+    assert B._model_arg(codex, "gpt-4o") == "gpt-4o"  # codex no usa alias
+
+
+def test_error_markers_regex():
+    assert B._ERROR_MARKERS.search("Your organization does not have access")
+    assert B._ERROR_MARKERS.search("Please login again")
+    assert not B._ERROR_MARKERS.search("def fact(n): return 1")
+
+
+def test_run_cli_raises_on_auth_error_in_stdout(monkeypatch):
+    """El error real que tumbaba la petición: claude sin login imprime el error en STDOUT
+    con código 0. _run_cli debe detectarlo y lanzar (para que el router caiga a local)."""
+    import asyncio
+    import pytest
+
+    class FakeProc:
+        returncode = 0
+        async def communicate(self, data):
+            return (b"Your organization does not have access to Claude. Please login.", b"")
+        def kill(self):
+            pass
+
+    async def fake_exec(*a, **k):
+        return FakeProc()
+
+    monkeypatch.setattr(B.asyncio, "create_subprocess_exec", fake_exec)
+    spec = next(s for s in B.CLI_SPECS if s.agent == "claude")
+    backend = Backend("cli:claude", "cli", "claude", ["claude-haiku-4-5-20251001"],
+                      True, spec=spec)
+    with pytest.raises(RuntimeError):
+        asyncio.run(B.run_backend(backend, "claude-haiku-4-5-20251001",
+                                  [{"role": "user", "content": "hi"}], 0.0, 64))
 
 
 def test_discover_service_and_passthrough(monkeypatch):

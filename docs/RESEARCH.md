@@ -9,11 +9,13 @@ hardware.
 ## 1. What hibrid is
 
 A transparent router that sits under existing AI tools (Claude Code, Gemini CLI, aider,
-Copilot) and sends each call to the cheapest model that can do the job — a cloud model when
+Copilot) and sends each call to the cheapest model that can do the job — a strong model when
 it matters, a model on the user's own machine for everything in between — based on:
 
 - the machine's real capabilities (RAM, VRAM, chip, measured tokens/sec),
-- the models the user can reach (local runtimes + cloud keys),
+- the models the user can reach (local runtimes + an orchestration backend — an agent CLI,
+  a skills service or harness passthrough — reached through the user's existing subscription,
+  no API key),
 - the task type and complexity,
 - cost, latency and privacy.
 

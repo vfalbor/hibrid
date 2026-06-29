@@ -18,7 +18,8 @@ Legend: ✅ done · ⬜ planned.
   at hibrid unchanged.
 - ✅ Curated model catalog — pick the best *available* local model **for the task axis**
   (code/reasoning/general), not just the one with the most parameters (`docs/MODELS.md`).
-- ✅ Tests green (`tests/test_router.py`, `tests/test_dialects.py`) and CI on every PR.
+- ✅ Tests green (`tests/test_router.py`, `tests/test_backends.py`, `tests/test_dialects.py` —
+  31 passing) and CI on every PR.
 - ⬜ Packaging: publish to PyPI and Docker Hub so `pip install hibrid && hibrid serve` is one line.
 - ⬜ **Streaming SSE** for the Anthropic endpoint — the one gap real coding agents need for a
   fully transparent drop-in. *Next item.*

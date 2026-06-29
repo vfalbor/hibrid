@@ -28,12 +28,15 @@ adds a well-documented profile is welcome.
 git clone https://github.com/vfalbor/hibrid && cd hibrid
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-python3 tests/test_router.py      # decision engine — should print 10/10 OK
-python3 tests/test_dialects.py    # API dialect translation — 4/4 OK
+python3 -m pytest -q                # full suite — 31 passing tests
+# or run a file standalone (no pytest):
+python3 tests/test_router.py        # decision engine — prints 11/11 tests OK
+python3 tests/test_dialects.py      # API dialect translation — 4/4 OK
+# tests/test_backends.py (orchestration backends) uses monkeypatch → run via pytest
 ```
 
-- Keep the **tests green** and add tests for new behaviour (the decision engine is tested
-  without network access).
+- Keep the **tests green** and add tests for new behaviour (the decision engine and the
+  orchestration backends are tested without network access).
 - Commit style: `feat(scope): …`, `fix(scope): …`, `docs: …`.
 - Open the PR against `main`. CI runs the tests automatically.
 

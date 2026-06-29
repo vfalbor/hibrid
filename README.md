@@ -108,7 +108,7 @@ The easiest, most useful contribution is **your machine's benchmark**. See
 
 ## Status
 
-Day one, and honest about it. The decision engine is tested (26 passing tests), the OpenAI and
+Day one, and honest about it. The decision engine is tested (31 passing tests), the OpenAI and
 Anthropic endpoints work, the no-API-key orchestration layer is in, and a first
 [benchmark study](docs/benchmarks/) on three real CPU servers shows local models handling
 43–100 % of a task suite at parity (the fraction set by the machine). Streaming for the Anthropic

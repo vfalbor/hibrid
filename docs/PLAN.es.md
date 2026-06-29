@@ -26,8 +26,10 @@ hibrid NO es un gateway central (la inferencia local corre en la máquina de cad
 Por eso se separa en dos componentes con responsabilidades distintas:
 
 ### A) `hibrid-engine` (lo que corre en la máquina del usuario) — YA construido
-El scaffold actual: FastAPI local, API OpenAI-compatible, profiler, micro-benchmark,
-router por utilidad, cascada con calibración. Es el **producto open-source** que la gente
+El scaffold actual: FastAPI local, API OpenAI- y Anthropic-compatible, profiler, micro-
+benchmark, router por utilidad, cascada con calibración y la **capa de orquestación
+adaptativa** (alcanza el tier de pago a través de un agente CLI / servicio de skills /
+passthrough del harness — sin API key). Es el **producto open-source** que la gente
 descarga y ejecuta. No requiere cuenta. Privacidad por defecto.
 
 ### B) `hibrid-hub` (lo que se aloja en `hibrid.tokenstree.eu`) — a construir
@@ -61,8 +63,10 @@ hub**; solo métricas de hardware/velocidad anónimas y *si el usuario lo activa
 |---|---|---|---|
 | Router + utilidad + cascada | engine (local) | ✅ hecho | FastAPI/Python |
 | **Perfiles de ejecución por tipo de tarea** (loops local-first) | engine (local) | ✅ hecho | ver `EXECUTION_PROFILES.md` |
+| **Matriz de política tarea → LLM** | engine (local) | ✅ hecho | `task_policy.py`, ver `ORCHESTRATION.md` |
+| **Backends de orquestación adaptativos (sin API key)** | engine (local) | ✅ hecho | `backends.py` (CLI/service/passthrough) |
 | Profiler hardware + micro-benchmark | engine (local) | ✅ hecho | psutil/pynvml/system_profiler |
-| Providers local+nube (OpenAI-compat) | engine (local) | ✅ hecho | httpx |
+| Provider local (OpenAI-compat) | engine (local) | ✅ hecho | httpx |
 | Calibración confianza (Platt online) | engine (local) | ✅ hecho | Python |
 | Router **kNN** sobre histórico | engine (local) | ⬜ siguiente | embeddings + SQLite |
 | Eval RouterBench/RouterEval | engine (CI) | ⬜ siguiente | dataset público |
@@ -124,7 +128,7 @@ hibrid/                      (github.com/<org>/hibrid)
 
 **Higiene GitHub que crea confianza y comunidad:**
 - **Licencia permisiva** (Apache-2.0): clave para adopción y contribuciones.
-- **CI verde visible**: badge de tests (ya hay `tests/test_router.py`, 6/6).
+- **CI verde visible**: badge de tests (la suite del engine ya corre, 31 tests en verde).
 - **Releases semánticas** + changelog; el engine publicado en **PyPI** (`pip install hibrid`)
   y **Docker Hub** para arranque en 1 línea.
 - **GitHub Discussions** activado (canal de comunidad sin fricción).
@@ -140,6 +144,7 @@ hibrid/                      (github.com/<org>/hibrid)
 
 ### Fase 0 — Consolidar el engine (1 semana) · *casi hecho*
 - [x] Scaffold engine + tests + docs de investigación/arquitectura.
+- [x] AI-agnóstico (dialectos Anthropic + OpenAI) y la **capa de orquestación sin API key**.
 - [ ] Empaquetar: `pyproject.toml`, publicar en PyPI y Docker Hub.
 - [ ] `pip install hibrid && hibrid serve` funcionando en 1 línea.
 - [ ] CI en GitHub Actions (tests + lint).
@@ -180,9 +185,10 @@ hibrid/                      (github.com/<org>/hibrid)
    misma estética y narrativa de "herramientas de usuario, privacidad primero".
 
 **Diferenciador defendible** (confirmado por el equipo de investigación): nadie más enruta
-por velocidad **medida** en la máquina del usuario, ni ofrece privacidad como override duro.
-La comunidad de benchmarks reales es además un **foso de datos** que un gateway cloud no puede
-replicar.
+por velocidad **medida** en la máquina del usuario, ni ofrece privacidad como override duro,
+**ni** alcanza los modelos potentes a través de la suscripción/agente que el usuario ya tiene
+sin API key. La comunidad de benchmarks reales es además un **foso de datos** que un gateway
+cloud no puede replicar.
 
 ---
 

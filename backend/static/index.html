@@ -188,6 +188,7 @@ points here too</pre></div>
       <div class="cell"><div class="k">Max local model</div><div class="v ac" id="n-max">…</div></div>
       <div class="cell"><div class="k">Local models</div><div class="v" id="n-models">…</div></div>
       <div class="cell"><div class="k">Measured speed</div><div class="v" id="n-tps">…</div></div>
+      <div class="cell"><div class="k">Strong backends</div><div class="v ac" id="n-backends">…</div></div>
     </div>
   </section>
 
@@ -241,8 +242,10 @@ points here too</pre></div>
       const m = n.local_models || []; set('n-models', m.length ? m.join(', ') : 'none');
       const t = n.tok_s || {}, k = Object.keys(t);
       set('n-tps', k.length ? t[k[0]] + ' tok/s · ' + k[0] : 'n/a');
+      const live = (n.backends || []).filter(b => b.available).map(b => b.agent);
+      set('n-backends', live.length ? live.join(' · ') : 'local only');
       document.getElementById('dot').classList.add('on'); set('st', 'online');
-    } catch (e) { set('st', 'offline'); ['n-class','n-max','n-models','n-tps'].forEach(id => set(id,'—')); }
+    } catch (e) { set('st', 'offline'); ['n-class','n-max','n-models','n-tps','n-backends'].forEach(id => set(id,'—')); }
   })();
 </script>
 </body>

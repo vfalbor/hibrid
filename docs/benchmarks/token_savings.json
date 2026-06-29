@@ -1,0 +1,269 @@
+{
+  "generated_at": "2026-06-29 17:44:46 CEST",
+  "engine": "http://127.0.0.1:8095",
+  "node": {
+    "machine_class": "cpu_8gb",
+    "local_model_class": "1-3B (llama3.2:3b / qwen2.5-coder:1.5b)"
+  },
+  "methodology": "Realistic agent-session workload through hibrid. Strong tier is the user's Claude subscription via cli:claude (no per-token price), so savings are expressed as frontier-tier TOKENS and CALLS avoided, not dollars. Token counts taken from each response's usage block. 'Frontier tokens WITHOUT hibrid' is the counterfactual where every call had been sent to the frontier model.",
+  "totals": {
+    "total_calls": 16,
+    "local_calls": 9,
+    "paid_calls": 7,
+    "pct_calls_kept_local": 56.2,
+    "frontier_tokens_with_hibrid": 1681,
+    "frontier_tokens_without_hibrid": 2882,
+    "frontier_tokens_avoided": 1201,
+    "pct_frontier_tokens_avoided": 41.7
+  },
+  "by_task_type": {
+    "loop_refine": {
+      "calls": 8,
+      "local": 8,
+      "paid": 0,
+      "tokens": 1152
+    },
+    "simple": {
+      "calls": 4,
+      "local": 1,
+      "paid": 3,
+      "tokens": 270
+    },
+    "general": {
+      "calls": 2,
+      "local": 0,
+      "paid": 2,
+      "tokens": 243
+    },
+    "deep_reason": {
+      "calls": 2,
+      "local": 0,
+      "paid": 2,
+      "tokens": 1217
+    }
+  },
+  "metrics_before": {
+    "total": 3,
+    "pct_local": 100.0,
+    "pct_escalated": 0.0,
+    "total_cloud_cost_usd": 0.0,
+    "avg_latency_s": 6.269
+  },
+  "metrics_after": {
+    "total": 19,
+    "pct_local": 63.2,
+    "pct_escalated": 0.0,
+    "total_cloud_cost_usd": 0.0076,
+    "avg_latency_s": 6.675
+  },
+  "calls": [
+    {
+      "n": 1,
+      "task_type": "loop_refine",
+      "tier": "local_free",
+      "kind": "local",
+      "model": "qwen2.5-coder:1.5b",
+      "backend": null,
+      "escalated": false,
+      "prompt_tokens": 52,
+      "completion_tokens": 65,
+      "total_tokens": 117,
+      "latency_s": 5.79
+    },
+    {
+      "n": 2,
+      "task_type": "loop_refine",
+      "tier": "local_free",
+      "kind": "local",
+      "model": "llama3.2:3b",
+      "backend": null,
+      "escalated": false,
+      "prompt_tokens": 51,
+      "completion_tokens": 61,
+      "total_tokens": 112,
+      "latency_s": 10.18
+    },
+    {
+      "n": 3,
+      "task_type": "loop_refine",
+      "tier": "local_free",
+      "kind": "local",
+      "model": "qwen2.5-coder:1.5b",
+      "backend": null,
+      "escalated": false,
+      "prompt_tokens": 49,
+      "completion_tokens": 150,
+      "total_tokens": 199,
+      "latency_s": 5.06
+    },
+    {
+      "n": 4,
+      "task_type": "loop_refine",
+      "tier": "local_free",
+      "kind": "local",
+      "model": "llama3.2:3b",
+      "backend": null,
+      "escalated": false,
+      "prompt_tokens": 43,
+      "completion_tokens": 11,
+      "total_tokens": 54,
+      "latency_s": 1.38
+    },
+    {
+      "n": 5,
+      "task_type": "loop_refine",
+      "tier": "local_free",
+      "kind": "local",
+      "model": "llama3.2:3b",
+      "backend": null,
+      "escalated": false,
+      "prompt_tokens": 48,
+      "completion_tokens": 62,
+      "total_tokens": 110,
+      "latency_s": 4.37
+    },
+    {
+      "n": 6,
+      "task_type": "loop_refine",
+      "tier": "local_free",
+      "kind": "local",
+      "model": "qwen2.5-coder:1.5b",
+      "backend": null,
+      "escalated": false,
+      "prompt_tokens": 45,
+      "completion_tokens": 139,
+      "total_tokens": 184,
+      "latency_s": 4.98
+    },
+    {
+      "n": 7,
+      "task_type": "loop_refine",
+      "tier": "local_free",
+      "kind": "local",
+      "model": "qwen2.5-coder:1.5b",
+      "backend": null,
+      "escalated": false,
+      "prompt_tokens": 48,
+      "completion_tokens": 214,
+      "total_tokens": 262,
+      "latency_s": 6.87
+    },
+    {
+      "n": 8,
+      "task_type": "loop_refine",
+      "tier": "local_free",
+      "kind": "local",
+      "model": "llama3.2:3b",
+      "backend": null,
+      "escalated": false,
+      "prompt_tokens": 43,
+      "completion_tokens": 71,
+      "total_tokens": 114,
+      "latency_s": 4.82
+    },
+    {
+      "n": 9,
+      "task_type": "simple",
+      "tier": "paid_cheap",
+      "kind": "cloud_cheap",
+      "model": "claude-haiku-4-5-20251001",
+      "backend": "cli:claude",
+      "escalated": false,
+      "prompt_tokens": 15,
+      "completion_tokens": 56,
+      "total_tokens": 71,
+      "latency_s": 7.09
+    },
+    {
+      "n": 10,
+      "task_type": "simple",
+      "tier": "paid_cheap",
+      "kind": "cloud_cheap",
+      "model": "claude-haiku-4-5-20251001",
+      "backend": "cli:claude",
+      "escalated": false,
+      "prompt_tokens": 23,
+      "completion_tokens": 69,
+      "total_tokens": 92,
+      "latency_s": 6.52
+    },
+    {
+      "n": 11,
+      "task_type": "simple",
+      "tier": "local_free",
+      "kind": "local",
+      "model": "llama3.2:3b",
+      "backend": null,
+      "escalated": false,
+      "prompt_tokens": 39,
+      "completion_tokens": 10,
+      "total_tokens": 49,
+      "latency_s": 1.27
+    },
+    {
+      "n": 12,
+      "task_type": "simple",
+      "tier": "paid_cheap",
+      "kind": "cloud_cheap",
+      "model": "claude-haiku-4-5-20251001",
+      "backend": "cli:claude",
+      "escalated": false,
+      "prompt_tokens": 27,
+      "completion_tokens": 31,
+      "total_tokens": 58,
+      "latency_s": 5.26
+    },
+    {
+      "n": 13,
+      "task_type": "general",
+      "tier": "paid_cheap",
+      "kind": "cloud_cheap",
+      "model": "claude-haiku-4-5-20251001",
+      "backend": "cli:claude",
+      "escalated": false,
+      "prompt_tokens": 21,
+      "completion_tokens": 96,
+      "total_tokens": 117,
+      "latency_s": 6.34
+    },
+    {
+      "n": 14,
+      "task_type": "general",
+      "tier": "paid_cheap",
+      "kind": "cloud_cheap",
+      "model": "claude-haiku-4-5-20251001",
+      "backend": "cli:claude",
+      "escalated": false,
+      "prompt_tokens": 18,
+      "completion_tokens": 108,
+      "total_tokens": 126,
+      "latency_s": 6.46
+    },
+    {
+      "n": 15,
+      "task_type": "deep_reason",
+      "tier": "paid_cheap",
+      "kind": "cloud_cheap",
+      "model": "claude-haiku-4-5-20251001",
+      "backend": "cli:claude",
+      "escalated": false,
+      "prompt_tokens": 46,
+      "completion_tokens": 897,
+      "total_tokens": 943,
+      "latency_s": 23.09
+    },
+    {
+      "n": 16,
+      "task_type": "deep_reason",
+      "tier": "paid_cheap",
+      "kind": "cloud_cheap",
+      "model": "claude-haiku-4-5-20251001",
+      "backend": "cli:claude",
+      "escalated": false,
+      "prompt_tokens": 37,
+      "completion_tokens": 237,
+      "total_tokens": 274,
+      "latency_s": 8.63
+    }
+  ]
+}

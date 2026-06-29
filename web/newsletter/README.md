@@ -4,6 +4,9 @@ Snapshot of the hibrid newsletter posts, published live at
 **https://tokenstree.eu/newsletter/** (the LLM Daily Review site, served by the `hnreviewer`
 app). Kept here as launch artifacts.
 
+- `2026-06-29-agent-loop-token-savings.html` — token-savings write-up: a 16-call agent session
+  metered through a local engine, 42% of frontier tokens avoided. Backed by
+  [`../../docs/benchmarks/token_savings.md`](../../docs/benchmarks/token_savings.md).
 - `2026-06-27-three-servers-no-gpu-benchmark.html` — the benchmark write-up (uses the charts in
   `img/`, generated from [`../../docs/benchmarks/`](../../docs/benchmarks)).
 - `2026-06-26-hibrid-router-that-knows-your-machine.html` — the launch post, updated with the

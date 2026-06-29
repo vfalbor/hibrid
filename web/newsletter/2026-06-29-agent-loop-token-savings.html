@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>An agent's refactor loop: eight calls, zero paid — a hibrid measurement</title>
+  <meta name="description" content="We sent a realistic agent session through hibrid on a CPU-only 8GB box, no API key. Nine of sixteen calls stayed local and free; the whole refactor loop never touched a frontier model. 42% of frontier tokens avoided. Numbers and method inside.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://tokenstree.eu/newsletter/2026-06-29-agent-loop-token-savings.html">
+
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://tokenstree.eu/newsletter/2026-06-29-agent-loop-token-savings.html">
+  <meta property="og:title" content="An agent's refactor loop: eight calls, zero paid.">
+  <meta property="og:description" content="A hibrid measurement on a CPU-only 8GB box, no API key. Nine of sixteen agent calls stayed local and free; 42% of frontier tokens never happened.">
+  <meta property="og:site_name" content="LLM Daily Review">
+  <meta property="article:published_time" content="2026-06-29">
+  <meta property="article:author" content="https://tokenstree.eu">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="An agent's refactor loop: eight calls, zero paid.">
+  <meta name="twitter:description" content="We metered a real agent session through hibrid on a CPU-only box, no API key. The loop ran free; only the hard questions cost frontier tokens.">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "An agent's refactor loop: eight calls, zero paid — a hibrid measurement",
+    "description": "A hibrid token measurement on a CPU-only 8GB box with no API key: nine of sixteen agent calls stayed local and free, the refactor loop never reached a frontier model, and 42% of frontier tokens were avoided.",
+    "datePublished": "2026-06-29",
+    "author": { "@type": "Organization", "name": "TokensTree", "url": "https://tokenstree.eu" },
+    "publisher": { "@type": "Organization", "name": "LLM Daily Review", "url": "https://tokenstree.eu" },
+    "url": "https://tokenstree.eu/newsletter/2026-06-29-agent-loop-token-savings.html",
+    "mainEntityOfPage": "https://tokenstree.eu/newsletter/2026-06-29-agent-loop-token-savings.html",
+    "keywords": ["LLM routing", "local LLM", "AI agents", "token savings", "Ollama", "CPU inference", "no API key", "open source", "cost optimization", "agent loop"]
+  }
+  </script>
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%232563eb'/%3E%3Ccircle cx='16' cy='10' r='3' fill='%23fff'/%3E%3Ccircle cx='9' cy='22' r='3' fill='%23fff'/%3E%3Ccircle cx='23' cy='22' r='3' fill='%23fff'/%3E%3Cline x1='16' y1='13' x2='9' y2='19' stroke='%23fff' stroke-width='1.5'/%3E%3Cline x1='16' y1='13' x2='23' y2='19' stroke='%23fff' stroke-width='1.5'/%3E%3Cline x1='9' y1='22' x2='23' y2='22' stroke='%23fff' stroke-width='1.5'/%3E%3C/svg%3E">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #fafaf8; --surface: #fff; --border: #e4e2da;
+      --text: #1a1a18; --muted: #6b6a65;
+      --accent: #2563eb; --accent-light: #dbeafe;
+      --radius: 10px;
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #111110; --surface: #1c1c1a; --border: #2e2e2b; --text: #e8e6df; --muted: #9a9891; --accent-light: #1e3a5f; }
+    }
+    body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.7; min-height: 100vh; }
+    nav {
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      padding: 0 24px; display: flex; align-items: center; gap: 24px;
+      height: 52px; position: sticky; top: 0; z-index: 100;
+    }
+    .brand { font-weight: 700; font-size: 15px; color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 8px; margin-right: auto; }
+    .brand-logo { width: 26px; height: 26px; flex-shrink: 0; }
+    nav a { color: var(--muted); font-size: 13px; text-decoration: none; white-space: nowrap; }
+    nav a:hover { color: var(--text); }
+    nav a.active { color: var(--accent); }
+
+    .page { max-width: 720px; margin: 0 auto; padding: 48px 20px 80px; }
+
+    .back-link { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); text-decoration: none; margin-bottom: 36px; }
+    .back-link:hover { color: var(--text); }
+
+    .article-meta { margin-bottom: 32px; }
+    .article-tag { display: inline-block; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--accent); background: var(--accent-light); padding: 3px 10px; border-radius: 20px; margin-bottom: 16px; }
+    .article-title { font-size: 30px; font-weight: 700; line-height: 1.25; letter-spacing: -0.02em; margin-bottom: 12px; }
+    .article-date { font-size: 13px; color: var(--muted); }
+
+    .article-body { font-size: 16px; line-height: 1.75; }
+    .article-body p { margin-bottom: 20px; }
+    .article-body h2 { font-size: 19px; font-weight: 600; margin: 40px 0 14px; letter-spacing: -0.01em; }
+    .article-body strong { font-weight: 600; color: var(--text); }
+    .article-body a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+    .article-body a:hover { opacity: 0.8; }
+    .article-body ol, .article-body ul { padding-left: 22px; margin-bottom: 20px; }
+    .article-body li { margin-bottom: 8px; }
+    .article-body code { background: var(--accent-light); color: var(--accent); padding: 2px 6px; border-radius: 4px; font-size: 13px; font-family: var(--mono); }
+    .article-body em { color: var(--text); font-style: italic; }
+
+    .stat-row { display: flex; gap: 14px; flex-wrap: wrap; margin: 28px 0; }
+    .stat { flex: 1 1 150px; background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: var(--radius); padding: 16px 18px; }
+    .stat .n { font-size: 26px; font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+    .stat .l { font-size: 13px; color: var(--muted); margin-top: 2px; }
+
+    .divider { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+
+    .footer-cta { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-top: 48px; text-align: center; }
+    .footer-cta p { font-size: 14px; color: var(--muted); margin-bottom: 12px; }
+    .footer-cta .links { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+    .footer-cta .links a { font-size: 13px; color: var(--accent); text-decoration: none; font-weight: 500; }
+    .footer-cta .links a:hover { opacity: 0.8; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="brand">
+    <svg class="brand-logo" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+      <rect width="32" height="32" rx="8" fill="#2563eb"/>
+      <circle cx="16" cy="10" r="3" fill="#fff"/>
+      <circle cx="9" cy="22" r="3" fill="#fff"/>
+      <circle cx="23" cy="22" r="3" fill="#fff"/>
+      <line x1="16" y1="13" x2="9" y2="19" stroke="#fff" stroke-width="1.5"/>
+      <line x1="16" y1="13" x2="23" y2="19" stroke="#fff" stroke-width="1.5"/>
+      <line x1="9" y1="22" x2="23" y2="22" stroke="#fff" stroke-width="1.5"/>
+    </svg>
+    LLM Daily Review
+  </a>
+  <a href="https://github.com/vfalbor/llm-daily-review" target="_blank">GitHub</a>
+  <a href="https://github.com/vfalbor/llm-daily-review/tree/main/skills" target="_blank">Skills</a>
+  <a href="/newsletter/" class="active">Newsletter</a>
+</nav>
+
+<div class="page">
+  <a href="/newsletter/" class="back-link">← All articles</a>
+
+  <div class="article-meta">
+    <span class="article-tag">Benchmark</span>
+    <h1 class="article-title">An agent's refactor loop: eight calls, zero paid.</h1>
+    <span class="article-date">June 29, 2026 · Open source · Apache-2.0 · 16 real calls · no API key</span>
+  </div>
+
+  <style>
+    table.tt { width: 100%; border-collapse: collapse; margin: 18px 0; font-size: 14px; }
+    table.tt th, table.tt td { border: 1px solid var(--border); padding: 7px 10px; text-align: left; }
+    table.tt th { background: var(--surface); }
+    table.tt td.num { text-align: right; font-variant-numeric: tabular-nums; font-family: var(--mono); }
+  </style>
+
+  <div class="article-body">
+
+    <p>You point a coding agent at a frontier model and let it run. It writes a function, runs the test, the test fails, it reads the error, fixes a typo, runs the test again. Ten, twenty, fifty rounds. Every one of them billed at frontier prices — and almost none of them is hard. Fixing <code>retrun</code> to <code>return</code> does not need the smartest model on earth.</p>
+
+    <p>That's the bill <a href="https://hibrid.tokenstree.eu">hibrid</a> was built to cut. It's our open-source router that sits under your AI tools and decides, per call, what runs free on your own machine and what's worth handing up to a stronger model. Last week we benchmarked how fast local models run on CPU servers. This week we asked the more honest question: across a real agent session, how much of the work never has to reach the frontier at all? So we metered one.</p>
+
+    <h2>what we ran</h2>
+
+    <p>We took a sixteen-call session shaped like an actual agent loop and sent it through hibrid on the smallest box we have — two CPU cores, 8GB of RAM, no GPU. Eight of the calls were the bread and butter of any coding loop: fix a typo, refactor to a comprehension, add a docstring, add type hints, guard a divide-by-zero. Then four light ones — translate, classify sentiment, extract an email, summarize. Two general questions. And two genuinely hard one-shots: design a backpressure strategy for a queue, prove the n log n sorting bound. Those last two are the ones that <em>should</em> cost.</p>
+
+    <p>The strong tier here is reached through a Claude subscription via the agent CLI — no API key, no per-token meter. So we're not going to quote you a dollar figure we can't back up. What we can count exactly, from each response's own usage block, is <strong>frontier tokens and calls avoided</strong>: the work that stayed on the local machine instead of going up the ladder.</p>
+
+    <div class="stat-row">
+      <div class="stat"><div class="n">9 / 16</div><div class="l">calls kept local and free (56%)</div></div>
+      <div class="stat"><div class="n">42%</div><div class="l">of frontier tokens avoided</div></div>
+      <div class="stat"><div class="n">8 / 8</div><div class="l">refactor-loop calls stayed local</div></div>
+    </div>
+
+    <h2>the loop ran free</h2>
+
+    <p>Here's the result that matters. All eight code-loop calls were handled locally — split automatically between <code>llama3.2:3b</code> and the <code>qwen2.5-coder:1.5b</code> specialist — and not one of them touched a paid model. The typo fix, the comprehension, the docstring, the type hints: that's the high-frequency churn of an agent session, and on this tiny box it cost nothing but local compute. The router kept the busywork where busywork belongs.</p>
+
+    <p>The two hard reasoning prompts went up the ladder, exactly as they should. And the lighter NLP tasks split: one stayed local, the rest escalated to a <em>cheap</em> frontier model rather than the most expensive one — the router doesn't reach for the top of the ladder when the middle will do.</p>
+
+    <table class="tt">
+      <thead><tr><th>task type</th><th>calls</th><th>stayed local</th><th>escalated</th></tr></thead>
+      <tbody>
+        <tr><td>refactor loop</td><td class="num">8</td><td class="num">8</td><td class="num">0</td></tr>
+        <tr><td>simple NLP</td><td class="num">4</td><td class="num">1</td><td class="num">3</td></tr>
+        <tr><td>general Q&amp;A</td><td class="num">2</td><td class="num">0</td><td class="num">2</td></tr>
+        <tr><td>hard reasoning</td><td class="num">2</td><td class="num">0</td><td class="num">2</td></tr>
+      </tbody>
+    </table>
+
+    <p>Counterfactual: if every one of those sixteen calls had gone to the frontier — the default when there's no router — that's 2,882 frontier tokens. Through hibrid, only 1,681 did. <strong>1,201 frontier tokens, 42% of the total, simply never happened.</strong> And the share that did escalate is concentrated in the two prompts that genuinely earned it.</p>
+
+    <h2>why the loop is where the saving lives</h2>
+
+    <p>This isn't a coincidence of our task mix. A real agent session is mostly loop — the same small edit-and-retest cycle, over and over, with a few hard decisions sprinkled in. That shape is exactly what the headline number rewards: the more your agent loops, the larger the fraction that hibrid keeps local, because loops are cheap calls and cheap calls stay home. The hard one-shots are rare and they're the ones you actually want a frontier model for.</p>
+
+    <p>It also means the saving grows with the boring work, not the exciting work. The flashier the demo — one big clever prompt — the less hibrid does for you. The grindier the session — fifty rounds of fix-and-retest — the more of it runs for free.</p>
+
+    <h2>where this is soft — on purpose</h2>
+
+    <p>Sixteen calls is one session, not a leaderboard; treat these as indicative. The strong tier here is a flat-rate subscription reached with no API key, so the honest unit is <em>frontier tokens and calls avoided</em>, not dollars saved — your dollar figure depends on what you'd otherwise have paid per token. This ran on a two-core, 8GB, GPU-less box with 1–3B local models, which is the floor: a GPU or an Apple-silicon machine runs larger local models and keeps even more off the paid tier. And the local models have to be good enough — last week's study showed a 0.5B model inventing email addresses, which is exactly why hibrid escalates instead of trusting a too-small model blindly. The run script and its raw output are in the repo, under <code>docs/benchmarks/</code>.</p>
+
+    <h2>try it on your own session</h2>
+
+    <pre style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px 16px;overflow-x:auto;font-family:var(--mono);font-size:13px;line-height:1.6;margin-bottom:20px;"><code style="background:none;color:var(--text);padding:0;">pip install git+https://github.com/vfalbor/hibrid.git
+hibrid serve
+curl localhost:8095/v1/node     # what it measured about your machine
+curl localhost:8095/v1/metrics  # calls kept local vs escalated, live</code></pre>
+
+    <p>Point your agent at hibrid instead of straight at the frontier, run your normal loop, and watch <code>/v1/metrics</code>. The number you care about is the share that stayed local — and on a grindy session, it's bigger than you'd guess.</p>
+
+    <p><strong>The router that knows your machine. Open source. Yours.</strong></p>
+
+  </div>
+
+  <div class="footer-cta">
+    <p>hibrid is an open-source local-first router for LLM workloads. Run it on your own machine; it decides what stays local and what goes to the cloud, and your private data never leaves your box.</p>
+    <div class="links">
+      <a href="https://hibrid.tokenstree.eu">hibrid.tokenstree.eu</a>
+      <a href="/newsletter/">Newsletter</a>
+      <a href="https://tokenstree.eu/">tokenstree.eu</a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

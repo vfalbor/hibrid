@@ -116,3 +116,14 @@ can actually run. That is hibrid's thesis in one chart: **the machine decides ho
 
 Data and code in this folder are self-contained — `python3 bench.py` on any machine reproduces a
 row, `python3 analyze.py` rebuilds every chart.
+
+---
+
+## Companion study — token savings across an agent session
+
+This study measures *throughput* and *local-at-parity coverage*. A companion measurement,
+[`token_savings.md`](token_savings.md), runs a realistic 16-call agent session (a refactor loop plus
+a few hard one-shots) end to end through a local engine with the strong tier wired in, and counts the
+**frontier tokens avoided**: 9/16 calls stayed local, the full refactor loop never reached a paid
+model, and 42% of frontier tokens were avoided on the `cpu_8gb` box. Reproduce with
+`python3 token_savings_run.py`.

@@ -120,9 +120,9 @@
   <a href="/newsletter/" class="back-link">← All articles</a>
 
   <div class="article-meta">
-    <span class="article-tag">Diseño</span>
-    <h1 class="article-title">No preguntes "¿cabe en mi máquina?". Pregunta "¿es bueno en esto Y cabe?"</h1>
-    <span class="article-date">30 de junio, 2026 · Código abierto · Apache-2.0 · el mapeo está en GET /v1/policy · sin API key</span>
+    <span class="article-tag">Design</span>
+    <h1 class="article-title">Don't ask "will it fit on my machine?". Ask "is it good at this, and does it fit?"</h1>
+    <span class="article-date">June 30, 2026 · Open source · Apache-2.0 · the mapping lives in GET /v1/policy · no API key</span>
   </div>
 
   <style>
@@ -131,88 +131,90 @@
     table.tt th { background: var(--surface); }
     table.tt td.num { text-align: right; font-variant-numeric: tabular-nums; font-family: var(--mono); }
     code { font-family: var(--mono); background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 1px 5px; font-size: 13px; }
+    figure { margin: 22px 0; }
+    figure img { width: 100%; border: 1px solid var(--border); border-radius: 8px; }
+    figcaption { color: var(--muted); font-size: 13px; margin-top: 6px; }
   </style>
 
   <div class="article-body">
 
-    <p>El error más común al montar un modelo local es tratar la elección como un problema de memoria. Miras los GB de la GPU, buscas el modelo más grande que entra, lo descargas y a correr. Funciona… hasta que le pides razonar sobre un problema de matemáticas y te suelta una respuesta segura, fluida y equivocada.</p>
+    <p>The most common mistake when you set up a local model is treating the choice as a memory problem. You check your GPU's GB, find the biggest model that fits, download it and go. It works… until you ask it to reason through a math problem and it hands you an answer that's confident, fluent and wrong.</p>
 
-    <p>El nuevo mapeo tarea→modelo de <a href="https://hibrid.tokenstree.eu">hibrid</a> parte de otra premisa: <strong>competencia primero, hardware después</strong>. Un modelo no es "bueno" o "malo" en abstracto. Es bueno en un <em>eje</em>. Y la pregunta correcta no es si cabe, sino si es competente en el eje que tu tarea necesita <em>y además</em> cabe en esta máquina.</p>
+    <p>hibrid's new task→model mapping starts from a different premise: <strong>competence first, hardware second</strong>. A model isn't "good" or "bad" in the abstract. It's good on an <em>axis</em>. And the right question isn't whether it fits, but whether it's competent on the axis your task needs <em>and</em> fits on this machine.</p>
 
-    <h2>Un modelo no tiene una nota, tiene cinco</h2>
+    <h2>a model doesn't have one grade, it has five</h2>
 
-    <p>hibrid clasifica cada tarea en uno de cinco ejes:</p>
+    <p>hibrid sorts every task into one of five axes:</p>
 
     <ul>
-      <li><strong>general</strong> — instrucciones cortas, extracción, resúmenes</li>
-      <li><strong>writing</strong> — redacción, copy, long-form</li>
-      <li><strong>code</strong> — generar y arreglar código</li>
-      <li><strong>reasoning</strong> — matemáticas, demostraciones, debug profundo</li>
-      <li><strong>multilingual</strong> — traducción y trabajo en español</li>
+      <li><strong>general</strong> — short instructions, extraction, summaries</li>
+      <li><strong>writing</strong> — drafting, copy, long-form</li>
+      <li><strong>code</strong> — generating and fixing code</li>
+      <li><strong>reasoning</strong> — math, proofs, deep debugging</li>
+      <li><strong>multilingual</strong> — translation and work in Spanish</li>
     </ul>
 
-    <p>Por qué importa separarlos: un modelo entrenado a fondo en código aprende a predecir la siguiente línea, no a sostener una cadena de deducción larga. Qwen2.5-Coder escribe funciones excelentes y, sin embargo, se pierde en un problema de razonamiento de varios pasos. Son habilidades distintas que se entrenan con datos distintos. Tratar "es bueno" como una sola nota es lo que te lleva a usar el modelo equivocado con total confianza.</p>
+    <p>Why splitting them matters: a model trained hard on code learns to predict the next line, not to hold a long chain of deduction. Qwen2.5-Coder writes excellent functions and still gets lost in a multi-step reasoning problem. They're different skills, trained on different data. Treating "it's good" as a single grade is what leads you to use the wrong model with total confidence.</p>
 
-    <h2>Quién gana cada eje en local (≤14B)</h2>
+    <h2>who wins each axis locally (≤14B)</h2>
 
-    <p>Con datos de benchmark, no por intuición:</p>
+    <p>From benchmark data, not intuition:</p>
 
     <table class="tt">
-      <thead><tr><th>Eje</th><th>Ganador local</th><th>Señal</th></tr></thead>
+      <thead><tr><th>Axis</th><th>Local winner</th><th>Signal</th></tr></thead>
       <tbody>
-        <tr><td>Código</td><td><strong>Qwen2.5-Coder</strong></td><td>7B: HumanEval+ 84.1 · 14B: 87.2, BigCodeBench 48.4</td></tr>
-        <tr><td>Redacción / general</td><td><strong>Qwen3-8B</strong></td><td>IFEval 85, MMLU 85.9</td></tr>
-        <tr><td>Multilingüe (español)</td><td><strong>Aya-Expanse-8B</strong></td><td>m-ArenaHard 76.6%</td></tr>
-        <tr><td>Razonamiento / mates</td><td><strong>Phi-4-reasoning-plus</strong></td><td>AIME-24 81%, GPQA 69%</td></tr>
+        <tr><td>Code</td><td><strong>Qwen2.5-Coder</strong></td><td>7B: HumanEval+ 84.1 · 14B: 87.2, BigCodeBench 48.4</td></tr>
+        <tr><td>Writing / general</td><td><strong>Qwen3-8B</strong></td><td>IFEval 85, MMLU 85.9</td></tr>
+        <tr><td>Multilingual (Spanish)</td><td><strong>Aya-Expanse-8B</strong></td><td>m-ArenaHard 76.6%</td></tr>
+        <tr><td>Reasoning / math</td><td><strong>Phi-4-reasoning-plus</strong></td><td>AIME-24 81%, GPQA 69%</td></tr>
       </tbody>
     </table>
 
-    <p>Tres lecturas rápidas. En <strong>código</strong>, el tamaño manda: el 14B de Qwen2.5-Coder sube a 87.2 en HumanEval+ frente al 84.1 del 7B. Si la tarea es código y tienes VRAM, el modelo grande paga. En <strong>redacción</strong>, no: Qwen3-8B supera a Qwen2.5-14B con la mitad de parámetros. Más grande no es mejor; mejor entrenado, sí.</p>
+    <p>Three quick reads. In <strong>code</strong>, size wins: Qwen2.5-Coder's 14B climbs to 87.2 on HumanEval+ against the 7B's 84.1. If the task is code and you have the VRAM, the bigger model pays off. In <strong>writing</strong>, it doesn't: Qwen3-8B beats Qwen2.5-14B at half the parameters. Bigger isn't better; better-trained is.</p>
 
-    <p>En <strong>razonamiento</strong>, cuidado con la letra pequeña. Phi-4-reasoning-plus y los DeepSeek-R1-distill son modelos <em>thinking</em>: piensan en voz alta antes de responder, y eso cuesta entre 2 y 5 veces más tokens y latencia. Brillan en un problema duro; son un derroche para clasificar un email.</p>
+    <p>In <strong>reasoning</strong>, mind the fine print. Phi-4-reasoning-plus and the DeepSeek-R1 distills are <em>thinking</em> models: they think out loud before answering, and that costs 2–5× the tokens and latency. They shine on a hard problem; they're a waste for classifying an email.</p>
 
-    <h2>La otra mitad: lo que aguanta tu máquina</h2>
+    <h2>the other half: what your machine can hold</h2>
 
-    <p>Saber quién gana cada eje no sirve si el ganador no entra. El segundo factor es la potencia real del nodo, y se calcula con dos números. El primero es el <strong>footprint en memoria</strong>: con cuantización Q4, cuenta unos <strong>0,6 GB por cada mil millones de parámetros</strong>. Un 8B ronda los 5 GB solo de pesos. El segundo es la <strong>KV-cache</strong>, que crece con el contexto: cuanto más larga la conversación, más memoria comes por encima de los pesos. Mucha gente dimensiona para los pesos y se olvida del contexto.</p>
+    <p>Knowing who wins each axis is useless if the winner doesn't fit. The second factor is the node's real power, and it comes down to two numbers. The first is the <strong>memory footprint</strong>: at Q4 quantization, count roughly <strong>0.6 GB per billion parameters</strong>. An 8B runs about 5 GB in weights alone. The second is the <strong>KV-cache</strong>, which grows with context: the longer the conversation, the more memory you eat on top of the weights. Most people size for the weights and forget the context.</p>
 
-    <p>De ahí sale una taxonomía simple de nodos:</p>
+    <p>From that comes a simple node taxonomy:</p>
 
     <table class="tt">
-      <thead><tr><th>Tier</th><th>Memoria</th><th>Modelo que sostiene</th></tr></thead>
+      <thead><tr><th>Tier</th><th>Memory</th><th>Model it holds</th></tr></thead>
       <tbody>
-        <tr><td>cpu_small</td><td class="num">≤8 GB</td><td>hasta 3B</td></tr>
+        <tr><td>cpu_small</td><td class="num">≤8 GB</td><td>up to 3B</td></tr>
         <tr><td>cpu_large / Apple 16 GB</td><td class="num">~16 GB</td><td>7B</td></tr>
         <tr><td>gpu_12gb</td><td class="num">12 GB</td><td>8B</td></tr>
         <tr><td>gpu_24gb+</td><td class="num">24 GB+</td><td>32B</td></tr>
       </tbody>
     </table>
 
-    <p><strong>Q4_K_M</strong> es el punto dulce: recorta el peso sin que la calidad se note en la práctica. Y un mínimo operativo para uso interactivo: <strong>por encima de 15 tok/s</strong>. Por debajo, escribir con el modelo se vuelve esperar al modelo.</p>
+    <p><strong>Q4_K_M</strong> is the sweet spot: it trims the weight without the quality showing in practice. And an operating floor for interactive use: <strong>above 15 tok/s</strong>. Below that, writing with the model turns into waiting for the model.</p>
 
-    <h2>Cómo lo resuelve hibrid</h2>
+    <h2>how hibrid solves it</h2>
 
-    <p>El router une las dos mitades en una sola decisión, en este orden:</p>
+    <p>The router joins the two halves into a single decision, in this order:</p>
 
     <ol>
-      <li><strong>Clasifica la tarea</strong> y le asigna un eje.</li>
-      <li><strong>Elige el mejor modelo de ese eje que cabe</strong> en este nodo concreto. No el más grande: el mejor del eje correcto dentro del presupuesto de memoria.</li>
-      <li><strong>Si la tarea es dura, escala al tier de pago</strong> —Opus, GPT— usando la suscripción del propio usuario vía <code>cli:claude</code>, sin API key y sin facturación aparte.</li>
+      <li><strong>It classifies the task</strong> and assigns it an axis.</li>
+      <li><strong>It picks the best model on that axis that fits</strong> this specific node. Not the biggest: the best on the right axis within the memory budget.</li>
+      <li><strong>If the task is hard, it escalates to the paid tier</strong> — Opus, GPT — using the user's own subscription via <code>cli:claude</code>, no API key and no separate bill.</li>
     </ol>
 
-    <p>Lo importante es que esto no es una caja negra. La tabla <code>task_type → (eje, escalera de tiers, preferencia por tier)</code> es la fuente de la verdad, y se sirve entera. Una traducción se queda en local con Aya y nunca toca el tier caro; una demostración matemática salta directa al modelo fuerte. Cada una de esas reglas es legible y auditable.</p>
+    <p>The point is this isn't a black box. The table <code>task_type → (axis, tier ladder, per-tier preference)</code> is the source of truth, and it's served whole. A translation stays local with Aya and never touches the expensive tier; a math proof jumps straight to the strong model. Every one of those rules is readable and auditable.</p>
 
-    <h2>Tu turno</h2>
+    <h2>your turn</h2>
 
-    <p>Lanza una llamada a <code>GET /v1/policy</code> en tu propio nodo. Vas a ver los cinco ejes, la escalera de tiers de cada tipo de tarea y qué modelo local gana en tu máquina con la memoria que tienes. Si algo no cuadra con tu hardware, ahí está el número que lo explica — no en un foro, en tu endpoint.</p>
+    <p>Hit <code>GET /v1/policy</code> on your own node. You'll see the five axes, the tier ladder for each task type, and which local model wins on your machine with the memory you have. If something doesn't line up with your hardware, there's the number that explains it — not in a forum, in your endpoint.</p>
 
     <pre style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px 16px;overflow-x:auto;font-family:var(--mono);font-size:13px;line-height:1.6;margin-bottom:20px;"><code style="background:none;border:none;color:var(--text);padding:0;">pip install git+https://github.com/vfalbor/hibrid.git
 hibrid serve
-curl localhost:8095/v1/policy   # los 5 ejes y el modelo que gana en TU máquina</code></pre>
+curl localhost:8095/v1/policy   # the 5 axes and the model that wins on YOUR machine</code></pre>
 
-    <p><strong>El router que conoce tu máquina. Código abierto. Tuyo.</strong></p>
+    <p><strong>The router that knows your machine. Open source. Yours.</strong></p>
 
   </div>
-
   <div class="footer-cta">
     <p>hibrid is an open-source local-first router for LLM workloads. Run it on your own machine; it decides what stays local and what goes to the cloud, and your private data never leaves your box.</p>
     <div class="links">

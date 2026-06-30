@@ -120,9 +120,9 @@
   <a href="/newsletter/" class="back-link">← All articles</a>
 
   <div class="article-meta">
-    <span class="article-tag">Manifiesto</span>
-    <h1 class="article-title">Estás pagando a Opus para que te arregle un punto y coma</h1>
-    <span class="article-date">30 de junio, 2026 · Código abierto · Apache-2.0 · sin API key · todos los números son llamadas reales medidas</span>
+    <span class="article-tag">Manifesto</span>
+    <h1 class="article-title">You're paying Opus to fix your semicolons</h1>
+    <span class="article-date">June 30, 2026 · Open source · Apache-2.0 · no API key · every number is a real measured call</span>
   </div>
 
   <style>
@@ -138,102 +138,101 @@
 
   <div class="article-body">
 
-    <p>Tu agente entra en un bucle de refactor. Cuarenta iteraciones: cambia una línea, corre los tests, lee el error, vuelve a intentarlo. Cada una de esas cuarenta vueltas le pregunta a un modelo frontera —Opus, Gemini— qué hacer con un punto y coma. Y cada una te cuesta tokens del caro.</p>
+    <p>Your agent drops into a refactor loop. Forty iterations: change a line, run the tests, read the error, try again. Each of those forty laps asks a frontier model — Opus, Gemini — what to do about a semicolon. And each one costs you tokens of the expensive tier.</p>
 
-    <p>Ese es el desperdicio que casi nadie mira. No el prompt difícil. El <em>volumen</em> de lo trivial. La inmensa mayoría del trabajo de un agente es barato, repetitivo y objetivo —clasificar, extraer, arreglar, reformatear— y aun así lo estás pagando a precio de razonamiento de élite.</p>
+    <p>That's the waste almost nobody looks at. Not the hard prompt. The <em>volume</em> of the trivial. The vast majority of an agent's work is cheap, repetitive and objective — classify, extract, fix, reformat — and you're still paying for it at elite-reasoning prices.</p>
 
-    <p>Llevamos un mes construyendo <a href="https://hibrid.tokenstree.eu">hibrid</a> para arreglar exactamente eso. La idea es simple de decir y la hemos medido cuatro veces: <strong>lo barato se queda en tu máquina, gratis; el modelo caro solo recibe la llamada que se lo gana.</strong></p>
+    <p>We've spent a month building <a href="https://hibrid.tokenstree.eu">hibrid</a> to fix exactly that. The idea is simple to say and we've measured it four times: <strong>the cheap work stays on your machine, free; the expensive model only gets the call that earns it.</strong></p>
 
-    <h2>el reencuadre: tu portátil ya pagó una GPU</h2>
+    <h2>the reframe: your laptop already paid for a GPU</h2>
 
-    <p>Compraste una máquina con potencia de sobra y tus bucles de IA la ignoran. Un modelo pequeño open-weights —Qwen2.5-Coder, Qwen3, Llama 3.2— corre en tu propio hardware sin coste por token y sin que el dato salga de la caja. El problema nunca fue si el modelo pequeño existe. Fue <em>saber cuándo confiar en él</em>.</p>
+    <p>You bought a machine with power to spare and your AI loops ignore it. A small open-weights model — Qwen2.5-Coder, Qwen3, Llama 3.2 — runs on your own hardware with no per-token cost and without the data leaving the box. The problem was never whether the small model exists. It was <em>knowing when to trust it</em>.</p>
 
-    <p>Porque no todos los modelos pequeños valen para todo, y no todas las máquinas aguantan lo mismo. Un 0,5B inventa direcciones de email; un coder de 1,5B gana en código a modelos del doble de tamaño. Esa es la decisión que hibrid toma por ti, en cada llamada.</p>
+    <p>Because not every small model is good at everything, and not every machine holds the same. A 0.5B invents email addresses; a 1.5B coder beats models twice its size at code. That's the decision hibrid makes for you, on every call.</p>
 
-    <h2>la arquitectura, en una frase</h2>
+    <h2>the architecture, in one line</h2>
 
-    <p>hibrid se sienta <strong>por debajo</strong> de tus herramientas de IA y enruta cada llamada con una decisión auditable:</p>
+    <p>hibrid sits <strong>underneath</strong> your AI tools and routes every call with an auditable decision:</p>
 
     <table class="tt">
-      <thead><tr><th>paso</th><th>qué hace</th></tr></thead>
+      <thead><tr><th>step</th><th>what it does</th></tr></thead>
       <tbody>
-        <tr><td>1 · clasifica</td><td>reduce la tarea a un eje: general, redacción, código, razonamiento o multilingüe</td></tr>
-        <tr><td>2 · elige local</td><td>el mejor modelo de ese eje <em>que cabe en tu máquina</em> — no el más grande, el correcto</td></tr>
-        <tr><td>3 · escala solo si toca</td><td>si la tarea es dura, sube al tier de pago usando tu propia suscripción vía <code>cli:claude</code> — sin API key, sin factura aparte</td></tr>
+        <tr><td>1 · classify</td><td>reduce the task to an axis: general, writing, code, reasoning or multilingual</td></tr>
+        <tr><td>2 · pick local</td><td>the best model on that axis <em>that fits your machine</em> — not the biggest, the right one</td></tr>
+        <tr><td>3 · escalate only when earned</td><td>if the task is hard, go up to the paid tier using your own subscription via <code>cli:claude</code> — no API key, no separate bill</td></tr>
       </tbody>
     </table>
 
-    <p>Lo importante: no es una caja negra. La tabla <code>tarea → (eje, escalera de tiers)</code> es la fuente de la verdad y se sirve entera en <code>GET /v1/policy</code>. Una traducción se queda en local y nunca toca el tier caro. Una demostración matemática salta directa al modelo fuerte. Cada regla se lee.</p>
+    <p>The point: it isn't a black box. The table <code>task → (axis, tier ladder)</code> is the source of truth and it's served whole at <code>GET /v1/policy</code>. A translation stays local and never touches the expensive tier. A math proof jumps straight to the strong model. Every rule is readable.</p>
 
-    <h2>la parte que casi nadie cuenta: orquestar por debajo</h2>
+    <h2>the part almost nobody tells: orchestrating underneath</h2>
 
-    <p>Aquí está el giro. hibrid no solo elige modelo: es el <strong>backend de ejecución</strong> de tus skills. Tú describes el trabajo con la experiencia de un skill —copy de venta, revisión senior de código, análisis— y hibrid decide <em>dónde</em> corre cada parte.</p>
+    <p>Here's the twist. hibrid doesn't just pick a model: it's the <strong>execution backend</strong> for your skills. You describe the work with a skill's expertise — sales copy, senior code review, analysis — and hibrid decides <em>where</em> each part runs.</p>
 
-    <p>Es el patrón de orquestación de equipos, pero con modelos en vez de personas:</p>
+    <p>It's the team-orchestration pattern, but with models instead of people:</p>
 
     <ul>
-      <li><strong>el orquestador</strong> (tu agente) reparte el trabajo y junta el resultado</li>
-      <li><strong>el ejecutor</strong> (el modelo del eje correcto) produce el artefacto</li>
-      <li><strong>el revisor</strong> (el tier fuerte, solo cuando hace falta) valida lo que de verdad importa</li>
+      <li><strong>the orchestrator</strong> (your agent) splits the work and assembles the result</li>
+      <li><strong>the executor</strong> (the model on the right axis) produces the artifact</li>
+      <li><strong>the reviewer</strong> (the strong tier, only when needed) validates what actually matters</li>
     </ul>
 
-    <p>El contrato es honesto: el skill decide <em>qué tan bueno</em> es el prompt; hibrid decide <em>dónde</em> se ejecuta y se ahorra tokens en lo barato. Las sub-tareas mecánicas —"extrae las 3 palabras clave", "clasifica este hook"— se quedan locales. La generación que pide criterio sube al modelo capaz. Nadie envía una respuesta local mala para ahorrar: si la calidad no llega, escala.</p>
+    <p>The contract is honest: the skill decides <em>how good</em> the prompt is; hibrid decides <em>where</em> it runs and saves tokens on the cheap parts. Mechanical sub-tasks — "extract the 3 keywords", "classify this hook" — stay local. Generation that needs judgment goes up to the capable model. Nobody ships a bad local answer to save money: if the quality isn't there, it escalates.</p>
 
-    <h2>¿el ahorro cuesta calidad? lo medimos a ciegas</h2>
+    <h2>does the saving cost quality? we measured it blind</h2>
 
-    <p>Esta es la pregunta que la mayoría de los "te recortamos costes" se salta. Barato es fácil si no te importa peor. Así que pusimos tres agentes independientes a auditar el router en la peor máquina que teníamos —dos núcleos, 8 GB, sin GPU— y a un modelo frontera a puntuar las respuestas a ciegas, sin saber cuál era cuál.</p>
+    <p>This is the question most "we cut your costs" pitches skip. Cheap is easy if you don't mind worse. So we pointed three independent agents at the router on the worst machine we had — two cores, 8 GB, no GPU — and had a frontier model grade the answers blind, not knowing which was which.</p>
 
     <div class="stat-row">
-      <div class="stat"><div class="n">87%</div><div class="l">de tokens frontera evitados</div></div>
-      <div class="stat"><div class="n">~89%</div><div class="l">de la calidad frontera conservada (juez ciego)</div></div>
-      <div class="stat"><div class="n">11/12</div><div class="l">reglas de enrutado correctas</div></div>
+      <div class="stat"><div class="n">87%</div><div class="l">of frontier tokens avoided</div></div>
+      <div class="stat"><div class="n">~89%</div><div class="l">of frontier quality kept (blind judge)</div></div>
+      <div class="stat"><div class="n">11/12</div><div class="l">routing rules correct</div></div>
     </div>
 
     <figure>
-      <img src="/newsletter/img/quality_axis.png" alt="Calidad local frente a frontera por tipo de tarea">
-      <figcaption>Las respuestas locales puntuaron 0,81 de media frente a 0,91 del frontera — el 89% de la calidad, a coste cero. El 75% estuvo en paridad. <a href="/newsletter/2026-06-30-three-agents-graded-our-router.html">Estudio completo →</a></figcaption>
+      <img src="/newsletter/img/quality_axis.png" alt="Local vs frontier quality by task type">
+      <figcaption>Local answers scored 0.81 on average against the frontier's 0.91 — 89% of the quality, at zero cost. 75% were at parity. <a href="/newsletter/2026-06-30-three-agents-graded-our-router.html">Full study →</a></figcaption>
     </figure>
 
-    <p>Y la parte honesta, que también publicamos: dos tareas salieron claramente peor en local —un arreglo de código y una demostración de cota inferior—. Son justo las que un modelo de 1–3B <em>no</em> debería tocar. El router decide antes de ver la respuesta, así que aún no atrapa un resultado local seguro pero equivocado. Lo nombramos como límite, no lo escondemos.</p>
+    <p>And the honest part, which we also published: two tasks came back clearly worse on local — a code fix and a lower-bound proof. Those are exactly the ones a 1–3B model <em>shouldn't</em> touch. The router decides before it sees the answer, so it can't yet catch a confidently-wrong local result. We name it as a limit, we don't hide it.</p>
 
-    <h2>cuatro estudios, una conclusión</h2>
+    <h2>four studies, one conclusion</h2>
 
-    <p>No es una promesa, es un registro. Cada número viene de llamadas reales, sin API key:</p>
+    <p>It's not a promise, it's a record. Every number comes from real calls, no API key:</p>
 
     <table class="tt">
-      <thead><tr><th>estudio</th><th>hallazgo</th></tr></thead>
+      <thead><tr><th>study</th><th>finding</th></tr></thead>
       <tbody>
-        <tr><td><a href="/newsletter/2026-06-26-hibrid-router-that-knows-your-machine.html">El router que conoce tu máquina</a></td><td>los bucles corren gratis en tu hardware; el caro se reserva para la llamada que lo necesita</td></tr>
-        <tr><td><a href="/newsletter/2026-06-27-three-servers-no-gpu-benchmark.html">Dos servidores idénticos, uno el doble de rápido</a></td><td>los pequeños cubrieron 43–100% del trabajo en paridad; la cuota la fija la máquina, no la ficha técnica</td></tr>
-        <tr><td><a href="/newsletter/2026-06-29-agent-loop-token-savings.html">El bucle de refactor: ocho llamadas, cero pagadas</a></td><td>42% de los tokens frontera simplemente no ocurrieron en una sesión real</td></tr>
-        <tr><td><a href="/newsletter/2026-06-30-three-agents-graded-our-router.html">Tres agentes calificaron nuestro router</a></td><td>87% de tokens evitados conservando ~89% de la calidad</td></tr>
+        <tr><td><a href="/newsletter/2026-06-26-hibrid-router-that-knows-your-machine.html">The router that knows your machine</a></td><td>loops run free on your hardware; the expensive one is saved for the call that needs it</td></tr>
+        <tr><td><a href="/newsletter/2026-06-27-three-servers-no-gpu-benchmark.html">Two identical servers, one twice as fast</a></td><td>small models covered 43–100% of the work at parity; the share is set by the machine, not the spec sheet</td></tr>
+        <tr><td><a href="/newsletter/2026-06-29-agent-loop-token-savings.html">A refactor loop: eight calls, zero paid</a></td><td>42% of frontier tokens simply never happened in a real session</td></tr>
+        <tr><td><a href="/newsletter/2026-06-30-three-agents-graded-our-router.html">Three agents graded our router</a></td><td>87% of tokens avoided while keeping ~89% of the quality</td></tr>
       </tbody>
     </table>
 
     <figure>
-      <img src="/newsletter/img/tps.png" alt="Velocidad medida (tokens por segundo) en tres servidores sin GPU">
-      <figcaption>hibrid mide tu hardware real al arrancar y enruta por velocidad medida, no por hoja de specs. Mismo papel, hasta 2× la velocidad real. <a href="/newsletter/2026-06-27-three-servers-no-gpu-benchmark.html">Cómo lo medimos →</a></figcaption>
+      <img src="/newsletter/img/tps.png" alt="Measured speed (tokens per second) on three GPU-less servers">
+      <figcaption>hibrid measures your real hardware at startup and routes on measured speed, not a spec sheet. Same paper, up to 2× the real speed. <a href="/newsletter/2026-06-27-three-servers-no-gpu-benchmark.html">How we measured →</a></figcaption>
     </figure>
 
-    <h2>de router a servicio</h2>
+    <h2>from router to service</h2>
 
-    <p>Junta las piezas y deja de ser un truco: es un <strong>servicio que mantiene un alto porcentaje de tus tokens en local</strong>. Lo enciendes una vez, apunta tus herramientas hacia él, y a partir de ahí decide solo. Tus loops se vuelven gratis. Tus datos no salen de la máquina. Y la suscripción que ya pagas cubre la única llamada difícil, sin una segunda factura por token.</p>
+    <p>Put the pieces together and it stops being a trick: it's a <strong>service that keeps a high share of your tokens local</strong>. You turn it on once, point your tools at it, and from there it decides on its own. Your loops go free. Your data never leaves the box. And the subscription you already pay for covers the one hard call, with no second per-token bill.</p>
 
-    <p>El frontera no desaparece. Se gana su sitio. Es la diferencia entre pagar a un cirujano por operar y pagarle por ponerte una tirita.</p>
+    <p>The frontier doesn't disappear. It earns its place. It's the difference between paying a surgeon to operate and paying one to put on a band-aid.</p>
 
-    <h2>pruébalo, y califícalo tú</h2>
+    <h2>try it, and grade it yourself</h2>
 
     <pre style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px 16px;overflow-x:auto;font-family:var(--mono);font-size:13px;line-height:1.6;margin-bottom:20px;"><code style="background:none;border:none;color:var(--text);padding:0;">pip install git+https://github.com/vfalbor/hibrid.git
 hibrid serve
-curl localhost:8095/v1/policy    # los 5 ejes y el modelo que gana en TU máquina
-curl localhost:8095/v1/metrics   # llamadas locales vs escaladas, en vivo</code></pre>
+curl localhost:8095/v1/policy    # the 5 axes and the model that wins on YOUR machine
+curl localhost:8095/v1/metrics   # local vs escalated calls, live</code></pre>
 
-    <p>Apunta tu agente a hibrid, corre tu bucle real y mira el reparto. Si en tu caja rinde peor que en la nuestra, queremos los números: así mejora el enrutado para la siguiente máquina como la tuya.</p>
+    <p>Point your agent at hibrid, run your real loop, and watch the split. If it does worse on your box than on ours, we want the numbers — that's how the routing gets better for the next machine like yours.</p>
 
-    <p><strong>El router que conoce tu máquina. Código abierto. Tuyo.</strong></p>
+    <p><strong>The router that knows your machine. Open source. Yours.</strong></p>
 
   </div>
-
   <div class="footer-cta">
     <p>hibrid is an open-source local-first router for LLM workloads. Run it on your own machine; it decides what stays local and what goes to the cloud, and your private data never leaves your box.</p>
     <div class="links">

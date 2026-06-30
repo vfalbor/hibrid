@@ -96,10 +96,20 @@ async def metrics():
 
 @app.get("/v1/policy")
 async def policy():
-    """La matriz explícita task_type -> (eje, escalera de tiers): qué LLM por tarea."""
-    from . import task_policy
-    return {"task_policy": task_policy.as_table(),
-            "backends": [b for b in STATE["node"].to_dict()["backends"]]}
+    """La matriz explícita task_type -> (eje, escalera de tiers): qué LLM por tarea,
+    más la taxonomía de máquina (qué modelo local por eje según el hardware)."""
+    from . import models_catalog, task_policy
+    hw = STATE["node"].hardware
+    tier = models_catalog.tier_for(hw.ram_gb, hw.gpu_vendor, hw.vram_gb)
+    return {
+        "task_policy": task_policy.as_table(),
+        "axes": list(task_policy.axes()),
+        "machine_tiers": models_catalog.tiers_as_table(),
+        "this_node": {"tier": tier.key, "label": tier.label,
+                      "max_params_b": tier.max_params_b,
+                      "recommend_by_axis": tier.recommend},
+        "backends": [b for b in STATE["node"].to_dict()["backends"]],
+    }
 
 
 async def _run(dest: Destination, messages: list[dict], temperature: float,

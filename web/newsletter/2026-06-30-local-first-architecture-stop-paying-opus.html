@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>We had three agents grade our own router — a hibrid study</title>
+  <meta name="description" content="Three independent agents stress-tested the hibrid router on a CPU-only 8GB box, no API key: 87% of frontier tokens avoided, ~89% of frontier answer quality kept (LLM-judged), 11/12 routing rules correct — plus an honest comparison with RouteLLM, OpenRouter, Martian and friends.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://tokenstree.eu/newsletter/2026-06-30-three-agents-graded-our-router.html">
+
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://tokenstree.eu/newsletter/2026-06-30-three-agents-graded-our-router.html">
+  <meta property="og:title" content="We had three agents grade our own router.">
+  <meta property="og:description" content="87% of frontier tokens avoided, ~89% of the quality kept (LLM-judged), 11/12 routing rules right — and where hibrid still loses to RouteLLM and the rest.">
+  <meta property="og:site_name" content="LLM Daily Review">
+  <meta property="article:published_time" content="2026-06-30">
+  <meta property="article:author" content="https://tokenstree.eu">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="We had three agents grade our own router.">
+  <meta name="twitter:description" content="87% of frontier tokens avoided, ~89% of the quality kept, 11/12 routing rules right — and the honest places hibrid falls short.">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "We had three agents grade our own router — a hibrid study",
+    "description": "Three independent agents measured the hibrid LLM router on a CPU-only 8GB box with no API key: 87% of frontier tokens avoided, ~89% of frontier answer quality retained (LLM-judged), 11/12 routing rules correct, and an honest competitive comparison.",
+    "datePublished": "2026-06-30",
+    "author": { "@type": "Organization", "name": "TokensTree", "url": "https://tokenstree.eu" },
+    "publisher": { "@type": "Organization", "name": "LLM Daily Review", "url": "https://tokenstree.eu" },
+    "url": "https://tokenstree.eu/newsletter/2026-06-30-three-agents-graded-our-router.html",
+    "mainEntityOfPage": "https://tokenstree.eu/newsletter/2026-06-30-three-agents-graded-our-router.html",
+    "keywords": ["LLM routing", "local LLM", "AI agents", "token savings", "answer quality", "LLM judge", "RouteLLM", "FrugalGPT", "no API key", "open source"]
+  }
+  </script>
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%232563eb'/%3E%3Ccircle cx='16' cy='10' r='3' fill='%23fff'/%3E%3Ccircle cx='9' cy='22' r='3' fill='%23fff'/%3E%3Ccircle cx='23' cy='22' r='3' fill='%23fff'/%3E%3Cline x1='16' y1='13' x2='9' y2='19' stroke='%23fff' stroke-width='1.5'/%3E%3Cline x1='16' y1='13' x2='23' y2='19' stroke='%23fff' stroke-width='1.5'/%3E%3Cline x1='9' y1='22' x2='23' y2='22' stroke='%23fff' stroke-width='1.5'/%3E%3C/svg%3E">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #fafaf8; --surface: #fff; --border: #e4e2da;
+      --text: #1a1a18; --muted: #6b6a65;
+      --accent: #2563eb; --accent-light: #dbeafe;
+      --radius: 10px;
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #111110; --surface: #1c1c1a; --border: #2e2e2b; --text: #e8e6df; --muted: #9a9891; --accent-light: #1e3a5f; }
+    }
+    body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.7; min-height: 100vh; }
+    nav {
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      padding: 0 24px; display: flex; align-items: center; gap: 24px;
+      height: 52px; position: sticky; top: 0; z-index: 100;
+    }
+    .brand { font-weight: 700; font-size: 15px; color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 8px; margin-right: auto; }
+    .brand-logo { width: 26px; height: 26px; flex-shrink: 0; }
+    nav a { color: var(--muted); font-size: 13px; text-decoration: none; white-space: nowrap; }
+    nav a:hover { color: var(--text); }
+    nav a.active { color: var(--accent); }
+
+    .page { max-width: 720px; margin: 0 auto; padding: 48px 20px 80px; }
+
+    .back-link { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); text-decoration: none; margin-bottom: 36px; }
+    .back-link:hover { color: var(--text); }
+
+    .article-meta { margin-bottom: 32px; }
+    .article-tag { display: inline-block; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--accent); background: var(--accent-light); padding: 3px 10px; border-radius: 20px; margin-bottom: 16px; }
+    .article-title { font-size: 30px; font-weight: 700; line-height: 1.25; letter-spacing: -0.02em; margin-bottom: 12px; }
+    .article-date { font-size: 13px; color: var(--muted); }
+
+    .article-body { font-size: 16px; line-height: 1.75; }
+    .article-body p { margin-bottom: 20px; }
+    .article-body h2 { font-size: 19px; font-weight: 600; margin: 40px 0 14px; letter-spacing: -0.01em; }
+    .article-body strong { font-weight: 600; color: var(--text); }
+    .article-body a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+    .article-body a:hover { opacity: 0.8; }
+    .article-body ol, .article-body ul { padding-left: 22px; margin-bottom: 20px; }
+    .article-body li { margin-bottom: 8px; }
+    .article-body code { background: var(--accent-light); color: var(--accent); padding: 2px 6px; border-radius: 4px; font-size: 13px; font-family: var(--mono); }
+    .article-body em { color: var(--text); font-style: italic; }
+
+    .stat-row { display: flex; gap: 14px; flex-wrap: wrap; margin: 28px 0; }
+    .stat { flex: 1 1 150px; background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: var(--radius); padding: 16px 18px; }
+    .stat .n { font-size: 26px; font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+    .stat .l { font-size: 13px; color: var(--muted); margin-top: 2px; }
+
+    .divider { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+
+    .footer-cta { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-top: 48px; text-align: center; }
+    .footer-cta p { font-size: 14px; color: var(--muted); margin-bottom: 12px; }
+    .footer-cta .links { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+    .footer-cta .links a { font-size: 13px; color: var(--accent); text-decoration: none; font-weight: 500; }
+    .footer-cta .links a:hover { opacity: 0.8; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="brand">
+    <svg class="brand-logo" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+      <rect width="32" height="32" rx="8" fill="#2563eb"/>
+      <circle cx="16" cy="10" r="3" fill="#fff"/>
+      <circle cx="9" cy="22" r="3" fill="#fff"/>
+      <circle cx="23" cy="22" r="3" fill="#fff"/>
+      <line x1="16" y1="13" x2="9" y2="19" stroke="#fff" stroke-width="1.5"/>
+      <line x1="16" y1="13" x2="23" y2="19" stroke="#fff" stroke-width="1.5"/>
+      <line x1="9" y1="22" x2="23" y2="22" stroke="#fff" stroke-width="1.5"/>
+    </svg>
+    LLM Daily Review
+  </a>
+  <a href="https://github.com/vfalbor/llm-daily-review" target="_blank">GitHub</a>
+  <a href="https://github.com/vfalbor/llm-daily-review/tree/main/skills" target="_blank">Skills</a>
+  <a href="/newsletter/" class="active">Newsletter</a>
+</nav>
+
+<div class="page">
+  <a href="/newsletter/" class="back-link">← All articles</a>
+
+  <div class="article-meta">
+    <span class="article-tag">Manifiesto</span>
+    <h1 class="article-title">Estás pagando a Opus para que te arregle un punto y coma</h1>
+    <span class="article-date">30 de junio, 2026 · Código abierto · Apache-2.0 · sin API key · todos los números son llamadas reales medidas</span>
+  </div>
+
+  <style>
+    table.tt { width: 100%; border-collapse: collapse; margin: 18px 0; font-size: 14px; }
+    table.tt th, table.tt td { border: 1px solid var(--border); padding: 7px 10px; text-align: left; }
+    table.tt th { background: var(--surface); }
+    table.tt td.num { text-align: right; font-variant-numeric: tabular-nums; font-family: var(--mono); }
+    code { font-family: var(--mono); background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 1px 5px; font-size: 13px; }
+    figure { margin: 22px 0; }
+    figure img { width: 100%; border: 1px solid var(--border); border-radius: 8px; }
+    figcaption { color: var(--muted); font-size: 13px; margin-top: 6px; }
+  </style>
+
+  <div class="article-body">
+
+    <p>Tu agente entra en un bucle de refactor. Cuarenta iteraciones: cambia una línea, corre los tests, lee el error, vuelve a intentarlo. Cada una de esas cuarenta vueltas le pregunta a un modelo frontera —Opus, Gemini— qué hacer con un punto y coma. Y cada una te cuesta tokens del caro.</p>
+
+    <p>Ese es el desperdicio que casi nadie mira. No el prompt difícil. El <em>volumen</em> de lo trivial. La inmensa mayoría del trabajo de un agente es barato, repetitivo y objetivo —clasificar, extraer, arreglar, reformatear— y aun así lo estás pagando a precio de razonamiento de élite.</p>
+
+    <p>Llevamos un mes construyendo <a href="https://hibrid.tokenstree.eu">hibrid</a> para arreglar exactamente eso. La idea es simple de decir y la hemos medido cuatro veces: <strong>lo barato se queda en tu máquina, gratis; el modelo caro solo recibe la llamada que se lo gana.</strong></p>
+
+    <h2>el reencuadre: tu portátil ya pagó una GPU</h2>
+
+    <p>Compraste una máquina con potencia de sobra y tus bucles de IA la ignoran. Un modelo pequeño open-weights —Qwen2.5-Coder, Qwen3, Llama 3.2— corre en tu propio hardware sin coste por token y sin que el dato salga de la caja. El problema nunca fue si el modelo pequeño existe. Fue <em>saber cuándo confiar en él</em>.</p>
+
+    <p>Porque no todos los modelos pequeños valen para todo, y no todas las máquinas aguantan lo mismo. Un 0,5B inventa direcciones de email; un coder de 1,5B gana en código a modelos del doble de tamaño. Esa es la decisión que hibrid toma por ti, en cada llamada.</p>
+
+    <h2>la arquitectura, en una frase</h2>
+
+    <p>hibrid se sienta <strong>por debajo</strong> de tus herramientas de IA y enruta cada llamada con una decisión auditable:</p>
+
+    <table class="tt">
+      <thead><tr><th>paso</th><th>qué hace</th></tr></thead>
+      <tbody>
+        <tr><td>1 · clasifica</td><td>reduce la tarea a un eje: general, redacción, código, razonamiento o multilingüe</td></tr>
+        <tr><td>2 · elige local</td><td>el mejor modelo de ese eje <em>que cabe en tu máquina</em> — no el más grande, el correcto</td></tr>
+        <tr><td>3 · escala solo si toca</td><td>si la tarea es dura, sube al tier de pago usando tu propia suscripción vía <code>cli:claude</code> — sin API key, sin factura aparte</td></tr>
+      </tbody>
+    </table>
+
+    <p>Lo importante: no es una caja negra. La tabla <code>tarea → (eje, escalera de tiers)</code> es la fuente de la verdad y se sirve entera en <code>GET /v1/policy</code>. Una traducción se queda en local y nunca toca el tier caro. Una demostración matemática salta directa al modelo fuerte. Cada regla se lee.</p>
+
+    <h2>la parte que casi nadie cuenta: orquestar por debajo</h2>
+
+    <p>Aquí está el giro. hibrid no solo elige modelo: es el <strong>backend de ejecución</strong> de tus skills. Tú describes el trabajo con la experiencia de un skill —copy de venta, revisión senior de código, análisis— y hibrid decide <em>dónde</em> corre cada parte.</p>
+
+    <p>Es el patrón de orquestación de equipos, pero con modelos en vez de personas:</p>
+
+    <ul>
+      <li><strong>el orquestador</strong> (tu agente) reparte el trabajo y junta el resultado</li>
+      <li><strong>el ejecutor</strong> (el modelo del eje correcto) produce el artefacto</li>
+      <li><strong>el revisor</strong> (el tier fuerte, solo cuando hace falta) valida lo que de verdad importa</li>
+    </ul>
+
+    <p>El contrato es honesto: el skill decide <em>qué tan bueno</em> es el prompt; hibrid decide <em>dónde</em> se ejecuta y se ahorra tokens en lo barato. Las sub-tareas mecánicas —"extrae las 3 palabras clave", "clasifica este hook"— se quedan locales. La generación que pide criterio sube al modelo capaz. Nadie envía una respuesta local mala para ahorrar: si la calidad no llega, escala.</p>
+
+    <h2>¿el ahorro cuesta calidad? lo medimos a ciegas</h2>
+
+    <p>Esta es la pregunta que la mayoría de los "te recortamos costes" se salta. Barato es fácil si no te importa peor. Así que pusimos tres agentes independientes a auditar el router en la peor máquina que teníamos —dos núcleos, 8 GB, sin GPU— y a un modelo frontera a puntuar las respuestas a ciegas, sin saber cuál era cuál.</p>
+
+    <div class="stat-row">
+      <div class="stat"><div class="n">87%</div><div class="l">de tokens frontera evitados</div></div>
+      <div class="stat"><div class="n">~89%</div><div class="l">de la calidad frontera conservada (juez ciego)</div></div>
+      <div class="stat"><div class="n">11/12</div><div class="l">reglas de enrutado correctas</div></div>
+    </div>
+
+    <figure>
+      <img src="/newsletter/img/quality_axis.png" alt="Calidad local frente a frontera por tipo de tarea">
+      <figcaption>Las respuestas locales puntuaron 0,81 de media frente a 0,91 del frontera — el 89% de la calidad, a coste cero. El 75% estuvo en paridad. <a href="/newsletter/2026-06-30-three-agents-graded-our-router.html">Estudio completo →</a></figcaption>
+    </figure>
+
+    <p>Y la parte honesta, que también publicamos: dos tareas salieron claramente peor en local —un arreglo de código y una demostración de cota inferior—. Son justo las que un modelo de 1–3B <em>no</em> debería tocar. El router decide antes de ver la respuesta, así que aún no atrapa un resultado local seguro pero equivocado. Lo nombramos como límite, no lo escondemos.</p>
+
+    <h2>cuatro estudios, una conclusión</h2>
+
+    <p>No es una promesa, es un registro. Cada número viene de llamadas reales, sin API key:</p>
+
+    <table class="tt">
+      <thead><tr><th>estudio</th><th>hallazgo</th></tr></thead>
+      <tbody>
+        <tr><td><a href="/newsletter/2026-06-26-hibrid-router-that-knows-your-machine.html">El router que conoce tu máquina</a></td><td>los bucles corren gratis en tu hardware; el caro se reserva para la llamada que lo necesita</td></tr>
+        <tr><td><a href="/newsletter/2026-06-27-three-servers-no-gpu-benchmark.html">Dos servidores idénticos, uno el doble de rápido</a></td><td>los pequeños cubrieron 43–100% del trabajo en paridad; la cuota la fija la máquina, no la ficha técnica</td></tr>
+        <tr><td><a href="/newsletter/2026-06-29-agent-loop-token-savings.html">El bucle de refactor: ocho llamadas, cero pagadas</a></td><td>42% de los tokens frontera simplemente no ocurrieron en una sesión real</td></tr>
+        <tr><td><a href="/newsletter/2026-06-30-three-agents-graded-our-router.html">Tres agentes calificaron nuestro router</a></td><td>87% de tokens evitados conservando ~89% de la calidad</td></tr>
+      </tbody>
+    </table>
+
+    <figure>
+      <img src="/newsletter/img/tps.png" alt="Velocidad medida (tokens por segundo) en tres servidores sin GPU">
+      <figcaption>hibrid mide tu hardware real al arrancar y enruta por velocidad medida, no por hoja de specs. Mismo papel, hasta 2× la velocidad real. <a href="/newsletter/2026-06-27-three-servers-no-gpu-benchmark.html">Cómo lo medimos →</a></figcaption>
+    </figure>
+
+    <h2>de router a servicio</h2>
+
+    <p>Junta las piezas y deja de ser un truco: es un <strong>servicio que mantiene un alto porcentaje de tus tokens en local</strong>. Lo enciendes una vez, apunta tus herramientas hacia él, y a partir de ahí decide solo. Tus loops se vuelven gratis. Tus datos no salen de la máquina. Y la suscripción que ya pagas cubre la única llamada difícil, sin una segunda factura por token.</p>
+
+    <p>El frontera no desaparece. Se gana su sitio. Es la diferencia entre pagar a un cirujano por operar y pagarle por ponerte una tirita.</p>
+
+    <h2>pruébalo, y califícalo tú</h2>
+
+    <pre style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px 16px;overflow-x:auto;font-family:var(--mono);font-size:13px;line-height:1.6;margin-bottom:20px;"><code style="background:none;border:none;color:var(--text);padding:0;">pip install git+https://github.com/vfalbor/hibrid.git
+hibrid serve
+curl localhost:8095/v1/policy    # los 5 ejes y el modelo que gana en TU máquina
+curl localhost:8095/v1/metrics   # llamadas locales vs escaladas, en vivo</code></pre>
+
+    <p>Apunta tu agente a hibrid, corre tu bucle real y mira el reparto. Si en tu caja rinde peor que en la nuestra, queremos los números: así mejora el enrutado para la siguiente máquina como la tuya.</p>
+
+    <p><strong>El router que conoce tu máquina. Código abierto. Tuyo.</strong></p>
+
+  </div>
+
+  <div class="footer-cta">
+    <p>hibrid is an open-source local-first router for LLM workloads. Run it on your own machine; it decides what stays local and what goes to the cloud, and your private data never leaves your box.</p>
+    <div class="links">
+      <a href="https://hibrid.tokenstree.eu">hibrid.tokenstree.eu</a>
+      <a href="/newsletter/">Newsletter</a>
+      <a href="https://tokenstree.eu/">tokenstree.eu</a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

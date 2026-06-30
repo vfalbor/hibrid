@@ -24,7 +24,7 @@ from dataclasses import dataclass, field
 @dataclass(frozen=True)
 class TaskPolicy:
     task_type: str
-    axis: str                       # general | code | reasoning
+    axis: str                       # general | writing | code | reasoning | multilingual
     tier_ladder: list[str]          # tiers preferidos, de barato a caro
     rationale: str = ""
     # Tier máximo permitido para el modelo orquestado en esta tarea (None = sin tope).
@@ -45,7 +45,18 @@ POLICIES: dict[str, TaskPolicy] = {
         "Tarea dura de una sola llamada (arquitectura, prueba, debug profundo)."),
     "simple": TaskPolicy(
         "simple", "general", ["local_free", "paid_cheap"],
-        "Clasificar, extraer, traducir, resumen corto.", paid_cap="paid_cheap"),
+        "Clasificar, extraer, resumen corto.", paid_cap="paid_cheap"),
+    "write": TaskPolicy(
+        "write", "writing", ["local_free", "paid_cheap", "paid_strong"],
+        "Redacción/copy/long-form: pide un modelo fuerte en escritura (eje 'writing'). "
+        "Local-first; escala a pago si la pieza es larga o crítica."),
+    "translate": TaskPolicy(
+        "translate", "multilingual", ["local_free", "paid_cheap"],
+        "Traducción/tarea multilingüe (español): prioriza modelos multilingües "
+        "(Aya-Expanse, Qwen3). Local cubre la mayoría.", paid_cap="paid_cheap"),
+    "code": TaskPolicy(
+        "code", "code", ["local_free", "paid_cheap", "paid_strong"],
+        "Generación de código de una sola pasada: eje 'code' (Qwen2.5-Coder local)."),
     "interactive": TaskPolicy(
         "interactive", "general", ["local_free", "paid_cheap", "paid_strong"],
         "Chat en vivo: la latencia pesa más (profiles sube λ_lat)."),
@@ -68,6 +79,11 @@ def axis_for(task_type: str | None, has_code: bool = False) -> str:
     if has_code or task_type in ("loop_refine", "loop_verify"):
         return "code"
     return policy_for(task_type).axis
+
+
+def axes() -> tuple[str, ...]:
+    """Ejes distintos presentes en la matriz (para documentación/validación)."""
+    return tuple(dict.fromkeys(p.axis for p in POLICIES.values()))
 
 
 def as_table() -> list[dict]:

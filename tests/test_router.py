@@ -132,6 +132,47 @@ def test_deep_reason_allows_strong():
     assert any(c.tier == "paid_strong" for c in d.candidates)
 
 
+def test_classifier_detects_writing_and_translation():
+    """El classifier distingue redacción, traducción y código a nivel de aplicación."""
+    assert _feat("Redáctame un artículo de blog sobre routing de LLMs.").task_type == "write"
+    assert _feat("Traduce este párrafo al inglés, por favor.").task_type == "translate"
+    assert _feat("def f(x):\n  return x  # arregla esto").task_type == "code"
+
+
+def test_writing_task_picks_best_writer_local():
+    """Una tarea de redacción elige el modelo más fuerte en el eje 'writing'."""
+    node = _node()
+    node.local_models = ["qwen2.5-coder:7b", "qwen3:8b", "llama3.2:3b"]
+    node.local_default = "llama3.2:3b"
+    node.tok_s = {"qwen2.5-coder:7b": 40, "qwen3:8b": 35, "llama3.2:3b": 50}
+    feat = _feat("Escribe un post de LinkedIn con thought leadership sobre IA local.")
+    d = router.decide(node, feat, HibridOptions(allow_cloud=False))
+    assert d.chosen.kind == "local"
+    assert d.chosen.model == "qwen3:8b"   # mejor redactor, no el coder ni el llama
+
+
+def test_translation_task_prefers_multilingual_local():
+    """Traducción al español: gana el modelo más fuerte en el eje 'multilingual'."""
+    node = _node()
+    node.local_models = ["qwen2.5:7b", "aya-expanse:8b", "llama3.1:8b"]
+    node.local_default = "qwen2.5:7b"
+    node.tok_s = {"qwen2.5:7b": 40, "aya-expanse:8b": 35, "llama3.1:8b": 45}
+    feat = _feat("Traduce este texto técnico del inglés al español.")
+    d = router.decide(node, feat, HibridOptions(allow_cloud=False))
+    assert d.chosen.kind == "local"
+    assert d.chosen.model == "aya-expanse:8b"   # especialista multilingüe
+
+
+def test_machine_tier_recommendation():
+    """La taxonomía de máquina mapea hardware -> modelo recomendado por eje."""
+    from backend import models_catalog as mc
+    t = mc.tier_for(ram_gb=8, gpu_vendor="none", vram_gb=0)
+    assert t.key == "cpu_small"
+    big = mc.tier_for(ram_gb=64, gpu_vendor="nvidia", vram_gb=24)
+    assert big.key == "gpu_24gb"
+    assert big.recommend["code"] == "qwen2.5-coder:32b"
+
+
 if __name__ == "__main__":
     import traceback
     fns = [v for k, v in dict(globals()).items() if k.startswith("test_")]

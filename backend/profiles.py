@@ -84,6 +84,33 @@ BUILTIN: dict[str, ExecutionProfile] = {
         escalate_after=1,
         description="Clasificar, extraer, traducir, resúmenes cortos.",
     ),
+    # Redacción/copy/long-form: local-first pero permite escalar a top en piezas críticas.
+    "write": ExecutionProfile(
+        name="write",
+        tier_order=["local_free", "paid_cheap", "paid_strong"],
+        tier_bonus={"local_free": 0.3},
+        escalate_to="paid_strong",
+        escalate_after=1,
+        description="Redacción/copy/long-form (eje writing).",
+    ),
+    # Traducción/multilingüe: local cubre casi todo; nunca el modelo caro.
+    "translate": ExecutionProfile(
+        name="translate",
+        tier_order=["local_free", "paid_cheap"],
+        tier_bonus={"local_free": 0.4},
+        escalate_to="paid_cheap",
+        escalate_after=1,
+        description="Traducción/tarea multilingüe (eje multilingual).",
+    ),
+    # Código de una sola pasada: local-first; escala a pago si no hay confianza.
+    "code": ExecutionProfile(
+        name="code",
+        tier_order=["local_free", "paid_cheap", "paid_strong"],
+        tier_bonus={"local_free": 0.3},
+        escalate_to="paid_strong",
+        escalate_after=1,
+        description="Generación de código de una sola pasada (eje code).",
+    ),
     # Interactivo: local sólo si es rápido (el router ya penaliza tok/s bajo); si no, barato.
     "interactive": ExecutionProfile(
         name="interactive",

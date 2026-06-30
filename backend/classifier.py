@@ -32,8 +32,21 @@ _HARD_HINTS = re.compile(
     r"diseña|estrategia|trade-?off|debug|race condition|concurren)"
 )
 _EASY_HINTS = re.compile(
-    r"(?i)\b(traduce|translate|resume|resumen|clasifica|classify|extrae|formatea|"
+    r"(?i)\b(resume|resumen|clasifica|classify|extrae|formatea|"
     r"corrige ortografía|lista|define|qué hora|saluda|hola)\b"
+)
+# Traducción / tarea multilingüe -> eje 'multilingual'.
+_TRANSLATE_HINTS = re.compile(
+    r"(?i)\b(traduce|tradúce|traducir|traducción|translate|translation|"
+    r"al (inglés|español|francés|alemán|italiano|portugués)|"
+    r"to (english|spanish|french|german)|localiza|localización)\b"
+)
+# Redacción / copy / long-form -> eje 'writing'.
+_WRITE_HINTS = re.compile(
+    r"(?i)\b(redacta|redáctame|redacción|escribe|escríbeme|reescribe|reescritura|"
+    r"artículo|post|newsletter|copy|copywriting|ensayo|guion|guión|carta|"
+    r"correo|email de|blog|borrador|draft|compose|write (a|an|me)|"
+    r"storytelling|titular|eslogan|descripción de producto)\b"
 )
 # Señales de tarea iterativa / loop (refinar, QA repetido, test-fix-retest, agéntico).
 _LOOP_HINTS = re.compile(
@@ -52,10 +65,17 @@ def _infer_task_type(text: str, complexity: float, has_code: bool) -> str:
         return "loop_verify"
     if _LOOP_HINTS.search(text):
         return "loop_refine"
-    if _EASY_HINTS.search(text) and complexity < 0.25:
-        return "simple"
+    if _TRANSLATE_HINTS.search(text):
+        return "translate"
+    # Razonamiento duro manda sobre redacción si la tarea es claramente compleja.
     if complexity >= 0.6 or (has_code and _HARD_HINTS.search(text)):
         return "deep_reason"
+    if _WRITE_HINTS.search(text) and not has_code:
+        return "write"
+    if _EASY_HINTS.search(text) and complexity < 0.25:
+        return "simple"
+    if has_code:
+        return "code"
     return "general"
 
 

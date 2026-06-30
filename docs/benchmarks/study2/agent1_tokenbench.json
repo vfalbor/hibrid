@@ -1,0 +1,1088 @@
+{
+  "generated_at": "2026-06-29 23:12:34 CEST",
+  "engine": "http://127.0.0.1:8095",
+  "node": {
+    "hardware": {
+      "os": "Linux",
+      "arch": "x86_64",
+      "cpu": "x86_64",
+      "cpu_cores_physical": 2,
+      "ram_gb": 8.3,
+      "gpu_vendor": "none",
+      "gpu_name": "CPU only",
+      "vram_gb": 0.0,
+      "apple_silicon": false,
+      "machine_class": "cpu_8gb",
+      "max_local_params_b": 8.0
+    },
+    "local_endpoint": "http://localhost:11434/v1",
+    "local_models": [
+      "llama3.2:3b",
+      "llama3.2:1b",
+      "qwen2.5-coder:1.5b",
+      "qwen2.5:1.5b",
+      "qwen2.5:0.5b"
+    ],
+    "local_default": "llama3.2:3b",
+    "tok_s": {
+      "llama3.2:3b": 6.3
+    },
+    "cloud_models": [
+      "claude-opus-4-8",
+      "claude-sonnet-4-6",
+      "claude-haiku-4-5-20251001"
+    ],
+    "backends": [
+      {
+        "id": "cli:claude",
+        "mechanism": "cli",
+        "agent": "claude",
+        "available": true,
+        "models": [
+          "claude-opus-4-8",
+          "claude-sonnet-4-6",
+          "claude-haiku-4-5-20251001"
+        ],
+        "latency_s": 2.5
+      },
+      {
+        "id": "cli:codex",
+        "mechanism": "cli",
+        "agent": "codex",
+        "available": false,
+        "models": [
+          "gpt-4o",
+          "gpt-4o-mini"
+        ],
+        "latency_s": 2.5
+      },
+      {
+        "id": "cli:opencode",
+        "mechanism": "cli",
+        "agent": "opencode",
+        "available": false,
+        "models": [
+          "claude-sonnet-4-6",
+          "gpt-4o",
+          "gpt-4o-mini"
+        ],
+        "latency_s": 2.5
+      },
+      {
+        "id": "cli:copilot",
+        "mechanism": "cli",
+        "agent": "copilot",
+        "available": false,
+        "models": [
+          "gpt-4o",
+          "gpt-4o-mini"
+        ],
+        "latency_s": 2.5
+      }
+    ]
+  },
+  "methodology": "3 distinct workloads (long refine loop, mixed agent session, reasoning-heavy). Each task called twice: WITH (auto routing) and WITHOUT (force cloud_strong). Frontier tokens = tokens of any non-local_free call. Savings = frontier tokens WITHOUT minus WITH. Strong tier is cli:claude (no per-token $), so unit is frontier tokens/calls avoided, not dollars.",
+  "overall": {
+    "calls": 31,
+    "calls_local_with": 23,
+    "pct_calls_local_with": 74.2,
+    "escalated_with": 0,
+    "frontier_tokens_with": 1069,
+    "frontier_tokens_without": 8531,
+    "frontier_tokens_avoided": 7462,
+    "pct_frontier_tokens_avoided": 87.5
+  },
+  "per_workload": {
+    "A_refine_loop": {
+      "calls": 12,
+      "calls_local_with": 12,
+      "pct_calls_local_with": 100.0,
+      "escalated_with": 0,
+      "frontier_tokens_with": 0,
+      "frontier_tokens_without": 1122,
+      "frontier_tokens_avoided": 1122,
+      "pct_frontier_tokens_avoided": 100.0
+    },
+    "B_mixed_session": {
+      "calls": 10,
+      "calls_local_with": 2,
+      "pct_calls_local_with": 20.0,
+      "escalated_with": 0,
+      "frontier_tokens_with": 1069,
+      "frontier_tokens_without": 2744,
+      "frontier_tokens_avoided": 1675,
+      "pct_frontier_tokens_avoided": 61.0
+    },
+    "C_reasoning": {
+      "calls": 9,
+      "calls_local_with": 9,
+      "pct_calls_local_with": 100.0,
+      "escalated_with": 0,
+      "frontier_tokens_with": 0,
+      "frontier_tokens_without": 4665,
+      "frontier_tokens_avoided": 4665,
+      "pct_frontier_tokens_avoided": 100.0
+    }
+  },
+  "by_task_type": {
+    "loop_refine": {
+      "calls": 14,
+      "local_with": 14,
+      "escalated_with": 0,
+      "frontier_tokens_with": 0,
+      "frontier_tokens_without": 1358
+    },
+    "simple": {
+      "calls": 3,
+      "local_with": 0,
+      "escalated_with": 0,
+      "frontier_tokens_with": 164,
+      "frontier_tokens_without": 173
+    },
+    "general": {
+      "calls": 4,
+      "local_with": 2,
+      "escalated_with": 0,
+      "frontier_tokens_with": 314,
+      "frontier_tokens_without": 970
+    },
+    "interactive": {
+      "calls": 1,
+      "local_with": 0,
+      "escalated_with": 0,
+      "frontier_tokens_with": 216,
+      "frontier_tokens_without": 290
+    },
+    "deep_reason": {
+      "calls": 7,
+      "local_with": 5,
+      "escalated_with": 0,
+      "frontier_tokens_with": 375,
+      "frontier_tokens_without": 5160
+    },
+    "loop_verify": {
+      "calls": 2,
+      "local_with": 2,
+      "escalated_with": 0,
+      "frontier_tokens_with": 0,
+      "frontier_tokens_without": 580
+    }
+  },
+  "correctness_checks": {
+    "loop_refine_all_local": {
+      "checked": 14,
+      "local": 14
+    },
+    "deep_reason_escalates": {
+      "checked": 7,
+      "escalated": 0,
+      "to_frontier": 2
+    },
+    "pii_simple_stays_local": {
+      "tier": "local_free",
+      "pass": true
+    }
+  },
+  "metrics_before": {
+    "total": 26,
+    "pct_local": 53.8,
+    "pct_escalated": 0.0,
+    "total_cloud_cost_usd": 0.0179,
+    "avg_latency_s": 6.57
+  },
+  "metrics_after": {
+    "total": 113,
+    "pct_local": 52.2,
+    "pct_escalated": 0.0,
+    "total_cloud_cost_usd": 0.201,
+    "avg_latency_s": 21.669
+  },
+  "workloads": {
+    "A_refine_loop": [
+      {
+        "n": 1,
+        "task_type": "loop_refine",
+        "with": {
+          "task_type": "loop_refine",
+          "mode": "with",
+          "tier": "local_free",
+          "model": "qwen2.5-coder:1.5b",
+          "backend": null,
+          "escalated": false,
+          "prompt_tokens": 47,
+          "completion_tokens": 102,
+          "total_tokens": 149,
+          "latency_s": 12.69
+        },
+        "without": {
+          "task_type": "loop_refine",
+          "mode": "without",
+          "tier": "paid_strong",
+          "model": "claude-opus-4-8",
+          "backend": "cli:claude",
+          "escalated": false,
+          "prompt_tokens": 19,
+          "completion_tokens": 9,
+          "total_tokens": 28,
+          "latency_s": 5.67
+        }
+      },
+      {
+        "n": 2,
+        "task_type": "loop_refine",
+        "with": {
+          "task_type": "loop_refine",
+          "mode": "with",
+          "tier": "local_free",
+          "model": "llama3.2:3b",
+          "backend": null,
+          "escalated": false,
+          "prompt_tokens": 49,
+          "completion_tokens": 54,
+          "total_tokens": 103,
+          "latency_s": 132.06
+        },
+        "without": {
+          "task_type": "loop_refine",
+          "mode": "without",
+          "tier": "paid_strong",
+          "model": "claude-opus-4-8",
+          "backend": "cli:claude",
+          "escalated": false,
+          "prompt_tokens": 22,
+          "completion_tokens": 25,
+          "total_tokens": 47,
+          "latency_s": 8.2
+        }
+      },
+      {
+        "n": 3,
+        "task_type": "loop_refine",
+        "with": {
+          "task_type": "loop_refine",
+          "mode": "with",
+          "tier": "local_free",
+          "model": "qwen2.5-coder:1.5b",
+          "backend": null,
+          "escalated": false,
+          "prompt_tokens": 50,
+          "completion_tokens": 74,
+          "total_tokens": 124,
+          "latency_s": 83.12
+        },
+        "without": {
+          "task_type": "loop_refine",
+          "mode": "without",
+          "tier": "paid_strong",
+          "model": "claude-opus-4-8",
+          "backend": "cli:claude",
+          "escalated": false,
+          "prompt_tokens": 21,
+          "completion_tokens": 67,
+          "total_tokens": 88,
+          "latency_s": 23.05
+        }
+      },
+      {
+        "n": 4,
+        "task_type": "loop_refine",
+        "with": {
+          "task_type": "loop_refine",
+          "mode": "with",
+          "tier": "local_free",
+          "model": "llama3.2:3b",
+          "backend": null,
+          "escalated": false,
+          "prompt_tokens": 44,
+          "completion_tokens": 15,
+          "total_tokens": 59,
+          "latency_s": 7.76
+        },
+        "without": {
+          "task_type": "loop_refine",
+          "mode": "without",
+          "tier": "paid_strong",
+          "model": "claude-opus-4-8",
+          "backend": "cli:claude",
+          "escalated": false,
+          "prompt_tokens": 19,
+          "completion_tokens": 114,
+          "total_tokens": 133,
+          "latency_s": 10.81
+        }
+      },
+      {
+        "n": 5,
+        "task_type": "loop_refine",
+        "with": {
+          "task_type": "loop_refine",
+          "mode": "with",
+          "tier": "local_free",
+          "model": "llama3.2:3b",
+          "backend": null,
+          "escalated": false,
+          "prompt_tokens": 44,
+          "completion_tokens": 115,
+          "total_tokens": 159,
+          "latency_s": 73.73
+        },
+        "without": {
+          "task_type": "loop_refine",
+          "mode": "without",
+          "tier": "paid_strong",
+          "model": "claude-opus-4-8",
+          "backend": "cli:claude",
+          "escalated": false,
+          "prompt_tokens": 16,
+          "completion_tokens": 60,
+          "total_tokens": 76,
+          "latency_s": 6.33
+        }
+      },
+      {
+        "n": 6,
+        "task_type": "loop_refine",
+        "with": {
+          "task_type": "loop_refine",
+          "mode": "with",
+          "tier": "local_free",
+          "model": "qwen2.5-coder:1.5b",
+          "backend": null,
+          "escalated": false,
+          "prompt_tokens": 42,
+          "completion_tokens": 91,
+          "total_tokens": 133,
+          "latency_s": 103.28
+        },
+        "without": {
+          "task_type": "loop_refine",
+          "mode": "without",
+          "tier": "paid_strong",
+          "model": "claude-opus-4-8",
+          "backend": "cli:claude",
+          "escalated": false,
+          "prompt_tokens": 16,
+          "completion_tokens": 99,
+          "total_tokens": 115,
+          "latency_s": 8.95
+        }
+      },
+      {
+        "n": 7,
+        "task_type": "loop_refine",
+        "with": {
+          "task_type": "loop_refine",
+          "mode": "with",
+          "tier": "local_free",
+          "model": "qwen2.5-coder:1.5b",
+          "backend": null,
+          "escalated": false,
+          "prompt_tokens": 44,
+          "completion_tokens": 252,
+          "total_tokens": 296,
+          "latency_s": 11.13
+        },
+        "without": {
+          "task_type": "loop_refine",
+          "mode": "without",
+          "tier": "paid_strong",
+          "model": "claude-opus-4-8",
+          "backend": "cli:claude",
+          "escalated": false,
+          "prompt_tokens": 16,
+          "completion_tokens": 209,
+          "total_tokens": 225,
+          "latency_s": 57.43
+        }
+      },
+      {
+        "n": 8,
+        "task_type": "loop_refine",
+        "with": {
+          "task_type": "loop_refine",
+          "mode": "with",
+          "tier": "local_free",
+          "model": "llama3.2:3b",
+          "backend": null,
+          "escalated": false,
+          "prompt_tokens": 39,
+          "completion_tokens": 93,
+          "total_tokens": 132,
+          "latency_s": 23.49
+        },
+        "without": {
+          "task_type": "loop_refine",
+          "mode": "without",
+          "tier": "paid_strong",
+          "model": "claude-opus-4-8",
+          "backend": "cli:claude",
+          "escalated": false,
+          "prompt_tokens": 13,
+          "completion_tokens": 7,
+          "total_tokens": 20,
+          "latency_s": 4.85
+        }
+      },
+      {
+        "n": 9,
+        "task_type": "loop_refine",
+        "with": {
+          "task_type": "loop_refine",
+          "mode": "with",
+          "tier": "local_free",
+          "model": "llama3.2:3b",
+          "backend": null,
+          "escalated": false,
+          "prompt_tokens": 45,
+          "completion_tokens": 71,
+          "total_tokens": 116,
+          "latency_s": 5.1
+        },
+        "without": {
+          "task_type": "loop_refine",
+          "mode": "without",
+          "tier": "paid_strong",
+          "model": "claude-opus-4-8",
+          "backend": "cli:claude",
+          "escalated": false,
+          "prompt_tokens": 20,
+          "completion_tokens": 10,
+          "total_tokens": 30,
+          "latency_s": 3.58
+        }
+      },
+      {
+        "n": 10,
+        "task_type": "loop_refine",
+        "with": {
+          "task_type": "loop_refine",
+          "mode": "with",
+          "tier": "local_free",
+          "model": "llama3.2:3b",
+          "backend": null,
+          "escalated": false,
+          "prompt_tokens": 49,
+          "completion_tokens": 147,
+          "total_tokens": 196,
+          "latency_s": 9.77
+        },
+        "without": {
+          "task_type": "loop_refine",
+          "mode": "without",
+          "tier": "paid_strong",
+          "model": "claude-opus-4-8",
+          "backend": "cli:claude",
+          "escalated": false,
+          "prompt_tokens": 22,
+          "completion_tokens": 122,
+          "total_tokens": 144,
+          "latency_s": 6.1
+        }
+      },
+      {
+        "n": 11,
+        "task_type": "loop_refine",
+        "with": {
+          "task_type": "loop_refine",
+          "mode": "with",
+          "tier": "local_free",
+          "model": "llama3.2:3b",
+          "backend": null,
+          "escalated": false,
+          "prompt_tokens": 40,
+          "completion_tokens": 258,
+          "total_tokens": 298,
+          "latency_s": 15.62
+        },
+        "without": {
+          "task_type": "loop_refine",
+          "mode": "without",
+          "tier": "paid_strong",
+          "model": "claude-opus-4-8",
+          "backend": "cli:claude",
+          "escalated": false,
+          "prompt_tokens": 19,
+          "completion_tokens": 171,
+          "total_tokens": 190,
+          "latency_s": 26.42
+        }
+      },
+      {
+        "n": 12,
+        "task_type": "loop_refine",
+        "with": {
+          "task_type": "loop_refine",
+          "mode": "with",
+          "tier": "local_free",
+          "model": "llama3.2:3b",
+          "backend": null,
+          "escalated": false,
+          "prompt_tokens": 46,
+          "completion_tokens": 14,
+          "total_tokens": 60,
+          "latency_s": 1.73
+        },
+        "without": {
+          "task_type": "loop_refine",
+          "mode": "without",
+          "tier": "paid_strong",
+          "model": "claude-opus-4-8",
+          "backend": "cli:claude",
+          "escalated": false,
+          "prompt_tokens": 20,
+          "completion_tokens": 6,
+          "total_tokens": 26,
+          "latency_s": 5.5
+        }
+      }
+    ],
+    "B_mixed_session": [
+      {
+        "n": 1,
+        "task_type": "loop_refine",
+        "with": {
+          "task_type": "loop_refine",
+          "mode": "with",
+          "tier": "local_free",
+          "model": "qwen2.5-coder:1.5b",
+          "backend": null,
+          "escalated": false,
+          "prompt_tokens": 47,
+          "completion_tokens": 182,
+          "total_tokens": 229,
+          "latency_s": 83.18
+        },
+        "without": {
+          "task_type": "loop_refine",
+          "mode": "without",
+          "tier": "paid_strong",
+          "model": "claude-opus-4-8",
+          "backend": "cli:claude",
+          "escalated": false,
+          "prompt_tokens": 19,
+          "completion_tokens": 24,
+          "total_tokens": 43,
+          "latency_s": 6.67
+        }
+      },
+      {
+        "n": 2,
+        "task_type": "simple",
+        "with": {
+          "task_type": "simple",
+          "mode": "with",
+          "tier": "paid_cheap",
+          "model": "claude-haiku-4-5-20251001",
+          "backend": "cli:claude",
+          "escalated": false,
+          "prompt_tokens": 15,
+          "completion_tokens": 60,
+          "total_tokens": 75,
+          "latency_s": 4.52
+        },
+        "without": {
+          "task_type": "simple",
+          "mode": "without",
+          "tier": "paid_strong",
+          "model": "claude-opus-4-8",
+          "backend": "cli:claude",
+          "escalated": false,
+          "prompt_tokens": 15,
+          "completion_tokens": 63,
+          "total_tokens": 78,
+          "latency_s": 11.04
+        }
+      },
+      {
+        "n": 3,
+        "task_type": "general",
+        "with": {
+          "task_type": "general",
+          "mode": "with",
+          "tier": "paid_cheap",
+          "model": "claude-haiku-4-5-20251001",
+          "backend": "cli:claude",
+          "escalated": false,
+          "prompt_tokens": 17,
+          "completion_tokens": 182,
+          "total_tokens": 199,
+          "latency_s": 8.62
+        },
+        "without": {
+          "task_type": "general",
+          "mode": "without",
+          "tier": "paid_strong",
+          "model": "claude-opus-4-8",
+          "backend": "cli:claude",
+          "escalated": false,
+          "prompt_tokens": 17,
+          "completion_tokens": 275,
+          "total_tokens": 292,
+          "latency_s": 9.63
+        }
+      },
+      {
+        "n": 4,
+        "task_type": "loop_refine",
+        "with": {
+          "task_type": "loop_refine",
+          "mode": "with",
+          "tier": "local_free",
+          "model": "qwen2.5-coder:1.5b",
+          "backend": null,
+          "escalated": false,
+          "prompt_tokens": 45,
+          "completion_tokens": 132,
+          "total_tokens": 177,
+          "latency_s": 4.35
+        },
+        "without": {
+          "task_type": "loop_refine",
+          "mode": "without",
+          "tier": "paid_strong",
+          "model": "claude-opus-4-8",
+          "backend": "cli:claude",
+          "escalated": false,
+          "prompt_tokens": 18,
+          "completion_tokens": 175,
+          "total_tokens": 193,
+          "latency_s": 9.75
+        }
+      },
+      {
+        "n": 5,
+        "task_type": "simple",
+        "with": {
+          "task_type": "simple",
+          "mode": "with",
+          "tier": "paid_cheap",
+          "model": "claude-haiku-4-5-20251001",
+          "backend": "cli:claude",
+          "escalated": false,
+          "prompt_tokens": 21,
+          "completion_tokens": 41,
+          "total_tokens": 62,
+          "latency_s": 5.07
+        },
+        "without": {
+          "task_type": "simple",
+          "mode": "without",
+          "tier": "paid_strong",
+          "model": "claude-opus-4-8",
+          "backend": "cli:claude",
+          "escalated": false,
+          "prompt_tokens": 21,
+          "completion_tokens": 47,
+          "total_tokens": 68,
+          "latency_s": 7.08
+        }
+      },
+      {
+        "n": 6,
+        "task_type": "interactive",
+        "with": {
+          "task_type": "interactive",
+          "mode": "with",
+          "tier": "paid_cheap",
+          "model": "claude-haiku-4-5-20251001",
+          "backend": "cli:claude",
+          "escalated": false,
+          "prompt_tokens": 21,
+          "completion_tokens": 195,
+          "total_tokens": 216,
+          "latency_s": 9.28
+        },
+        "without": {
+          "task_type": "interactive",
+          "mode": "without",
+          "tier": "paid_strong",
+          "model": "claude-opus-4-8",
+          "backend": "cli:claude",
+          "escalated": false,
+          "prompt_tokens": 21,
+          "completion_tokens": 269,
+          "total_tokens": 290,
+          "latency_s": 10.03
+        }
+      },
+      {
+        "n": 7,
+        "task_type": "deep_reason",
+        "with": {
+          "task_type": "deep_reason",
+          "mode": "with",
+          "tier": "paid_cheap",
+          "model": "claude-haiku-4-5-20251001",
+          "backend": "cli:claude",
+          "escalated": false,
+          "prompt_tokens": 27,
+          "completion_tokens": 185,
+          "total_tokens": 212,
+          "latency_s": 9.95
+        },
+        "without": {
+          "task_type": "deep_reason",
+          "mode": "without",
+          "tier": "paid_strong",
+          "model": "claude-opus-4-8",
+          "backend": "cli:claude",
+          "escalated": false,
+          "prompt_tokens": 27,
+          "completion_tokens": 492,
+          "total_tokens": 519,
+          "latency_s": 12.11
+        }
+      },
+      {
+        "n": 8,
+        "task_type": "simple",
+        "with": {
+          "task_type": "simple",
+          "mode": "with",
+          "tier": "paid_cheap",
+          "model": "claude-haiku-4-5-20251001",
+          "backend": "cli:claude",
+          "escalated": false,
+          "prompt_tokens": 19,
+          "completion_tokens": 8,
+          "total_tokens": 27,
+          "latency_s": 4.14
+        },
+        "without": {
+          "task_type": "simple",
+          "mode": "without",
+          "tier": "paid_strong",
+          "model": "claude-opus-4-8",
+          "backend": "cli:claude",
+          "escalated": false,
+          "prompt_tokens": 19,
+          "completion_tokens": 8,
+          "total_tokens": 27,
+          "latency_s": 3.42
+        }
+      },
+      {
+        "n": 9,
+        "task_type": "general",
+        "with": {
+          "task_type": "general",
+          "mode": "with",
+          "tier": "paid_cheap",
+          "model": "claude-haiku-4-5-20251001",
+          "backend": "cli:claude",
+          "escalated": false,
+          "prompt_tokens": 18,
+          "completion_tokens": 97,
+          "total_tokens": 115,
+          "latency_s": 5.95
+        },
+        "without": {
+          "task_type": "general",
+          "mode": "without",
+          "tier": "paid_strong",
+          "model": "claude-opus-4-8",
+          "backend": "cli:claude",
+          "escalated": false,
+          "prompt_tokens": 18,
+          "completion_tokens": 66,
+          "total_tokens": 84,
+          "latency_s": 3.73
+        }
+      },
+      {
+        "n": 10,
+        "task_type": "deep_reason",
+        "with": {
+          "task_type": "deep_reason",
+          "mode": "with",
+          "tier": "paid_cheap",
+          "model": "claude-haiku-4-5-20251001",
+          "backend": "cli:claude",
+          "escalated": false,
+          "prompt_tokens": 40,
+          "completion_tokens": 123,
+          "total_tokens": 163,
+          "latency_s": 35.27
+        },
+        "without": {
+          "task_type": "deep_reason",
+          "mode": "without",
+          "tier": "local_free",
+          "model": "llama3.2:3b",
+          "backend": null,
+          "escalated": false,
+          "prompt_tokens": 55,
+          "completion_tokens": 1095,
+          "total_tokens": 1150,
+          "latency_s": 126.52
+        }
+      }
+    ],
+    "C_reasoning": [
+      {
+        "n": 1,
+        "task_type": "deep_reason",
+        "with": {
+          "task_type": "deep_reason",
+          "mode": "with",
+          "tier": "local_free",
+          "model": "llama3.2:3b",
+          "backend": null,
+          "escalated": false,
+          "prompt_tokens": 44,
+          "completion_tokens": 717,
+          "total_tokens": 761,
+          "latency_s": 43.38
+        },
+        "without": {
+          "task_type": "deep_reason",
+          "mode": "without",
+          "tier": "local_free",
+          "model": "llama3.2:3b",
+          "backend": null,
+          "escalated": false,
+          "prompt_tokens": 44,
+          "completion_tokens": 817,
+          "total_tokens": 861,
+          "latency_s": 50.25
+        }
+      },
+      {
+        "n": 2,
+        "task_type": "loop_verify",
+        "with": {
+          "task_type": "loop_verify",
+          "mode": "with",
+          "tier": "local_free",
+          "model": "qwen2.5-coder:1.5b",
+          "backend": null,
+          "escalated": false,
+          "prompt_tokens": 69,
+          "completion_tokens": 273,
+          "total_tokens": 342,
+          "latency_s": 68.49
+        },
+        "without": {
+          "task_type": "loop_verify",
+          "mode": "without",
+          "tier": "local_free",
+          "model": "qwen2.5-coder:1.5b",
+          "backend": null,
+          "escalated": false,
+          "prompt_tokens": 69,
+          "completion_tokens": 197,
+          "total_tokens": 266,
+          "latency_s": 6.22
+        }
+      },
+      {
+        "n": 3,
+        "task_type": "deep_reason",
+        "with": {
+          "task_type": "deep_reason",
+          "mode": "with",
+          "tier": "local_free",
+          "model": "llama3.2:3b",
+          "backend": null,
+          "escalated": false,
+          "prompt_tokens": 38,
+          "completion_tokens": 428,
+          "total_tokens": 466,
+          "latency_s": 47.42
+        },
+        "without": {
+          "task_type": "deep_reason",
+          "mode": "without",
+          "tier": "local_free",
+          "model": "llama3.2:3b",
+          "backend": null,
+          "escalated": false,
+          "prompt_tokens": 38,
+          "completion_tokens": 601,
+          "total_tokens": 639,
+          "latency_s": 41.99
+        }
+      },
+      {
+        "n": 4,
+        "task_type": "general",
+        "with": {
+          "task_type": "general",
+          "mode": "with",
+          "tier": "local_free",
+          "model": "llama3.2:3b",
+          "backend": null,
+          "escalated": false,
+          "prompt_tokens": 38,
+          "completion_tokens": 184,
+          "total_tokens": 222,
+          "latency_s": 87.68
+        },
+        "without": {
+          "task_type": "general",
+          "mode": "without",
+          "tier": "local_free",
+          "model": "llama3.2:3b",
+          "backend": null,
+          "escalated": false,
+          "prompt_tokens": 38,
+          "completion_tokens": 206,
+          "total_tokens": 244,
+          "latency_s": 14.99
+        }
+      },
+      {
+        "n": 5,
+        "task_type": "deep_reason",
+        "with": {
+          "task_type": "deep_reason",
+          "mode": "with",
+          "tier": "local_free",
+          "model": "llama3.2:3b",
+          "backend": null,
+          "escalated": false,
+          "prompt_tokens": 43,
+          "completion_tokens": 568,
+          "total_tokens": 611,
+          "latency_s": 35.23
+        },
+        "without": {
+          "task_type": "deep_reason",
+          "mode": "without",
+          "tier": "local_free",
+          "model": "llama3.2:3b",
+          "backend": null,
+          "escalated": false,
+          "prompt_tokens": 43,
+          "completion_tokens": 898,
+          "total_tokens": 941,
+          "latency_s": 56.5
+        }
+      },
+      {
+        "n": 6,
+        "task_type": "loop_verify",
+        "with": {
+          "task_type": "loop_verify",
+          "mode": "with",
+          "tier": "local_free",
+          "model": "qwen2.5-coder:1.5b",
+          "backend": null,
+          "escalated": false,
+          "prompt_tokens": 52,
+          "completion_tokens": 311,
+          "total_tokens": 363,
+          "latency_s": 232.18
+        },
+        "without": {
+          "task_type": "loop_verify",
+          "mode": "without",
+          "tier": "local_free",
+          "model": "qwen2.5-coder:1.5b",
+          "backend": null,
+          "escalated": false,
+          "prompt_tokens": 52,
+          "completion_tokens": 262,
+          "total_tokens": 314,
+          "latency_s": 8.3
+        }
+      },
+      {
+        "n": 7,
+        "task_type": "deep_reason",
+        "with": {
+          "task_type": "deep_reason",
+          "mode": "with",
+          "tier": "local_free",
+          "model": "llama3.2:3b",
+          "backend": null,
+          "escalated": false,
+          "prompt_tokens": 46,
+          "completion_tokens": 757,
+          "total_tokens": 803,
+          "latency_s": 64.62
+        },
+        "without": {
+          "task_type": "deep_reason",
+          "mode": "without",
+          "tier": "local_free",
+          "model": "llama3.2:3b",
+          "backend": null,
+          "escalated": false,
+          "prompt_tokens": 46,
+          "completion_tokens": 731,
+          "total_tokens": 777,
+          "latency_s": 45.32
+        }
+      },
+      {
+        "n": 8,
+        "task_type": "general",
+        "with": {
+          "task_type": "general",
+          "mode": "with",
+          "tier": "local_free",
+          "model": "llama3.2:3b",
+          "backend": null,
+          "escalated": false,
+          "prompt_tokens": 39,
+          "completion_tokens": 230,
+          "total_tokens": 269,
+          "latency_s": 14.14
+        },
+        "without": {
+          "task_type": "general",
+          "mode": "without",
+          "tier": "local_free",
+          "model": "llama3.2:3b",
+          "backend": null,
+          "escalated": false,
+          "prompt_tokens": 39,
+          "completion_tokens": 311,
+          "total_tokens": 350,
+          "latency_s": 18.72
+        }
+      },
+      {
+        "n": 9,
+        "task_type": "deep_reason",
+        "with": {
+          "task_type": "deep_reason",
+          "mode": "with",
+          "tier": "local_free",
+          "model": "llama3.2:3b",
+          "backend": null,
+          "escalated": false,
+          "prompt_tokens": 44,
+          "completion_tokens": 286,
+          "total_tokens": 330,
+          "latency_s": 17.77
+        },
+        "without": {
+          "task_type": "deep_reason",
+          "mode": "without",
+          "tier": "local_free",
+          "model": "llama3.2:3b",
+          "backend": null,
+          "escalated": false,
+          "prompt_tokens": 44,
+          "completion_tokens": 229,
+          "total_tokens": 273,
+          "latency_s": 13.25
+        }
+      }
+    ]
+  },
+  "pii_probe": {
+    "task_type": "simple",
+    "mode": "with",
+    "tier": "local_free",
+    "model": "llama3.2:3b",
+    "backend": null,
+    "escalated": false,
+    "prompt_tokens": 54,
+    "completion_tokens": 152,
+    "total_tokens": 206,
+    "latency_s": 9.78
+  }
+}

@@ -1,0 +1,101 @@
+{
+  "agent": "QualityGuard",
+  "focus": "routing-decision correctness and the savings-vs-quality tradeoff",
+  "generated_at": "2026-06-29",
+  "engine": "http://127.0.0.1:8095",
+  "node": {
+    "machine_class": "cpu_8gb",
+    "cpu_cores_physical": 2,
+    "ram_gb": 8.3,
+    "gpu": "none",
+    "local_models": ["llama3.2:3b", "qwen2.5-coder:1.5b"],
+    "local_default": "llama3.2:3b",
+    "strong_tier_backend": "cli:claude (claude-opus-4-8, no API key / no per-token price)"
+  },
+  "methodology": "Probes hit POST /v1/chat/completions with hibrid options; routing read from response.hibrid.chosen; tokens from response.usage. 180s timeout, retry-on-5xx, ~1s sleep between calls (imitating token_savings_run.py). The 2-core engine was under concurrent load from two other agents; 3 calls (batch_local, pii_phone_ssn_local, force_local) plus 1 SVQ-auto (svq_listcomp) returned transient 502 Bad Gateway after retries and were re-run successfully (agent3_retry.json). Strong tier has no dollar price, so savings are expressed as frontier-tier tokens avoided.",
+
+  "correctness_matrix": [
+    {"rule": "simple_local", "intent": "simple task should stay local_free", "expected_tier": "local_free", "observed_tier": "paid_cheap", "observed_kind": "cloud_cheap", "pass": false, "note": "FAIL vs the stated preference. 'simple' is NOT a hard override: its policy ladder is local_free -> paid_cheap and the utility argmax picked paid_cheap. Consistently reproduced (the 3 'simple' SVQ tasks also routed paid_cheap). Honest finding: the router does NOT keep simple tasks local in this deployment."},
+    {"rule": "loop_refine_local", "intent": "loop_refine stays local_free", "expected_tier": "local_free", "observed_tier": "local_free", "observed_kind": "local", "pass": true},
+    {"rule": "batch_local", "intent": "batch stays local_free", "expected_tier": "local_free", "observed_tier": "local_free", "observed_kind": "local", "pass": true, "note": "re-run after transient 502"},
+    {"rule": "loop_refine_complex_local", "intent": "loop_refine never jumps to paid_strong even when complex", "expected": "not paid_strong (local_free or paid_cheap)", "observed_tier": "local_free", "observed_kind": "local", "pass": true},
+    {"rule": "deep_reason_escalates", "intent": "hard one-shot deep_reason is allowed to escalate to a paid tier", "expected": "paid tier", "observed_tier": "paid_cheap", "observed_kind": "cloud_cheap", "pass": true, "note": "Escalated off local to a paid tier as intended; landed on paid_cheap rather than paid_strong (utility favored cheap for this prompt). Escalation rule satisfied."},
+    {"rule": "pii_email_local", "intent": "email PII forces local even with task_type=deep_reason", "expected_tier": "local_free", "observed_tier": "local_free", "observed_kind": "local", "pass": true},
+    {"rule": "pii_phone_ssn_local", "intent": "SSN-like number forces local even with task_type=deep_reason", "expected_tier": "local_free", "observed_tier": "local_free", "observed_kind": "local", "pass": true, "note": "re-run after transient 502"},
+    {"rule": "pii_card_local", "intent": "credit-card-like number forces local even with task_type=deep_reason", "expected_tier": "local_free", "observed_tier": "local_free", "observed_kind": "local", "pass": true},
+    {"rule": "allow_cloud_false_local", "intent": "allow_cloud=false on a hard task stays local (offline/private mode)", "expected_tier": "local_free", "observed_tier": "local_free", "observed_kind": "local", "pass": true},
+    {"rule": "force_strong", "intent": "force cloud_strong honored on a trivial prompt", "expected_tier": "paid_strong", "observed_tier": "paid_strong", "observed_kind": "cloud_strong", "pass": true},
+    {"rule": "force_local", "intent": "force local honored on a hard deep_reason prompt", "expected_tier": "local_free", "observed_tier": "local_free", "observed_kind": "local", "pass": true, "note": "re-run after transient 502"},
+    {"rule": "force_cloud_cheap", "intent": "force cloud_cheap honored", "expected_tier": "paid_cheap", "observed_tier": "paid_cheap", "observed_kind": "cloud_cheap", "pass": true}
+  ],
+  "correctness_summary": {
+    "total": 12,
+    "passed": 11,
+    "failed": 1,
+    "failed_rules": ["simple_local"],
+    "verdict": "All HARD overrides are correct: PII (email/SSN/card) -> local regardless of task_type; allow_cloud=false -> local; force local/cheap/strong -> honored; loop_refine never escalates to the strong tier; deep_reason is allowed to escalate. The single failure is the SOFT preference that 'simple' tasks stay local: under the utility model the cheap paid tier wins, so simple tasks route to paid_cheap, not local_free."
+  },
+
+  "savings_vs_quality": {
+    "definition": "frontier = paid_strong tier. 'WITH hibrid' = auto routing. 'WITHOUT' = every task forced to cloud_strong. Quality judged by objective checks (correct code / correct classification / correct extraction) on the actual answer text.",
+    "rows": [
+      {"task": "svq_typo", "task_type": "loop_refine", "prompt": "Fix `def add(a,b): retrun a+b`",
+       "auto_tier": "local_free", "auto_kept_local": true, "auto_answer_ok": true,
+       "strong_tier": "paid_strong", "strong_answer_ok": true, "quality_equal": true,
+       "frontier_tokens_with": 0, "frontier_tokens_without": 36,
+       "note": "Both produce `def add(a,b): return a+b`. Identical correctness."},
+      {"task": "svq_listcomp", "task_type": "loop_refine", "prompt": "Refactor to a single list comprehension",
+       "auto_tier": "local_free", "auto_kept_local": true, "auto_answer_ok": true,
+       "strong_tier": "paid_strong", "strong_answer_ok": true, "quality_equal": true,
+       "frontier_tokens_with": 0, "frontier_tokens_without": 38,
+       "note": "Local: [x**2 for x in xs if x>0]; strong: [x*x for x in xs if x>0]. Both correct. (Auto 502'd on first pass, correct on re-run.)"},
+      {"task": "svq_reverse", "task_type": "loop_refine", "prompt": "Write reverse() so assert reverse('abc')=='cba'",
+       "auto_tier": "local_free", "auto_kept_local": true, "auto_answer_ok": true,
+       "strong_tier": "paid_strong", "strong_answer_ok": true, "quality_equal": true,
+       "frontier_tokens_with": 0, "frontier_tokens_without": 118,
+       "note": "Both use s[::-1]. Strong adds explanatory prose (118 tok) the local answer omits (57 tok); the code is identical and correct."},
+      {"task": "svq_translate", "task_type": "simple", "prompt": "Translate to Spanish: 'The build is green.'",
+       "auto_tier": "paid_cheap", "auto_kept_local": false, "auto_answer_ok": true,
+       "strong_tier": "paid_strong", "strong_answer_ok": true, "quality_equal": true,
+       "frontier_tokens_with": 0, "frontier_tokens_without": 118,
+       "note": "Auto did NOT stay local (routed paid_cheap/haiku). Both gave a correct, idiomatic Spanish rendering."},
+      {"task": "svq_sentiment", "task_type": "simple", "prompt": "Classify sentiment of 'this library saved me hours'",
+       "auto_tier": "paid_cheap", "auto_kept_local": false, "auto_answer_ok": true,
+       "strong_tier": "paid_strong", "strong_answer_ok": true, "quality_equal": true,
+       "frontier_tokens_with": 0, "frontier_tokens_without": 30,
+       "note": "Both answered exactly 'positive'. Auto routed paid_cheap, not local."},
+      {"task": "svq_summary", "task_type": "simple", "prompt": "Summarize in one sentence",
+       "auto_tier": "paid_cheap", "auto_kept_local": false, "auto_answer_ok": true,
+       "strong_tier": "paid_strong", "strong_answer_ok": true, "quality_equal": true,
+       "frontier_tokens_with": 0, "frontier_tokens_without": 44,
+       "note": "Both faithful one-sentence summaries. Auto routed paid_cheap, not local."}
+    ],
+    "totals": {
+      "tasks": 6,
+      "auto_kept_fully_local": 3,
+      "auto_routed_paid_cheap": 3,
+      "auto_routed_paid_strong": 0,
+      "frontier_tokens_with_hibrid": 0,
+      "frontier_tokens_without_hibrid": 384,
+      "frontier_tokens_avoided": 384,
+      "pct_frontier_tokens_avoided": 100.0,
+      "cheap_tier_tokens_incurred_by_auto": 160,
+      "quality_regressions_vs_strong": 0
+    },
+    "verdict": "On every task it kept off the frontier, the router lost NO answer quality: all 6 auto answers passed the same objective checks as the forced-strong answers (correct code, correct 'positive', faithful summary/translation). Auto sent 0 of these 6 to the frontier (strong) tier, avoiding all 384 frontier tokens the all-strong counterfactual would have spent. The honest nuance: only the 3 loop_refine tasks stayed fully local; the 3 'simple' tasks went to the cheap paid tier (haiku), not local. So the saving here is mostly 'frontier avoided', and partly (3/6) 'fully local'. No case observed where the local/cheap answer was worse than strong."
+  },
+
+  "engine_metrics": {
+    "before": {"total": 23, "pct_local": 56.5, "pct_escalated": 0.0, "total_cloud_cost_usd": 0.0157, "avg_latency_s": 6.547},
+    "after": {"total": 66, "pct_local": 47.0, "pct_escalated": 0.0, "total_cloud_cost_usd": 0.1264, "avg_latency_s": 16.282},
+    "note": "avg_latency rose to ~16s under the 3-agent concurrent load on 2 cores; this is the cause of the transient 502s on slow local calls, not a routing defect."
+  },
+
+  "web_research": [
+    {"point": "FrugalGPT frames cost saving via an LLM cascade: try cheap models first, escalate to expensive ones only when a learned scorer judges the cheap answer inadequate. Reports matching GPT-4 quality with up to ~98% cost reduction on their benchmarks - the canonical 'save money without losing quality' result. hibrid is a predictive (pre-execution) router rather than a post-hoc cascade, but shares the local/cheap-first, escalate-the-hard-ones principle.", "url": "https://arxiv.org/abs/2305.05176"},
+    {"point": "Hybrid LLM (Ding et al., ICLR 2024) trains a router that sends queries to a small vs large model based on predicted difficulty, with a tunable quality target: up to ~40% fewer large-model calls at NO measured quality drop. Directly supports our finding that easy tasks can be kept off the frontier without quality loss.", "url": "https://arxiv.org/abs/2404.14618"},
+    {"point": "RouterBench (Hu et al., 2024; UC Berkeley) is the standard 405k-outcome benchmark for evaluating routers on the cost-quality plane, using convex-hull / AIQ (area-under-quality-cost) metrics. The field's lesson: never report cost alone - report quality AT a cost, because no single model dominates across tasks.", "url": "https://arxiv.org/abs/2403.12031"},
+    {"point": "Confidence-based model cascades use the small model's output uncertainty as the escalation signal (high-confidence = keep local; low-confidence = escalate to cloud). Surveys report cascades/routing cutting cost ~45-85% while retaining ~95% of quality. hibrid escalates on cheap pre-execution features (complexity heuristic, task_type, PII) rather than on output confidence - cheaper to compute but blind to whether the local answer was actually good.", "url": "https://arxiv.org/html/2404.14618"},
+    {"point": "Practitioner consensus (e.g. RouterBench/Martian write-ups): the strongest setups route first to avoid obviously mismatched tiers, then cascade within a tier; and hard privacy/compliance constraints (keep PII local) are treated as overrides outside the cost-quality optimization - exactly the layering hibrid implements with its PII->local and allow_cloud=false hard gates.", "url": "https://withmartian.com/post/introducing-routerbench"}
+  ]
+}

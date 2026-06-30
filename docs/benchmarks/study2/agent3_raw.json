@@ -1,0 +1,559 @@
+{
+  "base": "http://127.0.0.1:8095",
+  "correctness": [
+    {
+      "rule": "simple_local",
+      "desc": "simple task stays local_free",
+      "opts": {
+        "task_type": "simple"
+      },
+      "expected_tier": "local_free",
+      "expected_kind": "local",
+      "observed_tier": "paid_cheap",
+      "observed_kind": "cloud_cheap",
+      "observed_model": "claude-haiku-4-5-20251001",
+      "escalated": false,
+      "reason": "perfil=simple (task_type=simple) | elegido paid_cheap:cloud_cheap/claude-haiku-4-5-20251001 (U=-1.333)",
+      "latency_s": 7.7,
+      "error": null
+    },
+    {
+      "rule": "loop_refine_local",
+      "desc": "loop_refine stays local_free",
+      "opts": {
+        "task_type": "loop_refine"
+      },
+      "expected_tier": "local_free",
+      "expected_kind": "local",
+      "observed_tier": "local_free",
+      "observed_kind": "local",
+      "observed_model": "qwen2.5-coder:1.5b",
+      "escalated": false,
+      "reason": "perfil=loop_refine (task_type=general) | elegido local_free:local/qwen2.5-coder:1.5b (U=-0.282)",
+      "latency_s": 4.16,
+      "error": null
+    },
+    {
+      "rule": "batch_local",
+      "desc": "batch stays local_free",
+      "opts": {
+        "task_type": "batch"
+      },
+      "expected_tier": "local_free",
+      "expected_kind": "local",
+      "observed_tier": null,
+      "observed_kind": null,
+      "observed_model": null,
+      "escalated": null,
+      "reason": null,
+      "latency_s": 82.23,
+      "error": "Server error '502 Bad Gateway' for url 'http://127.0.0.1:8095/v1/chat/completions'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+    },
+    {
+      "rule": "loop_refine_complex_local",
+      "desc": "loop_refine never jumps to strong even if complex",
+      "opts": {
+        "task_type": "loop_refine"
+      },
+      "expected_tier": null,
+      "expected_kind": "local",
+      "observed_tier": "local_free",
+      "observed_kind": "local",
+      "observed_model": "qwen2.5-coder:1.5b",
+      "escalated": false,
+      "reason": "perfil=loop_refine (task_type=loop_refine) | elegido local_free:local/qwen2.5-coder:1.5b (U=-0.323)",
+      "latency_s": 7.14,
+      "error": null
+    },
+    {
+      "rule": "deep_reason_escalates",
+      "desc": "deep_reason hard one-shot allowed to escalate",
+      "opts": {
+        "task_type": "deep_reason"
+      },
+      "expected_tier": null,
+      "expected_kind": null,
+      "observed_tier": "paid_cheap",
+      "observed_kind": "cloud_cheap",
+      "observed_model": "claude-haiku-4-5-20251001",
+      "escalated": false,
+      "reason": "perfil=deep_reason (task_type=general) | elegido paid_cheap:cloud_cheap/claude-haiku-4-5-20251001 (U=-1.333)",
+      "latency_s": 58.36,
+      "error": null
+    },
+    {
+      "rule": "pii_email_local",
+      "desc": "PII email forces local regardless of deep_reason",
+      "opts": {
+        "task_type": "deep_reason"
+      },
+      "expected_tier": "local_free",
+      "expected_kind": "local",
+      "observed_tier": "local_free",
+      "observed_kind": "local",
+      "observed_model": "llama3.2:3b",
+      "escalated": false,
+      "reason": "override de privacidad: PII detectada -> s\u00f3lo local",
+      "latency_s": 72.47,
+      "error": null
+    },
+    {
+      "rule": "pii_phone_ssn_local",
+      "desc": "PII SSN-like number forces local",
+      "opts": {
+        "task_type": "deep_reason"
+      },
+      "expected_tier": "local_free",
+      "expected_kind": "local",
+      "observed_tier": null,
+      "observed_kind": null,
+      "observed_model": null,
+      "escalated": null,
+      "reason": null,
+      "latency_s": 121.49,
+      "error": "Server error '502 Bad Gateway' for url 'http://127.0.0.1:8095/v1/chat/completions'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+    },
+    {
+      "rule": "pii_card_local",
+      "desc": "PII credit-card-like number forces local",
+      "opts": {
+        "task_type": "deep_reason"
+      },
+      "expected_tier": "local_free",
+      "expected_kind": "local",
+      "observed_tier": "local_free",
+      "observed_kind": "local",
+      "observed_model": "llama3.2:3b",
+      "escalated": false,
+      "reason": "override de privacidad: PII detectada -> s\u00f3lo local",
+      "latency_s": 9.45,
+      "error": null
+    },
+    {
+      "rule": "allow_cloud_false_local",
+      "desc": "allow_cloud=False on a hard task stays local",
+      "opts": {
+        "task_type": "deep_reason",
+        "allow_cloud": false
+      },
+      "expected_tier": "local_free",
+      "expected_kind": "local",
+      "observed_tier": "local_free",
+      "observed_kind": "local",
+      "observed_model": "llama3.2:3b",
+      "escalated": false,
+      "reason": "allow_cloud=False -> s\u00f3lo local",
+      "latency_s": 75.46,
+      "error": null
+    },
+    {
+      "rule": "force_strong",
+      "desc": "force cloud_strong honored",
+      "opts": {
+        "force": "cloud_strong"
+      },
+      "expected_tier": "paid_strong",
+      "expected_kind": "cloud_strong",
+      "observed_tier": "paid_strong",
+      "observed_kind": "cloud_strong",
+      "observed_model": "claude-opus-4-8",
+      "escalated": false,
+      "reason": "forzado por el cliente a cloud_strong",
+      "latency_s": 3.81,
+      "error": null
+    },
+    {
+      "rule": "force_local",
+      "desc": "force local honored on a hard task",
+      "opts": {
+        "task_type": "deep_reason",
+        "force": "local"
+      },
+      "expected_tier": "local_free",
+      "expected_kind": "local",
+      "observed_tier": null,
+      "observed_kind": null,
+      "observed_model": null,
+      "escalated": null,
+      "reason": null,
+      "latency_s": 123.4,
+      "error": "Server error '502 Bad Gateway' for url 'http://127.0.0.1:8095/v1/chat/completions'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+    },
+    {
+      "rule": "force_cloud_cheap",
+      "desc": "force cloud_cheap honored",
+      "opts": {
+        "force": "cloud_cheap"
+      },
+      "expected_tier": "paid_cheap",
+      "expected_kind": "cloud_cheap",
+      "observed_tier": "paid_cheap",
+      "observed_kind": "cloud_cheap",
+      "observed_model": "claude-haiku-4-5-20251001",
+      "escalated": false,
+      "reason": "forzado por el cliente a cloud_cheap",
+      "latency_s": 10.43,
+      "error": null
+    }
+  ],
+  "svq": [
+    {
+      "id": "svq_typo",
+      "task_type": "loop_refine",
+      "prompt": "Fix this Python: `def add(a, b): retrun a + b`. Return only the corrected function.",
+      "auto": {
+        "tier": "local_free",
+        "kind": "local",
+        "model": "qwen2.5-coder:1.5b",
+        "total_tokens": 69,
+        "latency_s": 1.2,
+        "answer": "```python\ndef add(a, b):\n    return a + b\n```",
+        "check": "ok",
+        "check_note": "matched=['return a + b']",
+        "error": null
+      },
+      "strong": {
+        "tier": "paid_strong",
+        "kind": "cloud_strong",
+        "model": "claude-opus-4-8",
+        "total_tokens": 36,
+        "latency_s": 4.22,
+        "answer": "```python\ndef add(a, b):\n    return a + b\n```",
+        "check": "ok",
+        "check_note": "matched=['return a + b']",
+        "error": null
+      }
+    },
+    {
+      "id": "svq_listcomp",
+      "task_type": "loop_refine",
+      "prompt": "Refactor to a single list comprehension: `out=[]\nfor x in xs:\n    if x>0: out.append(x*x)`",
+      "auto": {
+        "tier": null,
+        "kind": null,
+        "model": null,
+        "total_tokens": null,
+        "latency_s": 64.1,
+        "answer": "",
+        "check": "bad",
+        "check_note": "no answer",
+        "error": "Server error '502 Bad Gateway' for url 'http://127.0.0.1:8095/v1/chat/completions'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502"
+      },
+      "strong": {
+        "tier": "paid_strong",
+        "kind": "cloud_strong",
+        "model": "claude-opus-4-8",
+        "total_tokens": 38,
+        "latency_s": 5.63,
+        "answer": "```python\nout = [x*x for x in xs if x > 0]\n```",
+        "check": "ok",
+        "check_note": "matched=['[x*x for x in xs if x', 'for x in xs if x > 0']",
+        "error": null
+      }
+    },
+    {
+      "id": "svq_reverse",
+      "task_type": "loop_refine",
+      "prompt": "This test fails: `assert reverse('abc')=='cba'`. Write the `reverse` function.",
+      "auto": {
+        "tier": "local_free",
+        "kind": "local",
+        "model": "llama3.2:3b",
+        "total_tokens": 57,
+        "latency_s": 4.44,
+        "answer": "def reverse(s):\n    return s[::-1]",
+        "check": "ok",
+        "check_note": "matched=['[::-1]']",
+        "error": null
+      },
+      "strong": {
+        "tier": "paid_strong",
+        "kind": "cloud_strong",
+        "model": "claude-opus-4-8",
+        "total_tokens": 118,
+        "latency_s": 12.5,
+        "answer": "Here's the function that makes that assertion pass:\n\n```python\ndef reverse(s):\n    return s[::-1]\n```\n\n`s[::-1]` slices the string with a step of `-1`, walking it back to front, so `reverse('abc')` returns `'cba'`. It works for any sequence-like string, including empty strings (`reverse('') == ''`).\n\nWant me to drop this into a specific file in the repo along with the test?",
+        "check": "ok",
+        "check_note": "matched=['[::-1]']",
+        "error": null
+      }
+    },
+    {
+      "id": "svq_translate",
+      "task_type": "simple",
+      "prompt": "Translate to Spanish: 'The build is green.'",
+      "auto": {
+        "tier": "paid_cheap",
+        "kind": "cloud_cheap",
+        "model": "claude-haiku-4-5-20251001",
+        "total_tokens": 78,
+        "latency_s": 8.45,
+        "answer": "**La construcci\u00f3n est\u00e1 verde.** (literal)\n\nor more commonly in tech contexts:\n\n**El build est\u00e1 verde.** (uses the English term \"build\" as is standard in Spanish-speaking developer communities)\n\nBoth convey that the build/tests have passed successfully.",
+        "check": "ok",
+        "check_note": "matched=['verde', 'build']",
+        "error": null
+      },
+      "strong": {
+        "tier": "paid_strong",
+        "kind": "cloud_strong",
+        "model": "claude-opus-4-8",
+        "total_tokens": 118,
+        "latency_s": 9.73,
+        "answer": "Verde. (Literalmente: \"El build est\u00e1 en verde.\")\n\nIn Spanish: **\"El build est\u00e1 en verde.\"**\n\nA more natural/idiomatic option depending on context:\n- **\"La compilaci\u00f3n est\u00e1 en verde.\"** (using the Spanish word for \"build\")\n- **\"El build pas\u00f3 correctamente.\"** (The build passed successfully)\n\nThe phrase \"en verde\" preserves the same meaning as the English \"green\" \u2014 that the build succeeded and all checks passed.",
+        "check": "ok",
+        "check_note": "matched=['verde', 'compilaci', 'build']",
+        "error": null
+      }
+    },
+    {
+      "id": "svq_sentiment",
+      "task_type": "simple",
+      "prompt": "Classify sentiment as exactly one word (positive/negative/neutral): 'this library saved me hours'",
+      "auto": {
+        "tier": "paid_cheap",
+        "kind": "cloud_cheap",
+        "model": "claude-haiku-4-5-20251001",
+        "total_tokens": 30,
+        "latency_s": 4.61,
+        "answer": "positive",
+        "check": "ok",
+        "check_note": "matched=['positive', 'positiv']",
+        "error": null
+      },
+      "strong": {
+        "tier": "paid_strong",
+        "kind": "cloud_strong",
+        "model": "claude-opus-4-8",
+        "total_tokens": 30,
+        "latency_s": 6.28,
+        "answer": "positive",
+        "check": "ok",
+        "check_note": "matched=['positive', 'positiv']",
+        "error": null
+      }
+    },
+    {
+      "id": "svq_summary",
+      "task_type": "simple",
+      "prompt": "Summarize in one sentence: 'The router keeps cheap calls local and only escalates hard ones.'",
+      "auto": {
+        "tier": "paid_cheap",
+        "kind": "cloud_cheap",
+        "model": "claude-haiku-4-5-20251001",
+        "total_tokens": 52,
+        "latency_s": 15.67,
+        "answer": "The router handles inexpensive operations locally and escalates complex ones to more powerful systems.",
+        "check": "ok",
+        "check_note": "matched=['local', 'escalat', 'router']",
+        "error": null
+      },
+      "strong": {
+        "tier": "paid_strong",
+        "kind": "cloud_strong",
+        "model": "claude-opus-4-8",
+        "total_tokens": 44,
+        "latency_s": 3.24,
+        "answer": "The router keeps cheap calls local and escalates only the hard ones.",
+        "check": "ok",
+        "check_note": "matched=['local', 'escalat', 'cheap', 'router']",
+        "error": null
+      }
+    }
+  ],
+  "node": {
+    "hardware": {
+      "os": "Linux",
+      "arch": "x86_64",
+      "cpu": "x86_64",
+      "cpu_cores_physical": 2,
+      "ram_gb": 8.3,
+      "gpu_vendor": "none",
+      "gpu_name": "CPU only",
+      "vram_gb": 0.0,
+      "apple_silicon": false,
+      "machine_class": "cpu_8gb",
+      "max_local_params_b": 8.0
+    },
+    "local_endpoint": "http://localhost:11434/v1",
+    "local_models": [
+      "llama3.2:3b",
+      "llama3.2:1b",
+      "qwen2.5-coder:1.5b",
+      "qwen2.5:1.5b",
+      "qwen2.5:0.5b"
+    ],
+    "local_default": "llama3.2:3b",
+    "tok_s": {
+      "llama3.2:3b": 6.3
+    },
+    "cloud_models": [
+      "claude-opus-4-8",
+      "claude-sonnet-4-6",
+      "claude-haiku-4-5-20251001"
+    ],
+    "backends": [
+      {
+        "id": "cli:claude",
+        "mechanism": "cli",
+        "agent": "claude",
+        "available": true,
+        "models": [
+          "claude-opus-4-8",
+          "claude-sonnet-4-6",
+          "claude-haiku-4-5-20251001"
+        ],
+        "latency_s": 2.5
+      },
+      {
+        "id": "cli:codex",
+        "mechanism": "cli",
+        "agent": "codex",
+        "available": false,
+        "models": [
+          "gpt-4o",
+          "gpt-4o-mini"
+        ],
+        "latency_s": 2.5
+      },
+      {
+        "id": "cli:opencode",
+        "mechanism": "cli",
+        "agent": "opencode",
+        "available": false,
+        "models": [
+          "claude-sonnet-4-6",
+          "gpt-4o",
+          "gpt-4o-mini"
+        ],
+        "latency_s": 2.5
+      },
+      {
+        "id": "cli:copilot",
+        "mechanism": "cli",
+        "agent": "copilot",
+        "available": false,
+        "models": [
+          "gpt-4o",
+          "gpt-4o-mini"
+        ],
+        "latency_s": 2.5
+      }
+    ]
+  },
+  "policy": {
+    "task_policy": [
+      {
+        "task_type": "loop_refine",
+        "axis": "code",
+        "tier_ladder": "local_free \u2192 paid_cheap",
+        "paid_cap": "paid_cheap",
+        "rationale": "Bucle de refinado/QA: cientos de llamadas baratas. Local-first; nunca el modelo caro por iteraci\u00f3n."
+      },
+      {
+        "task_type": "loop_verify",
+        "axis": "code",
+        "tier_ladder": "paid_strong \u2192 paid_cheap \u2192 local_free",
+        "paid_cap": "\u2014",
+        "rationale": "Verificaci\u00f3n final \u00fanica de un loop: calidad por encima de coste."
+      },
+      {
+        "task_type": "deep_reason",
+        "axis": "reasoning",
+        "tier_ladder": "paid_strong \u2192 local_free \u2192 paid_cheap",
+        "paid_cap": "\u2014",
+        "rationale": "Tarea dura de una sola llamada (arquitectura, prueba, debug profundo)."
+      },
+      {
+        "task_type": "simple",
+        "axis": "general",
+        "tier_ladder": "local_free \u2192 paid_cheap",
+        "paid_cap": "paid_cheap",
+        "rationale": "Clasificar, extraer, traducir, resumen corto."
+      },
+      {
+        "task_type": "interactive",
+        "axis": "general",
+        "tier_ladder": "local_free \u2192 paid_cheap \u2192 paid_strong",
+        "paid_cap": "\u2014",
+        "rationale": "Chat en vivo: la latencia pesa m\u00e1s (profiles sube \u03bb_lat)."
+      },
+      {
+        "task_type": "batch",
+        "axis": "general",
+        "tier_ladder": "local_free \u2192 paid_cheap",
+        "paid_cap": "paid_cheap",
+        "rationale": "Procesado masivo sin urgencia: maximiza local."
+      },
+      {
+        "task_type": "general",
+        "axis": "general",
+        "tier_ladder": "local_free \u2192 paid_cheap \u2192 paid_strong",
+        "paid_cap": "\u2014",
+        "rationale": "Equilibrado: utilidad pura sin sesgo de tipo de tarea."
+      }
+    ],
+    "backends": [
+      {
+        "id": "cli:claude",
+        "mechanism": "cli",
+        "agent": "claude",
+        "available": true,
+        "models": [
+          "claude-opus-4-8",
+          "claude-sonnet-4-6",
+          "claude-haiku-4-5-20251001"
+        ],
+        "latency_s": 2.5
+      },
+      {
+        "id": "cli:codex",
+        "mechanism": "cli",
+        "agent": "codex",
+        "available": false,
+        "models": [
+          "gpt-4o",
+          "gpt-4o-mini"
+        ],
+        "latency_s": 2.5
+      },
+      {
+        "id": "cli:opencode",
+        "mechanism": "cli",
+        "agent": "opencode",
+        "available": false,
+        "models": [
+          "claude-sonnet-4-6",
+          "gpt-4o",
+          "gpt-4o-mini"
+        ],
+        "latency_s": 2.5
+      },
+      {
+        "id": "cli:copilot",
+        "mechanism": "cli",
+        "agent": "copilot",
+        "available": false,
+        "models": [
+          "gpt-4o",
+          "gpt-4o-mini"
+        ],
+        "latency_s": 2.5
+      }
+    ]
+  },
+  "metrics_before": {
+    "total": 23,
+    "pct_local": 56.5,
+    "pct_escalated": 0.0,
+    "total_cloud_cost_usd": 0.0157,
+    "avg_latency_s": 6.547
+  },
+  "metrics_after": {
+    "total": 66,
+    "pct_local": 47.0,
+    "pct_escalated": 0.0,
+    "total_cloud_cost_usd": 0.1264,
+    "avg_latency_s": 16.282
+  },
+  "generated_at": "2026-06-29 22:38:21 CEST"
+}

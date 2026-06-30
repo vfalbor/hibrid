@@ -1,0 +1,181 @@
+{
+  "study": "hibrid competitive comparison (internet research)",
+  "generated": "2026-06-29",
+  "agent": "CompetitorScan",
+  "subject": {
+    "name": "hibrid",
+    "license": "Apache-2.0",
+    "repo": "https://github.com/vfalbor/hibrid",
+    "category": "local-first LLM router that sits under AI coding tools",
+    "differentiators": [
+      "Local-first: cheap/loop calls run on local Ollama small model at zero marginal cost",
+      "No API key for the strong tier: reaches frontier models through the user's already-authenticated agent CLI (claude -p, codex, opencode, copilot) or session, not a metered per-token API key",
+      "Measures the machine at startup (RAM/VRAM/tok-s) and routes on measured latency, not the spec sheet",
+      "Routes by task axis (code vs general vs reasoning), picking the best local model for the detected task",
+      "Privacy: PII can be forced to stay local"
+    ]
+  },
+  "tools": [
+    {
+      "name": "RouteLLM",
+      "vendor": "LMSYS (lm-sys)",
+      "what_it_does": "Open-source framework for serving and evaluating LLM routers; decides per-query between a strong and a weak model to cut cost while preserving quality.",
+      "routing_mechanism": "Trained routers on preference data: matrix factorization, BERT classifier, similarity-weighted ranking, causal LLM classifier. Cascade/binary strong-vs-weak routing.",
+      "local_first": "No (designed around API model pairs, e.g. GPT-4 Turbo vs Mixtral; can be pointed at local backends but not its design point)",
+      "needs_api_keys": "Yes (calls underlying model APIs)",
+      "open_source": "Yes (Apache-2.0)",
+      "savings_claims": [
+        {"claim": "Up to ~85% cost reduction on MT Bench while maintaining 95% of GPT-4 quality; only ~14% of queries sent to the strong model", "methodology": "MT Bench, GPT-4 Turbo (strong) vs Mixtral 8x7B (weak), matrix-factorization router", "source": "https://www.lmsys.org/blog/2024-07-01-routellm/"},
+        {"claim": "~45% cost reduction on MMLU and ~35% on GSM8K at comparable quality", "methodology": "Same model pairing, BERT-based classifier router", "source": "https://arxiv.org/pdf/2406.18665"}
+      ],
+      "sources": ["https://www.lmsys.org/blog/2024-07-01-routellm/", "https://github.com/lm-sys/routellm", "https://arxiv.org/pdf/2406.18665"]
+    },
+    {
+      "name": "LiteLLM",
+      "vendor": "BerriAI",
+      "what_it_does": "Python SDK + self-hosted proxy/AI gateway calling 100+ LLM APIs in OpenAI format, with cost tracking, virtual keys, guardrails, load balancing, fallbacks, logging.",
+      "routing_mechanism": "Operational routing: retries, fallbacks, load balancing across deployments. Not a quality/task classifier; routing is rule/availability/cost based.",
+      "local_first": "Partial (supports local Ollama and vLLM as providers, but it is a gateway, not a local-first decision engine)",
+      "needs_api_keys": "Yes for cloud providers; manages virtual keys; can call keyless local models",
+      "open_source": "Yes (MIT for core; some enterprise features gated)",
+      "savings_claims": [
+        {"claim": "No headline quality-routing savings percentage published; value is cost visibility, budgets, and provider failover rather than a savings benchmark", "methodology": "n/a", "source": "https://docs.litellm.ai/docs/simple_proxy"}
+      ],
+      "sources": ["https://github.com/BerriAI/litellm", "https://docs.litellm.ai/docs/simple_proxy", "https://localaimaster.com/blog/ai-gateway-litellm"]
+    },
+    {
+      "name": "OpenRouter",
+      "vendor": "OpenRouter",
+      "what_it_does": "Hosted unified gateway to 300-400+ models via one API key and OpenAI-compatible endpoint; load-balances across providers, can pick cheapest provider, offers an Auto Router and a free-model router.",
+      "routing_mechanism": "Provider load balancing (price/uptime); :floor for cheapest provider; Auto Router (powered by NotDiamond) picks best model per prompt by complexity/task/capability.",
+      "local_first": "No (cloud service; passes prompts through OpenRouter)",
+      "needs_api_keys": "Yes (single OpenRouter key; pay-per-token, no markup claimed)",
+      "open_source": "No (proprietary service; some free models offered)",
+      "savings_claims": [
+        {"claim": "No first-party quality-routing savings percentage; savings come from picking cheapest provider per model and free-model availability", "methodology": "n/a", "source": "https://openrouter.ai/docs/guides/routing/routers/auto-router"}
+      ],
+      "sources": ["https://openrouter.ai/docs/guides/routing/routers/auto-router", "https://openrouter.ai/docs/guides/routing/provider-selection", "https://openrouter.ai/pricing"]
+    },
+    {
+      "name": "Martian",
+      "vendor": "withmartian",
+      "what_it_does": "Commercial LLM router/gateway that for any prompt finds the model giving the best result at lowest cost; markets itself as the first LLM router. Accenture-invested.",
+      "routing_mechanism": "Interpretability-based prediction of how models will perform without running them (uses compression/quantization/distillation/specialized models); user sets quality vs willingness-to-pay criteria. Also provider failover.",
+      "local_first": "No",
+      "needs_api_keys": "Yes (managed service / gateway)",
+      "open_source": "Mostly no (commercial; a 'Martian Protocol' router repo exists separately)",
+      "savings_claims": [
+        {"claim": "Markets significant cost reduction vs single all-purpose model; no specific first-party benchmark percentage located", "methodology": "uncertain / not published in sources found", "source": "https://techcrunch.com/2023/11/15/martians-tool-automatically-switches-between-llms-to-reduce-costs/"}
+      ],
+      "sources": ["https://venturebeat.com/ai/why-accenture-and-martian-see-model-routing-as-key-to-enterprise-ai-success", "https://techcrunch.com/2023/11/15/martians-tool-automatically-switches-between-llms-to-reduce-costs/", "https://github.com/martianprotocol/martianrouter"]
+    },
+    {
+      "name": "Not Diamond",
+      "vendor": "Not Diamond",
+      "what_it_does": "Predictive model-recommendation layer: trains a custom router that determines which of 60+ LLMs gives the highest-quality response to a query. Explicitly a recommender, not a gateway/proxy.",
+      "routing_mechanism": "Preference/ranking model trained on a large LLM evaluation dataset; meta-model learns when to call each LLM. Tradeoff knobs for cost/latency (cost_quality_tradeoff 0-10). Routing decision returned, call executed client-side.",
+      "local_first": "No (cloud recommender; but does NOT proxy your prompts/keys, and can route to your own custom/fine-tuned endpoints)",
+      "needs_api_keys": "API key for Not Diamond's recommendation service; your model keys stay client-side",
+      "open_source": "Partial (open-sourced a lightweight router preview Dec 2023; main product is hosted)",
+      "savings_claims": [
+        {"claim": "Markets quality maximization plus cost/latency tradeoffs; no specific first-party savings percentage located in sources", "methodology": "uncertain / not published in sources found", "source": "https://docs.notdiamond.ai/docs/quickstart"}
+      ],
+      "sources": ["https://docs.notdiamond.ai/docs/quickstart", "https://venturebeat.com/ai/not-diamond-automatically-routes-your-query-to-the-best-llm", "https://github.com/Not-Diamond/awesome-ai-model-routing"]
+    },
+    {
+      "name": "Unify.ai",
+      "vendor": "Unify",
+      "what_it_does": "LLM dev platform that dynamically routes prompts to the best model balancing cost/latency/quality, with quality/cost/latency sliders and published benchmarks.",
+      "routing_mechanism": "Trained router benchmarked across datasets (Open Hermes, GSM8K, HellaSwag, MMLU, MT-Bench); user-controlled quality/cost/latency sliders.",
+      "local_first": "No",
+      "needs_api_keys": "Yes (managed routing service)",
+      "open_source": "No (hosted product; open-source alternatives like LLMRouter exist)",
+      "savings_claims": [
+        {"claim": "Claims router can beat individual endpoints on average across MT-Bench/MMLU/GSM8K/HellaSwag and cut cost by using small models for simple tasks; no single headline % located", "methodology": "benchmark suite per their docs", "source": "https://xnavi.ai/tools/unify"}
+      ],
+      "sources": ["https://xnavi.ai/tools/unify", "https://docs.llamaindex.ai/en/logan-material_docs/examples/llm/unify/"]
+    },
+    {
+      "name": "semantic-router",
+      "vendor": "Aurelio AI (aurelio-labs)",
+      "what_it_does": "Open-source superfast decision layer that routes requests by semantic meaning (which path/tool/LLM) using vector embeddings instead of an LLM call.",
+      "routing_mechanism": "Embeddings + kNN/cosine similarity against example utterances; encoders for OpenAI, Cohere, HuggingFace, FastEmbed; in-memory or Pinecone/Qdrant.",
+      "local_first": "Partial (can run local embedding encoders like FastEmbed/HuggingFace; routing math is local)",
+      "needs_api_keys": "Optional (only if using a hosted encoder; local encoders are keyless)",
+      "open_source": "Yes (MIT)",
+      "savings_claims": [
+        {"claim": "No cost-savings % claim; value is latency (routing decision ~5000ms LLM -> ~100ms vector math) and avoiding LLM calls for routing", "methodology": "vendor latency figure", "source": "https://github.com/aurelio-labs/semantic-router"}
+      ],
+      "sources": ["https://github.com/aurelio-labs/semantic-router", "https://www.aurelio.ai/semantic-router", "https://www.deepchecks.com/glossary/semantic-router"]
+    },
+    {
+      "name": "Portkey AI Gateway",
+      "vendor": "Portkey",
+      "what_it_does": "Open-source, enterprise AI gateway routing to 1600+ models with one API; load balancing, retries/fallbacks, timeouts, guardrails, PII redaction, virtual keys, observability.",
+      "routing_mechanism": "Config-driven routing rules, weighted load balancing across keys/providers, fallbacks; can route to privately hosted/local models via custom host URLs. Operational, not quality/task classifier.",
+      "local_first": "Partial (can target local models via custom host; primarily a managed/self-hostable gateway)",
+      "needs_api_keys": "Yes for cloud providers; own keys or virtual keys; self-hosted has no per-request fee",
+      "open_source": "Yes (Apache-2.0 gateway, npx @portkey-ai/gateway / Docker); managed plan separate",
+      "savings_claims": [
+        {"claim": "No quality-routing savings %; PII redaction guardrail and self-hosting (no per-request fees) are the cost/privacy levers", "methodology": "n/a", "source": "https://portkey.ai/docs/product/ai-gateway"}
+      ],
+      "sources": ["https://github.com/portkey-ai/gateway", "https://portkey.ai/docs/product/ai-gateway", "https://portkey.ai/features/ai-gateway"]
+    },
+    {
+      "name": "GPTCache",
+      "vendor": "Zilliz / community",
+      "what_it_does": "Open-source semantic cache for LLM apps: stores prior responses and serves cached answers for semantically similar queries, cutting calls, latency and cost.",
+      "routing_mechanism": "Not a model router; embedding-based semantic cache lookup (vector store + similarity). Complementary to routing.",
+      "local_first": "Partial (cache and local embedding models run locally; still calls the LLM on cache miss)",
+      "needs_api_keys": "Only for the underlying LLM on cache miss / hosted embeddings",
+      "open_source": "Yes",
+      "savings_claims": [
+        {"claim": "Semantic caching cuts inference cost ~30-70% by reuse; 2-10x faster on cache hit; one study reduced API calls up to 68.8% (hit rate 61.6-68.8%)", "methodology": "GPTCache paper + GPT Semantic Cache study (arxiv 2411.05276) across query categories", "source": "https://aclanthology.org/2023.nlposs-1.24/"}
+      ],
+      "sources": ["https://aclanthology.org/2023.nlposs-1.24/", "https://arxiv.org/html/2411.05276v2", "https://www.datacamp.com/tutorial/gptcache-tutorial-enhancing-efficiency-in-llm-applications"]
+    },
+    {
+      "name": "LiteLLM + Ollama (local-first DIY pattern)",
+      "vendor": "community pattern",
+      "what_it_does": "The most-cited open-source local-first routing recipe: Ollama runs local models, LiteLLM (or n8n templates) routes routine tasks local and overflow/frontier tasks to cloud (e.g. OpenRouter).",
+      "routing_mechanism": "Manual/rule-based tiered routing (small/medium/large), optionally graduating to semantic routing. No hardware benchmarking or task-axis model selection out of the box.",
+      "local_first": "Yes (this is the local-first category hibrid competes in)",
+      "needs_api_keys": "Yes for the cloud tier (metered per-token API key); local tier keyless",
+      "open_source": "Yes (component tools are OSS)",
+      "savings_claims": [
+        {"claim": "No formal benchmark; savings depend on share of traffic kept local. Note: since Ollama v0.14 (Jan 2026) Claude Code can connect directly to local models via Anthropic Messages API compatibility (no proxy)", "methodology": "n/a", "source": "https://medium.com/@michael.hannecke/implementing-llm-model-routing-a-practical-guide-with-ollama-and-litellm-b62c1562f50f"}
+      ],
+      "sources": ["https://medium.com/@michael.hannecke/implementing-llm-model-routing-a-practical-guide-with-ollama-and-litellm-b62c1562f50f", "https://pinggy.io/blog/best_ai_llm_routers_openrouter_alternatives/", "https://growwstacks.com/workflows/private-and-local-ollama-self-hosted-dynamic-llm-router"]
+    }
+  ],
+  "comparison_matrix": {
+    "fields": ["local_first", "no_api_key_for_strong_tier", "measures_hardware", "routes_by_task_axis", "open_source", "has_published_savings_claim"],
+    "rows": {
+      "hibrid": {"local_first": "yes", "no_api_key_for_strong_tier": "yes (via authenticated agent CLI)", "measures_hardware": "yes", "routes_by_task_axis": "yes", "open_source": "yes (Apache-2.0)", "has_published_savings_claim": "in progress (this study)"},
+      "RouteLLM": {"local_first": "no", "no_api_key_for_strong_tier": "no", "measures_hardware": "no", "routes_by_task_axis": "partial (strong/weak only)", "open_source": "yes", "has_published_savings_claim": "yes (~85% MT Bench)"},
+      "LiteLLM": {"local_first": "partial", "no_api_key_for_strong_tier": "no", "measures_hardware": "no", "routes_by_task_axis": "no", "open_source": "yes", "has_published_savings_claim": "no"},
+      "OpenRouter": {"local_first": "no", "no_api_key_for_strong_tier": "no", "measures_hardware": "no", "routes_by_task_axis": "partial (Auto Router)", "open_source": "no", "has_published_savings_claim": "no"},
+      "Martian": {"local_first": "no", "no_api_key_for_strong_tier": "no", "measures_hardware": "no", "routes_by_task_axis": "yes (perf prediction)", "open_source": "no", "has_published_savings_claim": "no (marketed, no number found)"},
+      "Not Diamond": {"local_first": "no", "no_api_key_for_strong_tier": "no", "measures_hardware": "no", "routes_by_task_axis": "yes (quality ranking)", "open_source": "partial", "has_published_savings_claim": "no (number not found)"},
+      "Unify.ai": {"local_first": "no", "no_api_key_for_strong_tier": "no", "measures_hardware": "no", "routes_by_task_axis": "yes", "open_source": "no", "has_published_savings_claim": "partial (benchmark suite)"},
+      "semantic-router": {"local_first": "partial", "no_api_key_for_strong_tier": "n/a (not a model caller)", "measures_hardware": "no", "routes_by_task_axis": "yes (semantic)", "open_source": "yes", "has_published_savings_claim": "no (latency only)"},
+      "Portkey": {"local_first": "partial", "no_api_key_for_strong_tier": "no", "measures_hardware": "no", "routes_by_task_axis": "no", "open_source": "yes", "has_published_savings_claim": "no"},
+      "GPTCache": {"local_first": "partial", "no_api_key_for_strong_tier": "n/a (cache)", "measures_hardware": "no", "routes_by_task_axis": "no", "open_source": "yes", "has_published_savings_claim": "yes (30-70% via cache)"},
+      "LiteLLM+Ollama (DIY)": {"local_first": "yes", "no_api_key_for_strong_tier": "no", "measures_hardware": "no", "routes_by_task_axis": "no (manual tiers)", "open_source": "yes", "has_published_savings_claim": "no"}
+    }
+  },
+  "positioning": "hibrid's genuinely differentiated combination is: (1) reaching the strong tier through the user's already-authenticated agent CLI/session so there is no metered per-token API key for frontier calls, and (2) benchmarking the actual machine at startup and routing on measured local latency. No competitor researched does either. Its other claims (local-first, task-axis routing, OSS) each exist somewhere in the field but not bundled: the DIY LiteLLM+Ollama pattern is local-first but manual and still needs a cloud API key; RouteLLM/Unify/NotDiamond/Martian do learned quality routing but are cloud-API-centric and do not measure your hardware; Portkey/LiteLLM are mature managed/self-hostable gateways with far more provider coverage, observability, guardrails and enterprise hardening than hibrid. Where competitors are genuinely stronger: published, peer-reviewed savings benchmarks (RouteLLM ~85% on MT Bench at 95% GPT-4 quality), provider breadth (OpenRouter 400+, Portkey 1600+ models), enterprise features, and funding/maturity (Martian near a reported $1.3B valuation, Accenture-backed).",
+  "field_benchmarks": [
+    {"name": "RouterBench", "what": "Benchmark for evaluating multi-LLM routing systems (~405k inference outcomes)", "headline_numbers": "Establishes routing can save cost without quality loss; original paper light on exact %", "source": "https://arxiv.org/html/2403.12031v2"},
+    {"name": "LLMRouterBench (2026)", "what": "Massive unified LLM routing benchmark", "headline_numbers": "Flagship routers (GraphRouter PF, Avengers-Pro) up to ~31.7-32% cost reduction with no accuracy loss; notes HybridLLM/FrugalGPT/OpenRouter sometimes fail to beat BestSingle", "source": "https://arxiv.org/html/2601.07206v1"},
+    {"name": "FrugalGPT", "what": "Cascade approach: query weak->strong until a quality judge accepts (Chen, Zaharia, Zou 2023)", "headline_numbers": "Widely cited: up to ~98% cost reduction while matching best single LLM (GPT-4) on some datasets (mark: classic paper claim, dataset-dependent)", "source": "https://arxiv.org/pdf/2305.05176"},
+    {"name": "RouteLLM (MT Bench)", "what": "Strong/weak preference-data routers", "headline_numbers": "~85% cost cut on MT Bench at 95% GPT-4 quality; ~45% MMLU; ~35% GSM8K", "source": "https://www.lmsys.org/blog/2024-07-01-routellm/"},
+    {"name": "GPTCache / semantic caching", "what": "Reuse of semantically similar prior answers", "headline_numbers": "~30-70% inference cost reduction; up to 68.8% fewer API calls in one study", "source": "https://arxiv.org/html/2411.05276v2"}
+  ],
+  "caveats": [
+    "Martian and Not Diamond market cost/quality gains but no first-party numeric savings benchmark was located in the sources searched; marked uncertain.",
+    "FrugalGPT's ~98% figure is the classic paper claim and is highly dataset-dependent; LLMRouterBench (2026) reports FrugalGPT sometimes fails to beat the best single model.",
+    "Some 'local-first' partials (LiteLLM, Portkey, semantic-router, GPTCache) can use local models but are not designed as local-first decision engines the way hibrid is.",
+    "Ollama v0.14 (Jan 2026) added direct Anthropic Messages API compatibility, lowering the barrier for tools like Claude Code to call local models without a proxy - relevant context for hibrid's niche."
+  ]
+}

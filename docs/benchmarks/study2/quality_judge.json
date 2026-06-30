@@ -1,0 +1,85 @@
+{
+  "generated_at": "2026-06-30 08:42:25 CEST",
+  "engine": "http://127.0.0.1:8095",
+  "judge": "frontier tier (force=cloud_strong, cli:claude), blind to source model",
+  "tasks_judged": 8,
+  "mean_auto_quality": 0.812,
+  "mean_frontier_quality": 0.912,
+  "mean_auto_quality_local_only": 0.812,
+  "parity_rate_pct_ge_0_7": 75.0,
+  "parity_rate_pct_within_0_1_of_frontier": 75.0,
+  "rows": [
+    {
+      "n": 1,
+      "task_type": "loop_refine",
+      "auto_tier": "local_free",
+      "auto_model": "qwen2.5-coder:1.5b",
+      "auto_quality": 0.5,
+      "frontier_quality": 1.0,
+      "delta": -0.5
+    },
+    {
+      "n": 2,
+      "task_type": "loop_refine",
+      "auto_tier": "local_free",
+      "auto_model": "llama3.2:3b",
+      "auto_quality": 1.0,
+      "frontier_quality": 1.0,
+      "delta": 0.0
+    },
+    {
+      "n": 3,
+      "task_type": "simple",
+      "auto_tier": "local_free",
+      "auto_model": "llama3.2:3b",
+      "auto_quality": 1.0,
+      "frontier_quality": 1.0,
+      "delta": 0.0
+    },
+    {
+      "n": 4,
+      "task_type": "simple",
+      "auto_tier": "local_free",
+      "auto_model": "llama3.2:3b",
+      "auto_quality": 0.9,
+      "frontier_quality": 0.9,
+      "delta": 0.0
+    },
+    {
+      "n": 5,
+      "task_type": "general",
+      "auto_tier": "local_free",
+      "auto_model": "llama3.2:3b",
+      "auto_quality": 0.8,
+      "frontier_quality": 0.9,
+      "delta": -0.1
+    },
+    {
+      "n": 6,
+      "task_type": "general",
+      "auto_tier": "local_free",
+      "auto_model": "llama3.2:3b",
+      "auto_quality": 0.9,
+      "frontier_quality": 0.9,
+      "delta": 0.0
+    },
+    {
+      "n": 7,
+      "task_type": "deep_reason",
+      "auto_tier": "local_free",
+      "auto_model": "llama3.2:3b",
+      "auto_quality": 0.5,
+      "frontier_quality": 0.9,
+      "delta": -0.4
+    },
+    {
+      "n": 8,
+      "task_type": "deep_reason",
+      "auto_tier": "local_free",
+      "auto_model": "llama3.2:3b",
+      "auto_quality": 0.9,
+      "frontier_quality": 0.7,
+      "delta": 0.2
+    }
+  ]
+}

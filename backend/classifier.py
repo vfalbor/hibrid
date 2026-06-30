@@ -68,7 +68,11 @@ def _infer_task_type(text: str, complexity: float, has_code: bool) -> str:
     if _TRANSLATE_HINTS.search(text):
         return "translate"
     # Razonamiento duro manda sobre redacción si la tarea es claramente compleja.
-    if complexity >= 0.6 or (has_code and _HARD_HINTS.search(text)):
+    # También dispara cuando hay ≥3 coincidencias distintas de _HARD_HINTS (señales
+    # de razonamiento acumuladas) aunque la complejidad sea baja y no haya código:
+    # un prompt texto-puro con múltiples conceptos de razonamiento es deep_reason.
+    hard_count = len(_HARD_HINTS.findall(text))
+    if complexity >= 0.6 or (has_code and _HARD_HINTS.search(text)) or hard_count >= 3:
         return "deep_reason"
     if _WRITE_HINTS.search(text) and not has_code:
         return "write"

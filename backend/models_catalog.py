@@ -228,7 +228,14 @@ def match(model_name: str) -> ModelInfo | None:
     # 1) familia + tamaño exactos
     for e in CATALOG:
         fam, size = e.family.split(":")
-        if fam in n and (size.replace("b", "") in n or _params_in(n) == e.params_b):
+        # Require the model name to start with "family:" to avoid false positives where
+        # a shorter family name (e.g. "phi4") is a prefix of a longer one ("phi4-reasoning"),
+        # or where a digit from the size string (e.g. "3" from "3b") accidentally matches
+        # a digit that is part of the family version (e.g. the "3" in "llama3.2:1b").
+        if n.startswith(fam + ":") and (
+            n[len(fam) + 1:].startswith(size.replace("b", ""))
+            or _params_in(n) == e.params_b
+        ):
             return e
     # 2) sólo familia base (sin tamaño) — empareja la primera (mayor) de esa familia
     for e in CATALOG:

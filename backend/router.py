@@ -138,8 +138,13 @@ def decide(node: NodeProfile, feat: TaskFeatures,
     # --- overrides duros (preceden al perfil) ---
     forced_reason = ""
     if opts and opts.force:
-        pool = [d for d in candidates if d.kind == opts.force] or candidates
-        forced_reason = f"forzado por el cliente a {opts.force}"
+        matched = [d for d in candidates if d.kind == opts.force]
+        pool = matched or candidates
+        forced_reason = (
+            f"forzado por el cliente a {opts.force}"
+            if matched
+            else f"forzado={opts.force} no disponible; fallback al mejor candidato"
+        )
     elif feat.has_pii and settings.pii_forces_local and local is not None:
         pool = [local]
         forced_reason = "override de privacidad: PII detectada -> sólo local"

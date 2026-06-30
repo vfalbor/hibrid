@@ -83,6 +83,21 @@ No keys to configure. hibrid discovers what's already on your machine:
   (`claude` / `codex` / `opencode` / `copilot`), a skills service (`HIBRID_SKILLS_URL`), or a
   harness session token. Whatever is present, hibrid uses adaptively.
 
+## Use it from your agent — the `/hibrid` skill
+
+If your agent supports skills (e.g. Claude Code), this repo ships a `/hibrid` skill that delegates a
+task — or a cheap sub-task — to the local engine instead of spending frontier tokens. The agent stays
+the brain; hibrid is the muscle for cheap work.
+
+```bash
+ln -sfn "$(pwd)/skills/hibrid" ~/.claude/skills/hibrid   # install (repo stays the source of truth)
+```
+
+Then `/hibrid <task>` routes the task and reports where it ran. It composes with expertise skills —
+`/josecela`, `/viral`, `/senior-dev` and the like: their framework shapes the prompt, hibrid routes
+the execution (mechanical sub-steps stay local/free; frontier-grade generation goes to the strong
+tier). See [`skills/`](skills/).
+
 ## Why nothing else does this
 
 | | Cloud routers | Local apps | **hibrid** |
@@ -121,7 +136,8 @@ endpoint is the next item. Tell us where it breaks.
 - [`docs/EXECUTION_PROFILES.md`](docs/EXECUTION_PROFILES.md) — task-type routing & loop economics
 - [`docs/MODELS.md`](docs/MODELS.md) — the curated local-model catalog & task-axis matching
 - [`docs/RESEARCH.md`](docs/RESEARCH.md) — research behind the design (a 3-agent study)
-- [`docs/benchmarks/`](docs/benchmarks/) — **benchmark study**: local routing on three real CPU servers (charts + data)
+- [`skills/`](skills/) — the `/hibrid` agent skill (route tasks through the local router; composes with other skills)
+- [`docs/benchmarks/`](docs/benchmarks/) — **benchmark studies**: three-server local routing, plus a [3-agent verification study](docs/benchmarks/study2/) (tokens, LLM-judged quality, competitive comparison)
 - [`docs/ROADMAP.md`](docs/ROADMAP.md) — phases, the hub, and the community flywheel
 - [`docs/PLAN.md`](docs/PLAN.md) — deep community & hosting plan ([Spanish original](docs/PLAN.es.md))
 

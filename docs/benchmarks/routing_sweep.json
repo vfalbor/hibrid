@@ -1,0 +1,58 @@
+{
+  "machines": {
+    "cpu_small (8GB)": {
+      "kept_local": 16,
+      "kept_local_pct": 100.0,
+      "frontier_tokens": 0,
+      "fta_pct": 100.0,
+      "by_axis_kept": {
+        "general": "3/3",
+        "writing": "3/3",
+        "code": "3/3",
+        "reasoning": "4/4",
+        "multilingual": "3/3"
+      }
+    },
+    "cpu_large (32GB)": {
+      "kept_local": 16,
+      "kept_local_pct": 100.0,
+      "frontier_tokens": 0,
+      "fta_pct": 100.0,
+      "by_axis_kept": {
+        "general": "3/3",
+        "writing": "3/3",
+        "code": "3/3",
+        "reasoning": "4/4",
+        "multilingual": "3/3"
+      }
+    },
+    "gpu_12gb": {
+      "kept_local": 16,
+      "kept_local_pct": 100.0,
+      "frontier_tokens": 0,
+      "fta_pct": 100.0,
+      "by_axis_kept": {
+        "general": "3/3",
+        "writing": "3/3",
+        "code": "3/3",
+        "reasoning": "4/4",
+        "multilingual": "3/3"
+      }
+    },
+    "gpu_24gb": {
+      "kept_local": 16,
+      "kept_local_pct": 100.0,
+      "frontier_tokens": 0,
+      "fta_pct": 100.0,
+      "by_axis_kept": {
+        "general": "3/3",
+        "writing": "3/3",
+        "code": "3/3",
+        "reasoning": "4/4",
+        "multilingual": "3/3"
+      }
+    }
+  },
+  "n": 16,
+  "baseline_frontier_tokens": 6550
+}

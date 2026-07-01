@@ -203,6 +203,141 @@ points here too</pre></div>
     </div>
   </section>
 
+  <!--COMPARE_START-->
+  <section class="wrap" id="compare">
+    <style>
+      #compare .cmp-stats{display:flex;flex-wrap:wrap;gap:1rem;margin:1rem 0 1.4rem}
+      #compare .cmp-stat{flex:1;min-width:150px;background:var(--card);border:1px solid var(--rule);border-radius:var(--r);padding:.9rem 1rem}
+      #compare .cmp-stat .n{font-size:var(--s2);font-weight:700;color:var(--green-ink);line-height:1}
+      #compare .cmp-stat .l{color:var(--muted);font-size:var(--s-1);margin-top:.25rem}
+      #compare .cmp-card{background:var(--card);border:1px solid var(--rule);border-radius:var(--r);padding:1rem 1.1rem;margin-bottom:1rem}
+      #compare .cmp-q{font-family:var(--serif);font-size:var(--s1);margin-bottom:.7rem}
+      #compare .cmp-ax{display:inline-block;font-family:var(--sans);font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:var(--clay);border:1px solid var(--rule-2);border-radius:6px;padding:.1rem .4rem;margin-right:.5rem;vertical-align:middle}
+      #compare .cmp-cols{display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
+      @media(max-width:640px){#compare .cmp-cols{grid-template-columns:1fr}}
+      #compare .cmp-col{border:1px solid var(--rule);border-radius:8px;padding:.7rem .8rem}
+      #compare .cmp-local{border-left:3px solid var(--green)}
+      #compare .cmp-fro{border-left:3px solid var(--slate)}
+      #compare .cmp-h{font-size:var(--s-1);color:var(--ink-2);margin-bottom:.3rem}
+      #compare .cmp-meta{font-size:var(--s-1);color:var(--muted);margin-bottom:.5rem}
+      #compare .cmp-ans{font-size:var(--s-1);color:var(--ink-2);line-height:1.5;white-space:pre-wrap}
+      #compare .cmp-foot{margin-top:.7rem;font-size:var(--s-1);color:var(--muted)}
+      #compare .mono{font-family:var(--mono)}
+    </style>
+    <h2 class="lead">See for yourself — and the model behind each call</h2>
+    <p class="sub">Real measured runs (14 tasks, blind-judged 0–1). Same task, answered on a
+      small local model (a 3B, free) and by the frontier (paid). The quality gap is small; the
+      token bill isn't.</p>
+    <div class="cmp-stats">
+      <div class="cmp-stat"><div class="n">97.5%</div><div class="l">of frontier quality kept<br>(local 0.829 vs 0.85, blind judge)</div></div>
+      <div class="cmp-stat"><div class="n">64.3%</div><div class="l">of tasks at parity or better vs the paid model</div></div>
+      <div class="cmp-stat"><div class="n">5,382→0</div><div class="l">paid tokens: the frontier spent 5,382, the local tier spent nothing</div></div>
+    </div>
+    
+      <article class="cmp-card">
+        <div class="cmp-q"><span class="cmp-ax">general</span>List the planets in the solar system in order from the Sun.</div>
+        <div class="cmp-cols">
+          <div class="cmp-col cmp-local">
+            <div class="cmp-h">with hibrid · <b>local, free</b></div>
+            <div class="cmp-meta"><span class="mono">llama3.2:3b</span>
+              · <b>0</b> paid tok · q&nbsp;<b>0.85</b></div>
+            <p class="cmp-ans">Here are the 8 planets in our solar system, listed in order from closest to farthest from the Sun: 1. Mercury 2. Venus 3. Earth 4. Mars 5. Jupiter 6. Saturn 7. Uranus 8. Neptune Note: Pluto was previously considered a planet, but it is now classified as a dwarf planet by the International Astronomic…</p>
+          </div>
+          <div class="cmp-col cmp-fro">
+            <div class="cmp-h">without hibrid · <b>frontier, paid</b></div>
+            <div class="cmp-meta"><span class="mono">llama3.2:3b</span>
+              · <b>147</b> paid tok · q&nbsp;<b>0.80</b></div>
+            <p class="cmp-ans">Here are the 8 planets in our solar system, listed in order from the Sun: 1. Mercury 2. Venus 3. Earth 4. Mars 5. Jupiter 6. Saturn 7. Uranus 8. Neptune Note: Pluto was previously considered a planet but is now classified as a dwarf planet. Also, it&#x27;s worth noting that there are other objects in the…</p>
+          </div>
+        </div>
+        <div class="cmp-foot">the model behind the local answer: <span class="mono">llama3.2:3b</span>
+          · quality gap <b>-0.05</b> · paid tokens saved on this task: <b>147</b></div>
+      </article>
+
+      <article class="cmp-card">
+        <div class="cmp-q"><span class="cmp-ax">writing</span>Write a 400-word thought-leadership LinkedIn post on local-first AI privacy: include a strong hook, three concrete insights, and a clear call to action.</div>
+        <div class="cmp-cols">
+          <div class="cmp-col cmp-local">
+            <div class="cmp-h">with hibrid · <b>local, free</b></div>
+            <div class="cmp-meta"><span class="mono">llama3.2:3b</span>
+              · <b>0</b> paid tok · q&nbsp;<b>0.85</b></div>
+            <p class="cmp-ans">**The Local-First Approach to AI Privacy: Why Your Data Matters Most** As we increasingly rely on Artificial Intelligence (AI) to power our daily lives, it&#x27;s becoming painfully clear that the line between convenience and compromise is getting perilously thin. With every passing day, our personal dat…</p>
+          </div>
+          <div class="cmp-col cmp-fro">
+            <div class="cmp-h">without hibrid · <b>frontier, paid</b></div>
+            <div class="cmp-meta"><span class="mono">llama3.2:3b</span>
+              · <b>609</b> paid tok · q&nbsp;<b>0.70</b></div>
+            <p class="cmp-ans">**The Dark Side of Globalization: Why Local-First AI Privacy Matters** As we continue to navigate the digital age, it&#x27;s easy to get caught up in the excitement of AI-driven innovation. From personalized product recommendations to autonomous vehicles, AI is transforming industries and redefining the …</p>
+          </div>
+        </div>
+        <div class="cmp-foot">the model behind the local answer: <span class="mono">llama3.2:3b</span>
+          · quality gap <b>-0.15</b> · paid tokens saved on this task: <b>609</b></div>
+      </article>
+
+      <article class="cmp-card">
+        <div class="cmp-q"><span class="cmp-ax">code</span>Implement a thread-safe LRU cache in Python with O(1) get and O(1) put. Use full type hints, a lock for concurrent access, and a brief docstring.</div>
+        <div class="cmp-cols">
+          <div class="cmp-col cmp-local">
+            <div class="cmp-h">with hibrid · <b>local, free</b></div>
+            <div class="cmp-meta"><span class="mono">llama3.2:3b</span>
+              · <b>0</b> paid tok · q&nbsp;<b>1.00</b></div>
+            <p class="cmp-ans">import threading from collections import OrderedDict class LRUCache: &quot;&quot;&quot; A thread-safe implementation of an LRU (Least Recently Used) cache. Attributes: capacity (int): The maximum number of items the cache can hold. cache (OrderedDict): An ordered dictionary that stores the cached items. lock (thre…</p>
+          </div>
+          <div class="cmp-col cmp-fro">
+            <div class="cmp-h">without hibrid · <b>frontier, paid</b></div>
+            <div class="cmp-meta"><span class="mono">llama3.2:3b</span>
+              · <b>257</b> paid tok · q&nbsp;<b>0.80</b></div>
+            <p class="cmp-ans">class LRUCache: &quot;&quot;&quot; A thread-safe LRU cache implemented using an OrderedDict. &quot;&quot;&quot; def __init__(self, capacity: int): self.capacity = capacity self.cache = {} self.lock = asyncio.Lock() async def get(self, key: int) -&gt; int: &quot;&quot;&quot;Get a value from the cache by key.&quot;&quot;&quot; with self.lock: if key in self.cache…</p>
+          </div>
+        </div>
+        <div class="cmp-foot">the model behind the local answer: <span class="mono">llama3.2:3b</span>
+          · quality gap <b>-0.20</b> · paid tokens saved on this task: <b>257</b></div>
+      </article>
+
+      <article class="cmp-card">
+        <div class="cmp-q"><span class="cmp-ax">reasoning</span>A train travels at 60 mph for 2.5 hours. How far does it travel? Show your work.</div>
+        <div class="cmp-cols">
+          <div class="cmp-col cmp-local">
+            <div class="cmp-h">with hibrid · <b>local, free</b></div>
+            <div class="cmp-meta"><span class="mono">llama3.2:3b</span>
+              · <b>0</b> paid tok · q&nbsp;<b>1.00</b></div>
+            <p class="cmp-ans">To find the distance traveled, we need to multiply the speed of the train (in miles per hour) by the time it traveled. Speed = 60 mph Time = 2.5 hours Distance = Speed x Time = 60 x 2.5 = 150 miles So, the train travels 150 miles.</p>
+          </div>
+          <div class="cmp-col cmp-fro">
+            <div class="cmp-h">without hibrid · <b>frontier, paid</b></div>
+            <div class="cmp-meta"><span class="mono">llama3.2:3b</span>
+              · <b>135</b> paid tok · q&nbsp;<b>1.00</b></div>
+            <p class="cmp-ans">To find the distance traveled by the train, we need to use the formula: Distance = Speed x Time Given values: Speed (mph) = 60 Time (hours) = 2.5 Now, let&#x27;s plug in the values: Distance = 60 mph x 2.5 hours Distance = 150 miles So, the train travels 150 miles in 2.5 hours.</p>
+          </div>
+        </div>
+        <div class="cmp-foot">the model behind the local answer: <span class="mono">llama3.2:3b</span>
+          · quality gap <b>+0.00</b> · paid tokens saved on this task: <b>135</b></div>
+      </article>
+
+      <article class="cmp-card">
+        <div class="cmp-q"><span class="cmp-ax">translation</span>Traduce al inglés: &#x27;La reunión de seguimiento es el martes a las tres de la tarde.&#x27;</div>
+        <div class="cmp-cols">
+          <div class="cmp-col cmp-local">
+            <div class="cmp-h">with hibrid · <b>local, free</b></div>
+            <div class="cmp-meta"><span class="mono">llama3.2:3b</span>
+              · <b>0</b> paid tok · q&nbsp;<b>0.80</b></div>
+            <p class="cmp-ans">Una buena opción sería: &quot;The follow-up meeting is scheduled for Tuesday at 3 pm.&quot; Otra forma podría ser: &quot;Please note that the follow-up meeting is on Tuesday, 3 pm.&quot; Ambas opciones son precisas y claras. La primera opción es más directa y concisa, mientras que la segunda opción añade un toque de fo…</p>
+          </div>
+          <div class="cmp-col cmp-fro">
+            <div class="cmp-h">without hibrid · <b>frontier, paid</b></div>
+            <div class="cmp-meta"><span class="mono">llama3.2:3b</span>
+              · <b>71</b> paid tok · q&nbsp;<b>0.80</b></div>
+            <p class="cmp-ans">La traducción al inglés sería: &quot;The follow-up meeting is on Tuesday at 3 pm.&quot;</p>
+          </div>
+        </div>
+        <div class="cmp-foot">the model behind the local answer: <span class="mono">llama3.2:3b</span>
+          · quality gap <b>+0.00</b> · paid tokens saved on this task: <b>71</b></div>
+      </article>
+    <p class="sub" style="margin-top:.6rem">Method &amp; full data:
+      <a href="https://github.com/vfalbor/hibrid/blob/main/docs/benchmarks/qa_report.md">evaluation report</a>.</p>
+  </section>
+  <!--COMPARE_END-->
+
   <section class="wrap" id="why">
     <h2 class="lead">Why nothing else does this</h2>
     <p class="sub">Cloud routers can't see your hardware. Local apps won't reach the cloud on their own. hibrid is the part in the middle.</p>

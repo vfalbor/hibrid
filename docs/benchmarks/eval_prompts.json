@@ -1,0 +1,18 @@
+[
+ {"id":"G1","axis":"general","difficulty":"trivial","prompt":"What is the capital of France?"},
+ {"id":"G2","axis":"general","difficulty":"trivial","prompt":"List the planets in the solar system in order from the Sun."},
+ {"id":"G3","axis":"general","difficulty":"hard","prompt":"Compare microservices vs. monolithic architecture for a startup scaling to 10 million users. Analyze the operational trade-offs step by step."},
+ {"id":"W1","axis":"writing","difficulty":"trivial","prompt":"Write a two-sentence product description for a wireless mechanical keyboard aimed at developers."},
+ {"id":"W2","axis":"writing","difficulty":"trivial","prompt":"Draft a 3-line out-of-office email reply for a one-week vacation."},
+ {"id":"W3","axis":"writing","difficulty":"hard","prompt":"Write a 400-word thought-leadership LinkedIn post on local-first AI privacy: include a strong hook, three concrete insights, and a clear call to action."},
+ {"id":"C1","axis":"code","difficulty":"trivial","prompt":"Write a Python function that returns the factorial of n using recursion. Add a docstring."},
+ {"id":"C2","axis":"code","difficulty":"trivial","prompt":"Write a SQL query that returns the top 5 customers by total order value, including ties."},
+ {"id":"C3","axis":"code","difficulty":"hard","prompt":"Implement a thread-safe LRU cache in Python with O(1) get and O(1) put. Use full type hints, a lock for concurrent access, and a brief docstring."},
+ {"id":"R1","axis":"reasoning","difficulty":"trivial","prompt":"A train travels at 60 mph for 2.5 hours. How far does it travel? Show your work."},
+ {"id":"R2","axis":"reasoning","difficulty":"hard","prompt":"Prove that there are infinitely many prime numbers. Present Euclid's proof step by step and explain the logic of each step."},
+ {"id":"R3","axis":"reasoning","difficulty":"hard","prompt":"Design a rate-limiting algorithm for a distributed API gateway that handles burst traffic, is fair across users, and needs no central coordinator. Analyze time and space complexity and the trade-offs."},
+ {"id":"R4","axis":"reasoning","difficulty":"hard","prompt":"Explain why Dijkstra's algorithm fails on graphs with negative-weight edges. Derive a counterexample and analyze the complexity of Bellman-Ford as the fix."},
+ {"id":"M1","axis":"multilingual","difficulty":"trivial","prompt":"Translate 'Good morning, how are you today?' into French, German, and Japanese."},
+ {"id":"M2","axis":"multilingual","difficulty":"trivial","prompt":"Traduce al inglés: 'La reunión de seguimiento es el martes a las tres de la tarde.'"},
+ {"id":"M3","axis":"multilingual","difficulty":"hard","prompt":"Translate this technical paragraph from English to Spanish, preserving technical terms: 'Post-training quantization reduces model weights from 32-bit floating point to 4-bit integers, achieving a 4-8x reduction in memory footprint with less than 2% accuracy loss on most benchmarks.'"}
+]

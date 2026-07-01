@@ -1,0 +1,521 @@
+{
+  "summary": {
+    "n": 16,
+    "tokens": {
+      "baseline_all_frontier": 6550,
+      "hibrid_routed": 6308,
+      "frontier_tokens_avoided_pct": 3.7
+    },
+    "routing": {
+      "kept_local": 1,
+      "escalated": 15,
+      "kept_local_pct": 6.2
+    },
+    "quality": {
+      "mean_local": 0.829,
+      "mean_frontier": 0.85,
+      "n_judged": 14,
+      "quality_retained_pct": 97.5,
+      "parity_count": 9,
+      "parity_pct": 64.3
+    },
+    "by_axis": {
+      "general": {
+        "n": 2,
+        "mean_local_q": 0.925,
+        "mean_frontier_q": 0.9,
+        "kept_local": 0
+      },
+      "writing": {
+        "n": 3,
+        "mean_local_q": 0.8,
+        "mean_frontier_q": 0.8,
+        "kept_local": 0
+      },
+      "code": {
+        "n": 3,
+        "mean_local_q": 0.833,
+        "mean_frontier_q": 0.8,
+        "kept_local": 1
+      },
+      "reasoning": {
+        "n": 4,
+        "mean_local_q": 0.812,
+        "mean_frontier_q": 0.9,
+        "kept_local": 0
+      },
+      "multilingual": {
+        "n": 2,
+        "mean_local_q": 0.8,
+        "mean_frontier_q": 0.85,
+        "kept_local": 0
+      }
+    }
+  },
+  "rows": [
+    {
+      "axis": "general",
+      "difficulty": "trivial",
+      "prompt": "What is the capital of France?",
+      "local": {
+        "tier": "local_free",
+        "model": "llama3.2:3b",
+        "total_tokens": 40,
+        "dt": 7.16,
+        "content": "The capital of France is Paris.",
+        "score": 1.0
+      },
+      "frontier": {
+        "tier": "local_free",
+        "model": "llama3.2:3b",
+        "total_tokens": 40,
+        "dt": 0.64,
+        "content": "The capital of France is Paris.",
+        "score": 1.0
+      },
+      "routed": {
+        "kind": "cloud_cheap",
+        "tier": "paid_cheap",
+        "model": "claude-haiku-4-5-20251001",
+        "frontier_tokens": 40,
+        "reason": "perfil=general (task_type=general) | elegido paid_cheap:cloud_cheap/claude-haiku-4-5-20251001 (U=-1.333)"
+      },
+      "judge_reason": "Both answers are correct and complete, providing the same information about the capital city of France."
+    },
+    {
+      "axis": "general",
+      "difficulty": "trivial",
+      "prompt": "List the planets in the solar system in order from the Sun.",
+      "local": {
+        "tier": "local_free",
+        "model": "llama3.2:3b",
+        "total_tokens": 170,
+        "dt": 13.16,
+        "content": "Here are the 8 planets in our solar system, listed in order from closest to farthest from the Sun:\n\n1. Mercury\n2. Venus\n3. Earth\n4. Mars\n5. Jupiter\n6. Saturn\n7. Uranus\n8. Neptune\n\nNote: Pluto was previously considered a planet, but it is now classified as a dwarf planet by the International Astronomical Union (IAU).\n\nHere's a fun fact: You can remember the order of the planets using the mnemonic \"My Very Excellent Mother Just Served Us Nachos\": Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune!",
+        "score": 0.85
+      },
+      "frontier": {
+        "tier": "local_free",
+        "model": "llama3.2:3b",
+        "total_tokens": 147,
+        "dt": 5.69,
+        "content": "Here are the 8 planets in our solar system, listed in order from the Sun:\n\n1. Mercury\n2. Venus\n3. Earth\n4. Mars\n5. Jupiter\n6. Saturn\n7. Uranus\n8. Neptune\n\nNote: Pluto was previously considered a planet but is now classified as a dwarf planet.\n\nAlso, it's worth noting that there are other objects in the solar system that could be considered planets, such as Eris and Ceres, but these 8 are the most commonly recognized planets.",
+        "score": 0.8
+      },
+      "routed": {
+        "kind": "cloud_cheap",
+        "tier": "paid_cheap",
+        "model": "claude-haiku-4-5-20251001",
+        "frontier_tokens": 147,
+        "reason": "perfil=general (task_type=general) | elegido paid_cheap:cloud_cheap/claude-haiku-4-5-20251001 (U=-1.333)"
+      },
+      "judge_reason": "Both answers are correct and complete, but Answer B provides more details about Pluto being classified as a dwarf planet by the IAU."
+    },
+    {
+      "axis": "general",
+      "difficulty": "hard",
+      "prompt": "Compare microservices vs. monolithic architecture for a startup scaling to 10 million users. Analyze the operational trade-offs step by step.",
+      "local": {
+        "tier": "local_free",
+        "model": "llama3.2:3b",
+        "total_tokens": 868,
+        "dt": 57.32,
+        "content": "When it comes to building a scalable application, one of the most critical decisions is whether to adopt a microservices-based architecture or a monolithic approach. In this analysis, we'll explore the operational trade-offs for each approach as your startup scales up to 10 million users.\n\n**Monolithic Architecture**\n\nPros:\n\n1. **Easier development and deployment**: With a single codebase, developers can work on multiple features simultaneously, and deployment is simplified.\n2. **Predictable performance**: Since all components are tightly coupled, the overall system's behavior is easier to predict and maintain.\n3. **Less overhead**: There's no need for service discovery, communication between services, or handling service failures.\n\nCons:\n\n1. **Tight coupling**: As your application grows, each component becomes increasingly dependent on others, making it harder to make changes without affecting the entire system.\n2. **Single point of failure**: If one component fails, the entire system goes down, which can be detrimental for a large user base like 10 million.\n3. **Difficult scalability**: Scaling a monolithic application requires rewriting or re-architecting the entire system, which is time-consuming and costly.\n\n**Microservices Architecture**\n\nPros:\n\n1. **Loose coupling**: Each service operates independently, allowing for more flexibility and easier maintenance.\n2. **Fault tolerance**: If one service fails, others can continue to operate, ensuring high availability for your users.\n3. **Scalability**: New services can be added or removed as needed, without affecting the entire system.\n\nCons:\n\n1. **Increased complexity**: Managing multiple services requires additional overhead for service discovery, communication, and conflict resolution.\n2. **Higher operational overhead**: More components mean more resources are required to manage, monitor, and maintain each service.\n3. **Challenging coordination**: Ensuring consistency across services can be difficult, especially when dealing with complex domain logic.\n\n**Operational Trade-Offs for Scaling to 10 Million Users**\n\nAs your application grows to support 10 million users, the trade-offs between microservices and monolithic architecture become more pronounced:\n\n1. **Increased complexity**: With a large user base comes increased traffic, which can lead to performance issues. Microservices may be better equipped to handle this load by providing additional capacity through horizontal scaling.\n2. **Resource requirements**: More resources (e.g., CPU, memory) are needed to support the increased load. In a monolithic architecture, these resources could become bottlenecked, while in microservices, they can be allocated more efficiently across services.\n3. **Service discovery and communication**: As your application grows, service discovery and communication between services become increasingly important. Microservices require more sophisticated service discovery mechanisms, which add overhead.\n\n**Recommendation**\n\nFor a startup scaling to 10 million users, we recommend a microservices-based architecture initially, with the following conditions:\n\n1. **Start small**: Begin with a few key services that are critical to your user experience and scale from there.\n2. **Use containerization**: Leverage containerization (e.g., Docker) to manage service dependencies and reduce operational overhead.\n3. **Implement robust service discovery**: Use a reliable service discovery mechanism (e.g., etcd, Consul) to ensure services can find each other at runtime.\n4. **Monitor and optimize**: Continuously monitor your application's performance and optimize services as needed to ensure high availability and responsiveness.\n\nAs your application grows, reassess the trade-offs between microservices and monolithic architecture. If you find that your workload becomes too complex for a single service or that service discovery and communication become too difficult to manage, consider refactoring into a more monolithic approach or adopting a hybrid approach that balances the benefits of both architectures.\n\nIn summary, while microservices offer greater flexibility and scalability, they also introduce additional operational overhead. By starting small, using containerization, implementing robust service discovery, and monitoring performance, you can create a scalable microservices architecture that supports your 10 million user base and sets you up for future success.",
+        "score": null
+      },
+      "frontier": {
+        "tier": "local_free",
+        "model": "llama3.2:3b",
+        "total_tokens": 894,
+        "dt": 50.97,
+        "content": "When a startup is planning to scale from 1,000 to 10 million users, it's essential to consider the architectural implications of different design choices. Here's a comparison of microservices and monolithic architecture for scaling a startup:\n\n**Monolithic Architecture**\n\nPros:\n\n1. **Simplified Development**: Developers can work on multiple components simultaneously without worrying about communication between services.\n2. **Easier Debugging**: Since all components are part of the same application, debugging is more straightforward.\n3. **Less Overhead**: There's no need to worry about service discovery or inter-service communication.\n\nCons:\n\n1. **Scalability Issues**: As the number of users grows, monolithic applications can become slow and unresponsive due to increased load on a single server.\n2. **Single Point of Failure**: If one component fails, the entire application comes down.\n3. **Difficulty in Maintenance**: Updating code changes across multiple components simultaneously is challenging.\n\n**Microservices Architecture**\n\nPros:\n\n1. **Scalability**: Microservices allow for horizontal scaling and can handle increased load independently without affecting the overall system.\n2. **Fault Tolerance**: If one service fails, the other services can continue to operate, reducing downtime.\n3. **Flexibility**: Each microservice can be developed, tested, and deployed independently.\n\nCons:\n\n1. **Increased Complexity**: Communication between services requires additional overhead, which can lead to increased latency and complexity.\n2. **Higher Operational Overhead**: Service discovery, load balancing, and monitoring add operational complexity.\n3. **More Resources Required**: Multiple servers are needed to handle each microservice, increasing resource requirements.\n\n**Operational Trade-Offs**\n\n1. **Service Discovery**:\n\t* Monolithic: No need for service discovery; components are part of the same application.\n\t* Microservices: Requires implementing service discovery mechanisms (e.g., DNS, registry services) to find and communicate with microservices.\n2. **Load Balancing**:\n\t* Monolithic: No load balancing necessary; all traffic goes to a single server.\n\t* Microservices: Requires load balancing strategies (e.g., round-robin, IP hashing) to distribute traffic across multiple instances of each service.\n3. **Monitoring and Logging**:\n\t* Monolithic: Single console for monitoring and logging.\n\t* Microservices: Requires separate consoles or tools for monitoring and logging each microservice.\n4. **Security**:\n\t* Monolithic: Easier to implement security measures since all components are part of the same application.\n\t* Microservices: More complex to implement security measures, as each service needs to be secured independently.\n5. **Code Changes**:\n\t* Monolithic: Easier to make changes across multiple components simultaneously.\n\t* Microservices: More challenging to make changes across multiple services, requiring coordination and testing.\n\n**Recommendation for Scaling to 10 Million Users**\n\nFor a startup scaling from 1,000 to 10 million users, we recommend starting with a monolithic architecture. This will allow the team to focus on developing a high-quality product while maintaining simplicity and ease of development.\n\nOnce the product has gained traction and user engagement has increased, it's essential to consider introducing microservices to improve scalability and fault tolerance. A hybrid approach, where critical components are refactored into microservices while keeping core functionality in monolithic architecture, can also be a viable option.\n\nHere's a possible transition plan:\n\n1. **Initial Phase (1,000 - 10,000 users)**: Monolithic architecture.\n2. **Early Scaling (10,000 - 100,000 users)**: Implement load balancing and monitoring tools to improve system responsiveness.\n3. **Mid-Scale (100,000 - 1,000,000 users)**: Introduce service discovery mechanisms and start refactoring critical components into microservices.\n4. **Large Scale (1,000,000+ users)**: Complete the transition to a microservices architecture, ensuring each service is scalable, fault-tolerant, and secure.\n\nBy following this plan, the startup can balance development simplicity with scalability and maintainability as it grows in size and user base.",
+        "score": null
+      },
+      "routed": {
+        "kind": "cloud_cheap",
+        "tier": "paid_cheap",
+        "model": "claude-haiku-4-5-20251001",
+        "frontier_tokens": 894,
+        "reason": "perfil=general (task_type=general) | elegido paid_cheap:cloud_cheap/claude-haiku-4-5-20251001 (U=-1.333)"
+      },
+      "judge_reason": "judge failed: 'score_b'"
+    },
+    {
+      "axis": "writing",
+      "difficulty": "trivial",
+      "prompt": "Write a two-sentence product description for a wireless mechanical keyboard aimed at developers.",
+      "local": {
+        "tier": "local_free",
+        "model": "llama3.2:3b",
+        "total_tokens": 97,
+        "dt": 9.17,
+        "content": "Elevate your coding game with the CodeMaster, a wireless mechanical keyboard designed specifically for developers like you. With its precision-tuned switches, customizable backlighting, and long-lasting battery life, this ergonomic keyboard empowers you to focus on the code, not the commute.",
+        "score": 0.85
+      },
+      "frontier": {
+        "tier": "local_free",
+        "model": "llama3.2:3b",
+        "total_tokens": 101,
+        "dt": 3.54,
+        "content": "Elevate your coding productivity with the XCode Pro, a wireless mechanical keyboard designed specifically for developers like you. With its durable switches, customizable backlighting, and long battery life, this keyboard lets you focus on writing code without interruption, whether you're working solo or collaborating with a team.",
+        "score": 0.8
+      },
+      "routed": {
+        "kind": "cloud_cheap",
+        "tier": "paid_cheap",
+        "model": "claude-haiku-4-5-20251001",
+        "frontier_tokens": 101,
+        "reason": "perfil=write (task_type=write) | elegido paid_cheap:cloud_cheap/claude-haiku-4-5-20251001 (U=-1.323)"
+      },
+      "judge_reason": "Both answers provide useful information about the XCode Pro and CodeMaster wireless mechanical keyboards designed for developers. However, Answer B focuses on ergonomics, which is a more comprehensive description of the product's features."
+    },
+    {
+      "axis": "writing",
+      "difficulty": "trivial",
+      "prompt": "Draft a 3-line out-of-office email reply for a one-week vacation.",
+      "local": {
+        "tier": "local_free",
+        "model": "llama3.2:3b",
+        "total_tokens": 96,
+        "dt": 9.54,
+        "content": "Here is a possible 3-line out-of-office email reply:\n\n\"I am currently on vacation and will be unavailable until [Date]. During this time, I will have limited access to emails and responses. If you have an urgent matter, please contact [Alternate Contact Info].\"",
+        "score": 0.7
+      },
+      "frontier": {
+        "tier": "local_free",
+        "model": "llama3.2:3b",
+        "total_tokens": 107,
+        "dt": 3.79,
+        "content": "Here is a 3-line out-of-office email reply:\n\n\"I am currently out of the office on vacation and will not be checking emails until my return date, [Date]. If your inquiry is urgent, please contact [Alternate Contact Person's Email or Phone Number]. I look forward to responding to your message upon my return.\"",
+        "score": 0.9
+      },
+      "routed": {
+        "kind": "cloud_cheap",
+        "tier": "paid_cheap",
+        "model": "claude-haiku-4-5-20251001",
+        "frontier_tokens": 107,
+        "reason": "perfil=write (task_type=write) | elegido paid_cheap:cloud_cheap/claude-haiku-4-5-20251001 (U=-1.323)"
+      },
+      "judge_reason": "Answer B is more complete, maintains a professional tone, and provides contact information for emergencies."
+    },
+    {
+      "axis": "writing",
+      "difficulty": "hard",
+      "prompt": "Write a 400-word thought-leadership LinkedIn post on local-first AI privacy: include a strong hook, three concrete insights, and a clear call to action.",
+      "local": {
+        "tier": "local_free",
+        "model": "llama3.2:3b",
+        "total_tokens": 572,
+        "dt": 277.38,
+        "content": "**The Local-First Approach to AI Privacy: Why Your Data Matters Most**\n\nAs we increasingly rely on Artificial Intelligence (AI) to power our daily lives, it's becoming painfully clear that the line between convenience and compromise is getting perilously thin. With every passing day, our personal data is being harvested, analyzed, and exploited by companies eager to stay ahead of the curve – but what about those who are left behind?\n\nThink back to a time when you walked down the street without being tracked, or made a purchase without revealing your browsing history. Those were the days before Big Tech's all-knowing gaze descended upon our lives. But as AI's reach expands, so too does its capacity for surveillance.\n\nSo what does this mean for local businesses and individuals who value their data autonomy? In short, it means that the 'one-size-fits-all' approach to AI is no longer tenable. The time has come to adopt a **local-first** strategy – one that puts community needs at the forefront of decision-making.\n\nHere are three concrete insights that support this shift:\n\n1.  **Data ownership matters**: By prioritizing local control, we can ensure that our data remains in the hands of trusted authorities who understand our values and concerns.\n2.  **Context is key**: AI systems designed with a local-first approach will better account for regional nuances, cultural differences, and community-specific needs – leading to more effective solutions.\n3.  **Collaboration is critical**: By engaging with local stakeholders and fostering dialogue around data governance, we can build stronger, more resilient communities that thrive in the digital age.\n\nSo what's the next step? We need to redefine our relationship with AI, one that prioritizes transparency, trust, and community involvement. This means:\n\n*   **Demanding better data practices**: From companies and governments alike, we must insist on clear, actionable guidelines for AI development and deployment.\n*   **Supporting local innovation**: By championing local startups and initiatives, we can foster a culture of creativity and problem-solving that prioritizes people over profit.\n*   **Building inclusive policies**: Policy-makers must recognize the value of community-driven decision-making and work to create frameworks that support local control and data ownership.\n\nThe future of AI is not about sacrificing our privacy for the sake of convenience – it's about designing systems that serve us, rather than the other way around. Let's join forces to shape a more equitable, local-first approach to AI. Together, we can build a brighter future where data is power, not a commodity.",
+        "score": 0.85
+      },
+      "frontier": {
+        "tier": "local_free",
+        "model": "llama3.2:3b",
+        "total_tokens": 609,
+        "dt": 32.5,
+        "content": "**The Dark Side of Globalization: Why Local-First AI Privacy Matters**\n\nAs we continue to navigate the digital age, it's easy to get caught up in the excitement of AI-driven innovation. From personalized product recommendations to autonomous vehicles, AI is transforming industries and redefining the way we live and work. However, as we increasingly rely on AI to make decisions that impact our lives, a concerning trend has emerged: the erosion of local-first AI privacy.\n\nIn a world where global companies wield significant power over personal data, the risks associated with centralized AI decision-making are becoming harder to ignore. From compromised user consent to biased algorithms that perpetuate systemic inequalities, the consequences of prioritizing global AI interests over local needs are dire.\n\nSo, what's driving this shift towards globalization? Here are three concrete insights that highlight the need for a local-first approach:\n\n **1. Data is power**: The majority of personal data is created and consumed locally. Yet, most AI systems are designed to operate at scale, leveraging vast amounts of global data to inform decision-making. This means that local needs and concerns are often overlooked in favor of centralized control. By prioritizing local-first AI privacy, we can ensure that our most critical data remains under local jurisdiction.\n\n **2. Bias is baked-in**: AI systems that rely on global data are more likely to perpetuate existing biases and inequalities. For example, facial recognition technology has been shown to be less accurate for darker-skinned individuals. By designing AI systems with a local-first approach, we can mitigate these biases and create a more inclusive digital landscape.\n\n **3. Trust is lost**: When companies prioritize global interests over local needs, trust is eroded. In the age of data breaches and algorithmic errors, consumers are increasingly wary of sharing their personal data. By prioritizing local-first AI privacy, we can rebuild trust between individuals and organizations by putting local control back in our hands.\n\nSo, what can you do to support a shift towards local-first AI privacy? Here's a clear call to action:\n\n **Demand transparency**: From tech companies to governments, demand that institutions provide clear information about their data collection practices and AI decision-making processes.\n\n **Support local innovation**: Invest in startups and initiatives that prioritize local-first approaches to AI development and deployment.\n\n **Advocate for policy change**: Push for legislation that prioritizes local jurisdiction over global interests when it comes to personal data and AI decision-making.\n\nTogether, we can create a future where AI serves the needs of individuals and communities, not just the interests of corporations. It's time to rethink our approach to AI development and prioritize local-first privacy above all else. The future is in our hands – let's make sure it's a future that truly serves us all.",
+        "score": 0.7
+      },
+      "routed": {
+        "kind": "cloud_cheap",
+        "tier": "paid_cheap",
+        "model": "claude-haiku-4-5-20251001",
+        "frontier_tokens": 609,
+        "reason": "perfil=write (task_type=write) | elegido paid_cheap:cloud_cheap/claude-haiku-4-5-20251001 (U=-1.323)"
+      },
+      "judge_reason": "While both answers provide valuable insights, Answer A offers a more nuanced and comprehensive approach to local-first AI privacy, highlighting the importance of data ownership, context, collaboration, and community involvement. Answer B, while informative, is overly simplistic and lacks depth in its discussion of the role of global companies."
+    },
+    {
+      "axis": "code",
+      "difficulty": "trivial",
+      "prompt": "Write a Python function that returns the factorial of n using recursion. Add a docstring.",
+      "local": {
+        "tier": "local_free",
+        "model": "qwen2.5-coder:1.5b",
+        "total_tokens": 283,
+        "dt": 7.7,
+        "content": "```python\ndef factorial(n):\n    \"\"\"\n    Calculate the factorial of a non-negative integer n using recursion.\n\n    Args:\n    n (int): A non-negative integer whose factorial is to be calculated.\n\n    Returns:\n    int: The factorial of the given number n.\n    \"\"\"\n    if n == 0 or n == 1:\n        return 1\n    else:\n        return n * factorial(n-1)\n```\nIn this solution, we define a function `factorial` that calculates the factorial of a non-negative integer `n` using recursion. The function includes a docstring that explains the purpose of the function, its parameters, and its return value. The base case for the recursion is when `n` is 0 or 1, in which case the function returns 1 because the factorial of both 0 and 1 is 1. For other values of `n`, the function calls itself with `n-1` and multiplies the result by `n`. This recursive call continues until it reaches the base case, at which point the recursion unwinds, multiplying all the results together to get the factorial of `n`.",
+        "score": 0.8
+      },
+      "frontier": {
+        "tier": "local_free",
+        "model": "qwen2.5-coder:1.5b",
+        "total_tokens": 242,
+        "dt": 6.14,
+        "content": "```python\ndef factorial(n):\n    \"\"\"\n    Calculate the factorial of a non-negative integer n.\n\n    Args:\n    n (int): A non-negative integer whose factorial is to be calculated.\n\n    Returns:\n    int: The factorial of n.\n    \"\"\"\n    if n == 0 or n == 1:\n        return 1\n    else:\n        return n * factorial(n-1)\n```\n\nIn this solution, the function `factorial` calculates the factorial of a non-negative integer using recursion. The docstring provides a clear explanation of the problem, arguments, and return value. It uses an if-elif-else statement to handle the base case where `n` is 0 or 1, returning 1. For all other values of `n`, it calls itself with `n-1` until it reaches the base case. This recursive approach is a common method for calculating factorials in programming and is efficient for small numbers.",
+        "score": 0.8
+      },
+      "routed": {
+        "kind": "local",
+        "tier": "local_free",
+        "model": "qwen2.5-coder:1.5b",
+        "frontier_tokens": 0,
+        "reason": "perfil=code (task_type=code) | elegido local_free:local/qwen2.5-coder:1.5b (U=-0.717)"
+      },
+      "judge_reason": "Both answers are correct and adhere to the task requirements of writing a Python function that returns the factorial of n using recursion, including a docstring."
+    },
+    {
+      "axis": "code",
+      "difficulty": "trivial",
+      "prompt": "Write a SQL query that returns the top 5 customers by total order value, including ties.",
+      "local": {
+        "tier": "local_free",
+        "model": "llama3.2:3b",
+        "total_tokens": 222,
+        "dt": 16.39,
+        "content": "-- Get Top 5 Customers by Total Order Value\nSELECT customer_name, SUM(order_value) AS total_order_value\nFROM orders\nGROUP BY customer_name\nORDER BY total_order_value DESC\nLIMIT 5;\n\n-- Explanation:\n--\n-- This SQL query works as follows:\n--\n-- - It selects the 'customer_name' and calculates the sum of all order values for each customer using the GROUP BY clause.\n-- - The SUM function groups row by row by the group_by column, i.e., it returns the total value of every group in the result set. In other words, it sums up the order_value from top to bottom.\n-- - It orders these totals in descending order (largest first).\n-- - Finally, it limits the results to 5 rows.\n\nNote: Replace 'customer_name', and 'order_value' with actual column names as per your database schema.",
+        "score": 0.7
+      },
+      "frontier": {
+        "tier": "local_free",
+        "model": "llama3.2:3b",
+        "total_tokens": 231,
+        "dt": 10.21,
+        "content": "Here's an example of how you can do this using SQL:\n```sql\nSELECT *\nFROM customers\nORDER BY SUM(order_total) DESC\nLIMIT 5;\n```\nThis will return all columns (`*`) for the top 5 customers with the highest total order value.\n\nAlternatively, if there are ties and you want to include them in the result set as well, you can use a subquery like this:\n```sql\nSELECT *\nFROM customers c1\nWHERE (SUM(order_total) \n        OVER (ORDER BY SUM(order_total) DESC)) <= c1.order_id\nLIMIT 5;\n```\nThis query works by ordering all customers by their total order value in descending order, then it selects all rows where the order's position is less than or equal to the current row.\n\nPlease note that this approach might not be efficient for large tables and can lead to performance issues if there are a lot of ties.",
+        "score": 0.8
+      },
+      "routed": {
+        "kind": "cloud_cheap",
+        "tier": "paid_cheap",
+        "model": "claude-haiku-4-5-20251001",
+        "frontier_tokens": 231,
+        "reason": "perfil=code (task_type=write) | elegido paid_cheap:cloud_cheap/claude-haiku-4-5-20251001 (U=-1.323)"
+      },
+      "judge_reason": "Answer B is more detailed and includes a clear explanation of how the query works."
+    },
+    {
+      "axis": "code",
+      "difficulty": "hard",
+      "prompt": "Implement a thread-safe LRU cache in Python with O(1) get and O(1) put. Use full type hints, a lock for concurrent access, and a brief docstring.",
+      "local": {
+        "tier": "local_free",
+        "model": "llama3.2:3b",
+        "total_tokens": 543,
+        "dt": 35.37,
+        "content": "import threading\nfrom collections import OrderedDict\n\nclass LRUCache:\n    \"\"\"\n    A thread-safe implementation of an LRU (Least Recently Used) cache.\n\n    Attributes:\n        capacity (int): The maximum number of items the cache can hold.\n        cache (OrderedDict): An ordered dictionary that stores the cached items.\n        lock (threading.Lock): A lock to ensure exclusive access to the cache.\n\n    Methods:\n        get(key): Retrieves the value associated with a given key from the cache.\n        put(key, value): Inserts or updates a key-value pair in the cache.\n    \"\"\"\n\n    def __init__(self, capacity: int):\n        \"\"\"\n        Initializes an LRU cache with the specified capacity.\n\n        Args:\n            capacity (int): The maximum number of items the cache can hold.\n        \"\"\"\n        self.capacity = capacity\n        self.cache = OrderedDict()\n        self.lock = threading.Lock()\n\n    def get(self, key: str) -> any:\n        \"\"\"\n        Retrieves the value associated with a given key from the cache.\n\n        Args:\n            key (str): The key to look up in the cache.\n\n        Returns:\n            any: The value associated with the key if found; otherwise None.\n        \"\"\"\n        with self.lock:\n            if key not in self.cache:\n                return None\n            value = self.cache.pop(key)\n            self.cache[key] = value  # Move the accessed item to the end of the order\n            return value\n\n    def put(self, key: str, value: any) -> None:\n        \"\"\"\n        Inserts or updates a key-value pair in the cache.\n\n        Args:\n            key (str): The key to insert or update.\n            value (any): The value associated with the key.\n        \"\"\"\n        with self.lock:\n            if key in self.cache:\n                del self.cache[key]\n            elif len(self.cache) >= self.capacity:\n                self.cache.popitem(last=False)\n            self.cache[key] = value\n\n# Example usage:\ncache = LRUCache(2)\n\ndef worker(key, value):\n    cache.put(key, value)\n    print(cache.get(key))\n\nthreads = []\nfor i in range(3):\n    thread = threading.Thread(target=worker, args=(f\"key{i}\", f\"value{i}\"))\n    threads.append(thread)\n    thread.start()\n\nfor thread in threads:\n    thread.join()",
+        "score": 1.0
+      },
+      "frontier": {
+        "tier": "local_free",
+        "model": "llama3.2:3b",
+        "total_tokens": 257,
+        "dt": 10.81,
+        "content": "class LRUCache:\n    \"\"\"\n    A thread-safe LRU cache implemented using an OrderedDict.\n    \"\"\"\n\n    def __init__(self, capacity: int):\n        self.capacity = capacity\n        self.cache = {}\n        self.lock = asyncio.Lock()\n\n    async def get(self, key: int) -> int:\n        \"\"\"Get a value from the cache by key.\"\"\"\n        with self.lock:\n            if key in self.cache:\n                value = self.cache[key]\n                del self.cache[key]\n                self.cache[key] = value  # move key to end\n                return value\n\n    async def put(self, key: int, value: int) -> None:\n        \"\"\"Add a new entry to the cache or update an existing one.\"\"\"\n        with self.lock:\n            if key in self.cache:\n                del self.cache[key]\n            elif len(self.cache) >= self.capacity:\n                self.cache.popitem(last=False)\n            self.cache[key] = value",
+        "score": 0.8
+      },
+      "routed": {
+        "kind": "cloud_cheap",
+        "tier": "paid_cheap",
+        "model": "claude-haiku-4-5-20251001",
+        "frontier_tokens": 257,
+        "reason": "perfil=code (task_type=general) | elegido paid_cheap:cloud_cheap/claude-haiku-4-5-20251001 (U=-1.333)"
+      },
+      "judge_reason": "Both answers are correct and complete, but A uses asyncio for concurrency which is more modern and preferred in Python for such tasks."
+    },
+    {
+      "axis": "reasoning",
+      "difficulty": "trivial",
+      "prompt": "A train travels at 60 mph for 2.5 hours. How far does it travel? Show your work.",
+      "local": {
+        "tier": "local_free",
+        "model": "llama3.2:3b",
+        "total_tokens": 120,
+        "dt": 10.62,
+        "content": "To find the distance traveled, we need to multiply the speed of the train (in miles per hour) by the time it traveled.\n\nSpeed = 60 mph\nTime = 2.5 hours\n\nDistance = Speed x Time\n= 60 x 2.5\n= 150 miles\n\nSo, the train travels 150 miles.",
+        "score": 1.0
+      },
+      "frontier": {
+        "tier": "local_free",
+        "model": "llama3.2:3b",
+        "total_tokens": 135,
+        "dt": 5.03,
+        "content": "To find the distance traveled by the train, we need to use the formula:\n\nDistance = Speed x Time\n\nGiven values:\nSpeed (mph) = 60\nTime (hours) = 2.5\n\nNow, let's plug in the values:\n\nDistance = 60 mph x 2.5 hours\nDistance = 150 miles\n\nSo, the train travels 150 miles in 2.5 hours.",
+        "score": 1.0
+      },
+      "routed": {
+        "kind": "cloud_cheap",
+        "tier": "paid_cheap",
+        "model": "claude-haiku-4-5-20251001",
+        "frontier_tokens": 135,
+        "reason": "perfil=deep_reason (task_type=general) | elegido paid_cheap:cloud_cheap/claude-haiku-4-5-20251001 (U=-1.333)"
+      },
+      "judge_reason": "Both answers are correct and complete in showing how to calculate distance using the formula: Distance = Speed x Time. The answers are identical and use the provided values without any discrepancies."
+    },
+    {
+      "axis": "reasoning",
+      "difficulty": "hard",
+      "prompt": "Prove that there are infinitely many prime numbers. Present Euclid's proof step by step and explain the logic of each step.",
+      "local": {
+        "tier": "local_free",
+        "model": "llama3.2:3b",
+        "total_tokens": 276,
+        "dt": 19.23,
+        "content": "Euclid's proof that there are infinitely many prime numbers is a classic result in number theory, first presented by the ancient Greek mathematician Euclid in his book \"Elements\". Here's a step-by-step explanation of the proof:\n\n**Step 1: Assume the contrary**\n\nLet's assume that there are only finitely many prime numbers. We'll call them p1, p2, ..., pn.\n\n**Step 2: Consider a number that is not divisible by any of these primes**\n\nWe consider a new number, m, such that it is not divisible by any of the primes p1, p2, ..., pn. This means that m is not a multiple of any of these primes.\n\n**Step 3: Show that if m is prime, then there must be another prime**\n\nIf m is prime, then it cannot be divided evenly by any of the primes p1, p2, ..., pn. However, since we assumed that m is not divisible by any of these primes, this means that m itself has a prime factorization with no common factors among p1, p2, ...,",
+        "score": 0.85
+      },
+      "frontier": {
+        "tier": "local_free",
+        "model": "llama3.2:3b",
+        "total_tokens": 834,
+        "dt": 47.16,
+        "content": "Euclid's proof of the infinitude of prime numbers is a classic example of mathematical induction. Here's the step-by-step proof:\n\n**Step 1: State the assumption**\n\nAssume that there are only a finite number of prime numbers, say p1, p2, ..., pn.\n\n**Step 2: Define the set of all positive integers less than or equal to n**\n\nLet N be the set of all positive integers less than or equal to n. In other words, N = {1, 2, 3, ..., n}.\n\n**Step 3: Show that there exists an integer k in N such that k is not divisible by any of p1, p2, ..., pn**\n\nSince there are only a finite number of prime numbers (p1, p2, ..., pn), we can apply the Pigeonhole Principle to conclude that there must exist at least one integer k in N that is not divisible by any of these primes.\n\n**Step 4: Prove that k is either prime or can be factored into two smaller positive integers**\n\nSuppose that k is not prime. Then, it can be written as the product of two smaller positive integers a and b (k = ab). Since neither a nor b can divide k, both a and b must be less than k.\n\nBy the same reasoning as in Step 3, there exist integers x and y such that xy < k and neither x nor y divides any of p1, p2, ..., pn.\n\n**Step 5: Apply the division algorithm**\n\nSince xy > 0, we can apply the division algorithm to conclude that there exist unique integers q and r such that:\n\nxy = qk + r\n\nwhere 0 ≤ r < k. Since q and r are both less than k, neither q nor r can divide any of p1, p2, ..., pn.\n\n**Step 6: Derive a contradiction**\n\nNow, consider the product pq + r. By construction, this quantity is not divisible by any of p1, p2, ..., pn (since none of these primes can divide x or y). Furthermore, pq + r > xy > k, so pq + r is greater than k.\n\nThis means that pq + r must be a positive integer greater than k, but less than n. Therefore, pq + r belongs to the set N = {1, 2, ..., n}.\n\nHowever, since we assumed that there are only finitely many prime numbers (p1, p2, ..., pn), and pq + r is not divisible by any of these primes, it must be a composite number that cannot be factored further. This is a contradiction, since pq + r belongs to the set N = {1, 2, ..., n}.\n\n**Conclusion**\n\nSince we have derived a contradiction, our initial assumption that there are only finitely many prime numbers must be false. Therefore, there are infinitely many prime numbers.\n\nThe logic behind this proof is as follows:\n\n* We start with an arbitrary finite set of prime numbers (p1, p2, ..., pn).\n* We then show that there exists an integer k in N = {1, 2, 3, ..., n} that is not divisible by any of these primes.\n* We prove that k can be factored into two smaller positive integers a and b.\n* We apply the division algorithm to derive a contradiction.\n\nThe key insight here is that if there are only finitely many prime numbers, then we can find an integer k that is not divisible by any of them. But this leads us to a contradiction, since we cannot show that k can be factored into two smaller positive integers that do not divide any of the primes.\n\nTherefore, our initial assumption must be false, and there are infinitely many prime numbers.",
+        "score": 0.9
+      },
+      "routed": {
+        "kind": "cloud_cheap",
+        "tier": "paid_cheap",
+        "model": "claude-haiku-4-5-20251001",
+        "frontier_tokens": 834,
+        "reason": "perfil=deep_reason (task_type=general) | elegido paid_cheap:cloud_cheap/claude-haiku-4-5-20251001 (U=-1.333)"
+      },
+      "judge_reason": "Answer A provides a detailed and comprehensive proof of Euclid's infinitude of prime numbers, while Answer B is a simplified explanation that does not fully capture the underlying logic. Answer A includes the Pigeonhole Principle, division algorithm, and contradiction, whereas Answer B only presents the step-by-step reasoning without the necessary details."
+    },
+    {
+      "axis": "reasoning",
+      "difficulty": "hard",
+      "prompt": "Design a rate-limiting algorithm for a distributed API gateway that handles burst traffic, is fair across users, and needs no central coordinator. Analyze time and space complexity and the trade-offs.",
+      "local": {
+        "tier": "local_free",
+        "model": "llama3.2:3b",
+        "total_tokens": 1045,
+        "dt": 66.53,
+        "content": "# Rate-Limiting Algorithm Design\n=====================================\n\nThe proposed rate-limiting algorithm, dubbed \"Token Bucket Algorithm with Distributed Hash Map\", aims to handle burst traffic while maintaining fairness across users without relying on a central coordinator.\n\n## Algorithm Overview\n\n1.  **Distributed Hash Map (DHM)**: Utilize a distributed hash map to store user-specific token buckets.\n2.  **Token Bucket**: Implement the token bucket algorithm for rate limiting.\n3.  **Burst Traffic Handling**: Use exponential backoff and retry mechanisms to handle burst traffic.\n\n## Algorithm Components\n\n### Distributed Hash Map (DHM)\n\n*   Each node in the distributed system maintains a DHM.\n*   The DHM maps user IDs to their respective token buckets.\n*   When a request is made, the API gateway checks its local DHM for an available token.\n\n### Token Bucket Algorithm with Exponential Backoff\n\n*   Maintain a queue of requests for each user.\n*   Each time a request is made, add 1 token to the bucket. If no tokens are available, wait for a short period before retrying.\n*   When a burst occurs, implement exponential backoff.\n\n## Implementation\n\n### Python Code\n\n```python\nimport hashlib\nimport time\nfrom collections import defaultdict, deque\n\nclass DistributedHashMap:\n    def __init__(self):\n        self.dhm = {}\n\n    def get(self, user_id):\n        return self.dhm.get(user_id, {time.time() + 3600: 10})  # default to 10 tokens for 1 hour\n\n    def put(self, user_id, tokens=10, expiration_time=3600):\n        self.dhm[user_id] = {\n            time.time(): tokens,\n            time.time() + expiration_time: None\n        }\n\nclass TokenBucket:\n    def __init__(self, rate, max_tokens):\n        self.rate = rate\n        self.max_tokens = max_tokens\n        self.tokens_available = 0\n        self.request_timestamps = deque()\n\n    def wait(self, max_timeout):\n        current_time = time.time()\n        while True:\n            while self.request_timestamps and self.request_timestamps[0] <= current_time - max_timeout:\n                self.request_timestamps.popleft()\n            available_tokens = min(self.tokens_available + (current_time / self.rate), self.max_tokens)\n            if not self.request_timestamps:\n                return available_tokens\n            self.request_timestamps.append(current_time)\n\nclass BurstTrafficHandler:\n    def __init__(self, rate):\n        self.token_bucket = TokenBucket(rate, 1000)  # default to 1000 tokens\n\n    def handle_burst(self, user_id, num_requests):\n        start_time = time.time()\n        for _ in range(num_requests):\n            available_tokens = self.token_bucket.wait(time.time() - start_time)\n            if not available_tokens:\n                return\n            # add request to queue\n            pass\n```\n\n### Algorithm Flow\n\n1.  Initialize the DHM and Token Bucket instances.\n2.  Check the local DHM for an available token when a request is made.\n3.  If no tokens are available, wait according to the Token Bucket algorithm.\n4.  When a burst occurs, handle it using exponential backoff.\n\n## Time Complexity Analysis\n\n*   DHM operations (get and put): O(1)\n*   Token Bucket wait: O(n) where n is the number of requests in the queue\n*   Burst traffic handling: O(n) where n is the number of requests in the burst\n\n## Space Complexity Analysis\n\n*   DHM: O(n) where n is the number of users\n*   Token Bucket: O(1)\n*   Burst Traffic Handler: O(n) where n is the number of requests in the burst\n\n## Trade-Offs\n\nThe proposed algorithm balances fairness, burst traffic handling, and scalability. However, it may require more complex implementation and debugging due to its distributed nature.\n\n### Advantages:\n\n*   **Fairness**: The DHM ensures that users receive tokens based on their historical behavior.\n*   **Burst Traffic Handling**: Exponential backoff helps mitigate the impact of sudden increases in traffic.\n*   **Scalability**: The algorithm can handle a large number of users and requests without relying on a central coordinator.\n\n### Disadvantages:\n\n*   **Complexity**: The distributed nature of the algorithm may make it more challenging to implement and debug.\n*   **Resource Usage**: The DHM and Token Bucket instances require additional resources (e.g., memory, CPU cycles).\n\n### Recommendations:\n\n*   **Implement Carefully**: Ensure that the algorithm is thoroughly tested and validated before deployment in production.\n*   **Monitor Performance**: Continuously monitor the algorithm's performance and adjust parameters as necessary to maintain fairness and scalability.",
+        "score": 0.8
+      },
+      "frontier": {
+        "tier": "local_free",
+        "model": "llama3.2:3b",
+        "total_tokens": 1479,
+        "dt": 88.14,
+        "content": "Here's an example of a rate-limiting algorithm that implements a token bucket algorithm with a Moving Average (MA) decay to handle both burst traffic and fairness for users without a centralized coordinator.\n\nAlgorithm Overview:\n------------------\n\nThe proposed algorithm, called \"Rate-Limiter\", consists of two components: \n\n1.  **Token Bucket**: This component ensures that no user can make too many requests within a fixed time window (e.g., one minute). The token bucket is replenished periodically.\n2.  **Moving Average (MA) Decay**: This component helps to detect and prevent burst traffic.\n\nHow it works:\n--------------\n\n1.  Each user gets assigned a unique token for every request made by them within the time window of interest. These tokens are stored in memory, which makes them suitable for use with distributed systems.\n2.  A moving average (MA) decay component is used to analyze the rate at which users are making requests over a certain period of time (e.g., one hour). It calculates a moving average of the number of requests made by a user within that time frame.\n3.  The MA decay rate determines how quickly tokens will be replenished for a user. This ensures fairness and prevents an individual from monopolizing tokens.\n\n Implementation:\n--------------\n\n```python\nimport time\nfrom collections import defaultdict\n\nclass RateLimiter:\n    def __init__(self, bucket_size, ma_decay_rate):\n        self.bucket_size = bucket_size  # Maximum number of tokens that can be stored in the bucket.\n        self.ma_decay_rate = ma_decay_rate  # Rate at which to decay the moving average.\n\n        # Initialize a dictionary where keys are user IDs and values are lists\n        # representing their tokens over time. The list has length equal to\n        # bucket_size, with each element corresponding to a unique request from the\n        # same user.\n        self.tokens = defaultdict(list)\n\n    def add_token(self, user_id):\n        # Add a new token for a given user and update the moving average.\n        if len(self.tokens[user_id]) < self.bucket_size:\n            # If not full yet, just add it in.\n            return\n        else:\n            # Calculate the time elapsed since last request from this user.\n            current_time = int(time.time())\n            start_index = 0\n            end_index = 1\n\n            while True:\n                if len(self.tokens[user_id]) == self.bucket_size:\n                    break\n                mid_index = (start_index + end_index) // 2\n                time_since_mid_index = self.tokens[user_id][mid_index] - current_time\n\n                # If the time since the last request is more than bucket size,\n                # then remove all tokens before this index.\n                if time_since_mid_index > self.bucket_size:\n                    start_index = mid_index + 1\n                else:\n                    end_index = mid_index\n\n            # Remove tokens until there's an available slot in the bucket for new requests.\n            while len(self.tokens[user_id]) >= self.bucket_size:\n                self.tokens[user_id].pop(0)\n\n        # Add a new token to the user, along with its timestamp.\n        current_time = int(time.time())\n        self.tokens[user_id].append(current_time)\n\n    def remove_token(self, user_id):\n        if not self.tokens[user_id]:\n            return None  # No tokens available for this user.\n\n        current_time = int(time.time())\n\n        while len(self.tokens[user_id]) > 0 and \\\n                self.tokens[user_id][self.tokens[user_id].index(current_time)] < current_time:\n            self.tokens[user_id].pop(0)\n\n        if not self.tokens[user_id]:\n            return None\n        else:\n            # Remove the most recent token from the user.\n            self.tokens[user_id].pop()\n\n    def get_token_count(self, user_id):\n        \"\"\"\n        Returns a list of timestamps for all tokens made by this user within last 1 hour.\n        \n        :param user_id: ID of the user to query\n        :return: List of time stamps corresponding to each token made by this user in the last hour\n        \"\"\"\n        current_time = int(time.time())\n        if user_id not in self.tokens:\n            return None\n\n        # Filter out tokens older than 1 hour.\n        timestamps_to_return = [\n            timestamp for timestamp in self.tokens[user_id] \n            if current_time - timestamp <= 3600]\n        return timestamps_to_return\n\n\n# Example usage\nlimiter = RateLimiter(bucket_size=10, ma_decay_rate=0.5)\nuser_ids = ['user1', 'user2']\nusers_request_counts = defaultdict(int)\n\nfor i in range(20):\n    for user_id in user_ids:\n        limiter.add_token(user_id)\n        users_request_counts[user_id] += 1\n    # Simulate some burst traffic by requesting more than the bucket limit.\n    while True:\n        try:\n            # Add a request, which is also a token at this point.\n            limiter.add_token('user3')\n            break\n        except Exception as e:\n            pass\n    time.sleep(0.1)\n```\n\n Analysis:\n---------\n\nThis algorithm provides fairness across users and handles burst traffic effectively.\n\n-   **Fairness**: Each user gets assigned a unique token for every request made by them within the time window of interest, ensuring that each user is treated equally regardless of their usage patterns.\n-   **Burst Traffic Handling**: The Moving Average decay rate ensures that tokens are replenished at a consistent rate even when there's an increase in requests from an individual. However, due to the bucket size limit, it prevents users from monopolizing all available tokens.\n\nTime Complexity:\n--------------\n\n1.  `add_token(user_id)` : O(1) - Constant time complexity as we're simply updating and adding elements to our lists.\n2.  `remove_token(user_id)` : O(n) where n is the number of tokens stored for user 'user_id', because we need to delete all older timestamps from this list, then return the most recent timestamp.\n\nSpace Complexity:\n-------------\n\n1.  `add_token(user_id)` : O(1) - Constant space complexity as we're storing a single timestamp.\n2.  `remove_token(user_id)` : O(n) where n is the number of tokens stored for user 'user_id', because we need to remove all older timestamps from this list.\n\n Trade-offs:\n------------\n\n*   The algorithm handles burst traffic effectively, but might be slightly less efficient than algorithms that use a queue-based or priority-based approach.\n*   The bucket size can limit the total number of requests that users can make within the time window. If the bucket size is too small for your needs, it may prevent users from making the maximum allowed number of requests during their \"burst\" time.\n\nThe proposed Rate-Limiter algorithm offers a good balance between fairness and efficiency while effectively handling burst traffic in distributed systems without a centralized coordinator.",
+        "score": 1.0
+      },
+      "routed": {
+        "kind": "cloud_cheap",
+        "tier": "paid_cheap",
+        "model": "claude-haiku-4-5-20251001",
+        "frontier_tokens": 1479,
+        "reason": "perfil=deep_reason (task_type=general) | elegido paid_cheap:cloud_cheap/claude-haiku-4-5-20251001 (U=-1.333)"
+      },
+      "judge_reason": "Both answers are correct and provide a comprehensive overview of the proposed rate-limiting algorithm. Answer B provides a more detailed implementation with comments, which adds value to the task."
+    },
+    {
+      "axis": "reasoning",
+      "difficulty": "hard",
+      "prompt": "Explain why Dijkstra's algorithm fails on graphs with negative-weight edges. Derive a counterexample and analyze the complexity of Bellman-Ford as the fix.",
+      "local": {
+        "tier": "local_free",
+        "model": "llama3.2:3b",
+        "total_tokens": 272,
+        "dt": 18.58,
+        "content": "Dijkstra's algorithm is an efficient method for finding the shortest path between two nodes in a graph, but it fails when there are negative-weight edges present. This is because Dijkstra's algorithm assumes that the weight of each edge is non-negative.\n\nThe main problem with negative-weight edges is that they can lead to a situation where the shortest distance from one node to another becomes \"infinity\" or undefined, which means that the algorithm cannot determine a valid path.\n\nTo illustrate this, let's consider a counterexample:\n\nSuppose we have a graph with three nodes: A, B, and C. The edges between these nodes are as follows:\n\n- A -> B: 3 (this is positive)\n- B -> C: -2 (this is negative)\n- C -> A: 1 (this is positive)\n\nNow, if we apply Dijkstra's algorithm to this graph starting from node A, the shortest path would be A -> B -> C, with a total weight of 3 + (-2) = 1. However, the edge from C",
+        "score": 0.6
+      },
+      "frontier": {
+        "tier": "local_free",
+        "model": "llama3.2:3b",
+        "total_tokens": 941,
+        "dt": 52.48,
+        "content": "Dijkstra's algorithm is a popular method for finding the shortest path between two nodes in a graph. However, it has a major limitation: it only works correctly if all edge weights are non-negative.\n\nThe problem arises when there are negative-weight edges in the graph. In this case, Dijkstra's algorithm will make incorrect decisions about which edges to choose at each step, leading to an incorrect shortest path.\n\nTo illustrate this, let's consider a simple counterexample:\n\nSuppose we have a graph with three nodes (A, B, and C) and two edges: AB with weight -3 and BC with weight 2. If we start at node A and try to find the shortest path to B using Dijkstra's algorithm, it will choose the edge AB, which has a negative weight, and then move to node B with a \"distance\" of -3 + 1 = -2 (since it adds the weight of BC). However, this is not the correct distance, since there is an alternative path from A to C with a total weight of -3.\n\nThe issue arises when we try to find the shortest path from A to B. Dijkstra's algorithm will choose the edge AB because it has the smallest \"distance\" (-3) so far, but this is not the correct answer. The correct answer is to go through node C, which has a total weight of -1.\n\nDijkstra's algorithm fails in this case because it relies on choosing the next edge based solely on its distance from the current node. However, when there are negative-weight edges, we can only determine the shortest path by looking at all possible paths and selecting the one with the smallest total weight.\n\nTo address this issue, we need an algorithm that can handle graphs with negative-weight edges. One such algorithm is Bellman-Ford.\n\nBellman-Ford works as follows:\n\n1.  Initialize distances to all nodes as infinity except for the starting node (source), which is set to zero.\n2.  Relax each edge repeatedly until there are no more negative-weight edges or distance updates.\n3.  If we can still relax an edge after iterating over all edges, it means that there's a negative-weight cycle in the graph.\n\nBellman-Ford has a time complexity of O((V + E) \\* E), where V is the number of vertices and E is the number of edges. This is because we need to iterate over each edge at most once for each vertex.\n\nHere is how you can implement it:\n\n```python\ndef bellman_ford(graph, source):\n    distance = {node: float('inf') for node in graph}\n\n    distance[source] = 0\n\n    for _ in range(len(graph) - 1):\n        for u, v, weight in graph:\n            if distance[u] != float('inf') and distance[v] > distance[u] + weight:\n                distance[v] = distance[u] + weight\n\n    # Check for negative-weight cycles\n    for u, v, weight in graph:\n        if distance[u] != float('inf') and distance[v] > distance[u] + weight:\n            raise ValueError(\"Graph contains a negative-weight cycle\")\n\n    return distance\n\n\n# Example usage\ngraph = [\n    (0, 1, -3),\n    (0, 2, 5),\n    (1, 2, 2)\n]\n\nsource_node = 0\n\ntry:\n    distances = bellman_ford(graph, source_node)\n    print(distances)  # Output: {0: 0, 1: 2, 2: -2}\nexcept ValueError as e:\n    print(e)\n\n\n```\n\nIn this example, we define a graph with three nodes and two edges. The `bellman_ford` function takes the graph and source node as input and returns a dictionary of shortest distances from the source to all other nodes in the graph.\n\nWhen you run this code, it will correctly compute the shortest path from the source node to all other nodes and detect negative-weight cycles if they exist.\n\nIn conclusion, Dijkstra's algorithm fails when there are negative-weight edges because it relies on finding the next edge with the smallest weight. However, Bellman-Ford can handle graphs with negative-weight edges by relaxing each edge repeatedly until no more updates can be made or a cycle is detected.",
+        "score": 0.7
+      },
+      "routed": {
+        "kind": "cloud_cheap",
+        "tier": "paid_cheap",
+        "model": "claude-haiku-4-5-20251001",
+        "frontier_tokens": 941,
+        "reason": "perfil=deep_reason (task_type=general) | elegido paid_cheap:cloud_cheap/claude-haiku-4-5-20251001 (U=-1.333)"
+      },
+      "judge_reason": "Answer B provides a good explanation of why Dijkstra's algorithm fails when there are negative-weight edges. However, it does not provide a practical example or an analysis of the complexity of Bellman-Ford as the fix."
+    },
+    {
+      "axis": "multilingual",
+      "difficulty": "trivial",
+      "prompt": "Translate 'Good morning, how are you today?' into French, German, and Japanese.",
+      "local": {
+        "tier": "local_free",
+        "model": "llama3.2:3b",
+        "total_tokens": 167,
+        "dt": 13.88,
+        "content": "Here are the translations:\n\n* French: \"Bonjour, comment allez-vous aujourd'hui?\" (Note: A more casual way to say this is \"Bon matin!\" or \"Bonne journée!\")\n* German: \"Guten Morgen! Wie geht es Ihnen heute?\"\n* Japanese: (Ohayou gozaimasu!) - Note that in Japan, it's common to use a polite verb form and a suffix (-masu) when greeting someone. The literal translation of this phrase is \"Good morning!\", but the more formal way to say it is \"Good morning, may I have your permission?\"",
+        "score": null
+      },
+      "frontier": {
+        "tier": "local_free",
+        "model": "llama3.2:3b",
+        "total_tokens": 274,
+        "dt": 13.17,
+        "content": "Here are the translations:\n\n1. French:\n\"Bonjour, comment allez-vous aujourd'hui?\"\n\nBreakdown:\n\n* \"Bonjour\" means \"good morning\"\n* \"Comment\" is a polite way of asking \"how are you\"\n* \"allez-vous\" means \"you are\"\n* \"aujourd'hui\" means \"today\"\n\n2. German:\n\"Guten Morgen, wie geht es Ihnen heute?\"\n\nBreakdown:\n\n* \"Guten Morgen\" means \"good morning\"\n* \"Wie\" is a polite way of asking \"how are you\"\n* \"geht es\" means \"things are going\"\n* \"Ihnen\" means \"to you\"\n* \"heute\" means \"today\"\n\n3. Japanese:\n (Konnichiwa o kudasai, irasshaimase!)\n Breakdown:\n\n* \"Konnichiwa\" is a polite greeting that can be used in the morning\n* \"o kudasai\" is a polite way of asking \"how are you\"\n* \"irasshaimase\" means \"welcome\" (in this context, it's used to acknowledge someone's presence)",
+        "score": null
+      },
+      "routed": {
+        "kind": "cloud_cheap",
+        "tier": "paid_cheap",
+        "model": "claude-haiku-4-5-20251001",
+        "frontier_tokens": 274,
+        "reason": "perfil=translate (task_type=translate) | elegido paid_cheap:cloud_cheap/claude-haiku-4-5-20251001 (U=-1.343)"
+      },
+      "judge_reason": "judge failed: 'score_b'"
+    },
+    {
+      "axis": "multilingual",
+      "difficulty": "trivial",
+      "prompt": "Traduce al inglés: 'La reunión de seguimiento es el martes a las tres de la tarde.'",
+      "local": {
+        "tier": "local_free",
+        "model": "llama3.2:3b",
+        "total_tokens": 130,
+        "dt": 10.77,
+        "content": "Una buena opción sería:\n\n\"The follow-up meeting is scheduled for Tuesday at 3 pm.\"\n\nOtra forma podría ser:\n\n\"Please note that the follow-up meeting is on Tuesday, 3 pm.\"\n\nAmbas opciones son precisas y claras. La primera opción es más directa y concisa, mientras que la segunda opción añade un toque de formalidad con \"Please note\".",
+        "score": 0.8
+      },
+      "frontier": {
+        "tier": "local_free",
+        "model": "llama3.2:3b",
+        "total_tokens": 71,
+        "dt": 1.46,
+        "content": "La traducción al inglés sería:\n\n\"The follow-up meeting is on Tuesday at 3 pm.\"",
+        "score": 0.8
+      },
+      "routed": {
+        "kind": "cloud_cheap",
+        "tier": "paid_cheap",
+        "model": "claude-haiku-4-5-20251001",
+        "frontier_tokens": 71,
+        "reason": "perfil=translate (task_type=translate) | elegido paid_cheap:cloud_cheap/claude-haiku-4-5-20251001 (U=-1.343)"
+      },
+      "judge_reason": "Both answers are accurate and clear, with only minor differences in tone and style."
+    },
+    {
+      "axis": "multilingual",
+      "difficulty": "hard",
+      "prompt": "Translate this technical paragraph from English to Spanish, preserving technical terms: 'Post-training quantization reduces model weights from 32-bit floating point to 4-bit integers, achieving a 4-8x reduction in memory footprint with less than 2% accuracy loss on most benchmarks.'",
+      "local": {
+        "tier": "local_free",
+        "model": "llama3.2:3b",
+        "total_tokens": 384,
+        "dt": 25.08,
+        "content": "\"La reducción de entrenamiento de la quantización reduce el peso del modelo desde la representación de punto flotante de 32 bits hasta enteros de 4 bits, logrando una reducción en el tamaño de memoria de 4 a 8 veces con una pérdida de precisión menos del 2% en la mayoría de los benchmarks.\"\n\nNote:\n\n* \"Post-training\" se traduce literalmente como \"después del entrenamiento\", pero para evitar confusiones, se puede mantener la expresión original o reemplazarla por \"entrenamiento posterior\".\n* \"Quantization\" es un término técnico que se mantiene sin cambiar en la traducción.\n* \"Floating point\" se traduce como \"punto flotante\" y \"32-bit floating point\" se traduce como \"punto flotante de 32 bits\".\n* \"4-8x reduction\" se traduce literalmente como \"reducción del 4 al 8 veces\", pero para mantener el sentido original, se puede reemplazar por la expresión \"reducción en el tamaño de memoria del 4 al 8 veces\".\n* \"Accuracy loss\" se traduce como \"pérdida de precisión\".\n\nPlease note that machine translation may not always preserve the exact technical tone and nuance of the original text. If you need a more precise translation, it's recommended to consult with a native Spanish speaker or a professional translator.",
+        "score": 0.8
+      },
+      "frontier": {
+        "tier": "local_free",
+        "model": "llama3.2:3b",
+        "total_tokens": 188,
+        "dt": 6.23,
+        "content": "Here is the translation:\n\nLa reducción de entrenamiento con cuantización reduce los pesos del modelo desde el punto flotante de 32 bits hasta los enteros de 4 bits, logrando una reducción en la memoria del 4-8x con una pérdida de precisión menor de 2% en la mayoría de las benchmarkas.\n\nI've preserved the technical terms and translated them exactly as they appeared in the original paragraph. Let me know if you'd like me to make any adjustments!",
+        "score": 0.9
+      },
+      "routed": {
+        "kind": "cloud_cheap",
+        "tier": "paid_cheap",
+        "model": "claude-haiku-4-5-20251001",
+        "frontier_tokens": 188,
+        "reason": "perfil=translate (task_type=translate) | elegido paid_cheap:cloud_cheap/claude-haiku-4-5-20251001 (U=-1.343)"
+      },
+      "judge_reason": "Both answers are correct but A preserves more technical terms and maintains the original meaning."
+    }
+  ]
+}

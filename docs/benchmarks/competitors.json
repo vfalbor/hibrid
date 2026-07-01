@@ -1,0 +1,15 @@
+{
+ "note": "All competitor numbers are REPORTED by their authors under THEIR conditions (dataset/models/date) and are NOT measured by us and NOT directly comparable. hibrid rows are MEASURED here.",
+ "tools": [
+  {"name":"hibrid (this work)","local_first":true,"no_api_key":true,"hardware_aware":true,"open_source":true,"cost_saving_pct":null,"quality_retained_pct":null,"source":"github.com/vfalbor/hibrid"},
+  {"name":"RouteLLM","local_first":false,"no_api_key":false,"hardware_aware":false,"open_source":true,"cost_saving_pct":74,"quality_retained_pct":95,"source":"arxiv 2406.18665 (ICLR 2025), MT-Bench, GPT-4 vs Mixtral"},
+  {"name":"FrugalGPT","local_first":false,"no_api_key":false,"hardware_aware":false,"open_source":false,"cost_saving_pct":80,"quality_retained_pct":101,"source":"arxiv 2305.05176 (TMLR 2024)"},
+  {"name":"Martian","local_first":false,"no_api_key":false,"hardware_aware":false,"open_source":false,"cost_saving_pct":50,"quality_retained_pct":97,"source":"martian.ai / Accenture 2024"},
+  {"name":"Not Diamond","local_first":false,"no_api_key":false,"hardware_aware":false,"open_source":false,"cost_saving_pct":null,"quality_retained_pct":null,"source":"notdiamond.ai (accuracy-lift framing)"},
+  {"name":"LiteLLM+Ollama (DIY)","local_first":true,"no_api_key":true,"hardware_aware":false,"open_source":true,"cost_saving_pct":80,"quality_retained_pct":null,"source":"practitioner reports (not peer-reviewed)"},
+  {"name":"semantic-router","local_first":true,"no_api_key":true,"hardware_aware":false,"open_source":true,"cost_saving_pct":null,"quality_retained_pct":null,"source":"github.com/aurelio-labs/semantic-router (intent router)"},
+  {"name":"OpenRouter Auto","local_first":false,"no_api_key":false,"hardware_aware":false,"open_source":false,"cost_saving_pct":null,"quality_retained_pct":null,"source":"openrouter.ai (gateway, 5.5% fee)"},
+  {"name":"GPTCache","local_first":true,"no_api_key":true,"hardware_aware":false,"open_source":true,"cost_saving_pct":65,"quality_retained_pct":null,"source":"NLP-OSS 2023 (semantic cache, 61.6-68.8% hit rate)"},
+  {"name":"Portkey","local_first":true,"no_api_key":true,"hardware_aware":false,"open_source":true,"cost_saving_pct":null,"quality_retained_pct":null,"source":"portkey.ai (gateway, Apache-2.0 2026)"}
+ ]
+}

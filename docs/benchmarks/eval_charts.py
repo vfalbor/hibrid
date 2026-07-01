@@ -23,16 +23,34 @@ def load(name):
     return json.load(open(p, encoding="utf-8")) if os.path.exists(p) else None
 
 
+def _strategies(data):
+    """Three operating points over judged rows: without-hibrid (all paid), hibrid
+    (route by task difficulty: trivial->local free, hard->paid), all-local."""
+    rows = [r for r in data["rows"] if r["local"]["score"] is not None
+            and r["frontier"]["score"] is not None]
+    triv = [r for r in rows if r["difficulty"] == "trivial"]
+    hard = [r for r in rows if r["difficulty"] == "hard"]
+    n = len(rows)
+    base_tok = sum(r["frontier"]["total_tokens"] for r in rows)
+    base_q = sum(r["frontier"]["score"] for r in rows) / n
+    hib_tok = sum(r["frontier"]["total_tokens"] for r in hard)
+    hib_q = (sum(r["local"]["score"] for r in triv) + sum(r["frontier"]["score"] for r in hard)) / n
+    loc_q = sum(r["local"]["score"] for r in rows) / n
+    return {"n": n, "base": (base_tok, base_q), "hibrid": (hib_tok, round(hib_q, 3)),
+            "local": (0, round(loc_q, 3))}
+
+
 def fig_tokens(data):
-    """Figure 1: frontier tokens — all-frontier baseline vs all-local (measured bound)."""
-    rows = [r for r in data["rows"] if r["frontier"]["score"] is not None]
-    base = sum(r["frontier"]["total_tokens"] for r in rows)
-    fig, ax = plt.subplots(figsize=(5.2, 4))
-    bars = ax.bar(["No router\n(all frontier)", "hibrid\n(all local)"],
-                  [base, 0], color=[BR["slate"], BR["green"]], width=0.55)
-    ax.set_ylabel("frontier tokens (workload total)")
-    ax.set_title(f"Frontier tokens: 100% avoided  (n={len(rows)})")
-    for b, v in zip(bars, [base, 0]):
+    """Figure 1: paid tokens by strategy (without hibrid / hibrid routed / all local)."""
+    st = _strategies(data)
+    labels = ["Without hibrid\n(all paid)", "hibrid\n(route by task)", "All local\n(3B only)"]
+    vals = [st["base"][0], st["hibrid"][0], st["local"][0]]
+    fig, ax = plt.subplots(figsize=(6, 4))
+    bars = ax.bar(labels, vals, color=[BR["slate"], BR["green"], BR["lite"]], width=0.6)
+    ax.set_ylabel("paid (frontier) tokens — workload total")
+    saved = round(100 * (1 - st["hibrid"][0] / st["base"][0]), 1)
+    ax.set_title(f"Paid tokens: hibrid saves {saved}% on this one-shot mix (n={st['n']})")
+    for b, v in zip(bars, vals):
         ax.text(b.get_x() + b.get_width() / 2, v, f"{v:,}", ha="center", va="bottom")
     fig.tight_layout(); fig.savefig(os.path.join(IMG, "eval_tokens.png")); plt.close(fig)
 
@@ -56,26 +74,24 @@ def fig_quality(s):
 
 
 def fig_pareto(data):
-    """Figure 3: cost/quality trade-off — all-local vs all-frontier (measured, judged rows)."""
-    rows = [r for r in data["rows"] if r["frontier"]["score"] is not None
-            and r["local"]["score"] is not None]
-    n = len(rows)
-    all_local_q = round(sum(r["local"]["score"] for r in rows) / n, 3)
-    all_frontier_q = round(sum(r["frontier"]["score"] for r in rows) / n, 3)
-    all_frontier_tokens = sum(r["frontier"]["total_tokens"] for r in rows)
-    pts = [("all-local (free)", 0, all_local_q, BR["green"]),
-           ("all-frontier (paid)", all_frontier_tokens, all_frontier_q, BR["slate"])]
-    fig, ax = plt.subplots(figsize=(6, 4.2))
+    """Figure 3: cost/quality — without hibrid, hibrid (routed), all-local (judged rows)."""
+    st = _strategies(data)
+    pts = [("all local (3B)", st["local"][0], st["local"][1], BR["lite"]),
+           ("hibrid (route by task)", st["hibrid"][0], st["hibrid"][1], BR["green"]),
+           ("without hibrid (all paid)", st["base"][0], st["base"][1], BR["slate"])]
+    fig, ax = plt.subplots(figsize=(6.4, 4.4))
     for name, x, y, c in pts:
         ax.scatter(x, y, s=150, color=c, zorder=3)
         ax.annotate(f"{name}\n({x:,}t, q={y})", (x, y), textcoords="offset points",
-                    xytext=(8, -4), fontsize=9)
-    ax.plot([p[1] for p in pts], [p[2] for p in pts], color=BR["slate"], alpha=0.3, zorder=1)
-    ax.set_xlabel("frontier tokens (workload total) — cost")
+                    xytext=(8, -6), fontsize=9)
+    xs = [p[1] for p in pts]; ys = [p[2] for p in pts]
+    ax.plot(xs, ys, color=BR["slate"], alpha=0.3, zorder=1)
+    ax.set_xlabel("paid (frontier) tokens — cost")
     ax.set_ylabel("mean quality, blind judge (0–1)")
-    ax.set_title(f"100% of frontier tokens saved for {round((1-all_local_q/all_frontier_q)*100,1)}% quality drop (n={n})")
-    ax.set_ylim(min(all_local_q, all_frontier_q) - 0.08, 1.0)
-    ax.set_xlim(-max(all_frontier_tokens * 0.15, 200), all_frontier_tokens * 1.25)
+    kept = round(100 * st["hibrid"][1] / st["base"][1], 1)
+    ax.set_title(f"hibrid keeps {kept}% of frontier quality below the all-paid cost (n={st['n']})")
+    ax.set_ylim(min(ys) - 0.08, 1.0)
+    ax.set_xlim(-max(max(xs) * 0.12, 200), max(xs) * 1.3)
     fig.tight_layout(); fig.savefig(os.path.join(IMG, "eval_pareto.png")); plt.close(fig)
 
 

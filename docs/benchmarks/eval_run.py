@@ -36,6 +36,25 @@ AXIS_TASK = {"general": "general", "writing": "write", "code": "code",
              "reasoning": "deep_reason", "multilingual": "translate"}
 
 
+def _refresh():
+    try:
+        urllib.request.urlopen(urllib.request.Request(BASE + "/v1/node/refresh", data=b"",
+                               headers={"Content-Type": "application/json"}), timeout=90)
+    except Exception:
+        pass
+
+
+def _post_paid(messages, task_type, timeout=300):
+    """Force the paid tier and REQUIRE it actually ran paid (no silent local fallback).
+    Retries with a node refresh; raises if a genuine paid answer can't be obtained."""
+    for attempt in range(3):
+        out = _post(messages, {"task_type": task_type, "force": "cloud_strong"}, timeout=timeout)
+        if str(out.get("tier", "")).startswith("paid"):
+            return out
+        _refresh()  # backend probe was stale/flaky — re-probe and retry
+    raise RuntimeError(f"paid tier unavailable (got tier={out.get('tier')}); refuse to use local as frontier")
+
+
 def _post(messages, hibrid_opts, timeout=240, retries=3):
     body = json.dumps({"model": "hibrid-auto", "messages": messages,
                        "hibrid": hibrid_opts}).encode()
@@ -74,8 +93,8 @@ JUDGE_SYS = (
 def judge(task, ans_a, ans_b):
     user = (f"TASK:\n{task}\n\n=== ANSWER A ===\n{ans_a}\n\n=== ANSWER B ===\n{ans_b}\n\n"
             "Return only the JSON.")
-    out = _post([{"role": "system", "content": JUDGE_SYS}, {"role": "user", "content": user}],
-                {"task_type": "deep_reason", "force": "cloud_strong"}, timeout=240)
+    out = _post_paid([{"role": "system", "content": JUDGE_SYS}, {"role": "user", "content": user}],
+                     "deep_reason")  # the judge MUST be the paid model, never a local fallback
     txt = out["content"].strip()
     s, e = txt.find("{"), txt.rfind("}")
     data = json.loads(txt[s:e + 1])
@@ -91,6 +110,7 @@ def main():
     if limit:
         prompts = prompts[:limit]
 
+    _refresh()  # ensure the engine re-probes the paid backend before we start
     import asyncio
     node = asyncio.run(build_node_profile(use_cache=True, benchmark=False))
 
@@ -107,10 +127,9 @@ def main():
         except Exception as e:
             print(f"      local ERROR: {e}"); continue
         try:
-            frontier = _post([{"role": "user", "content": task}],
-                             {"task_type": tt, "force": "cloud_strong"})
+            frontier = _post_paid([{"role": "user", "content": task}], tt)
         except Exception as e:
-            print(f"      frontier ERROR: {e}"); continue
+            print(f"      frontier ERROR (not paid): {e}"); continue
 
         # hibrid routing DECISION (free): would it keep this local or escalate?
         feat = classifier.classify([ChatMessage(role="user", content=task)])

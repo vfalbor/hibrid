@@ -221,120 +221,135 @@ points here too</pre></div>
       #compare .cmp-h{font-size:var(--s-1);color:var(--ink-2);margin-bottom:.3rem}
       #compare .cmp-meta{font-size:var(--s-1);color:var(--muted);margin-bottom:.5rem}
       #compare .cmp-ans{font-size:var(--s-1);color:var(--ink-2);line-height:1.5;white-space:pre-wrap}
-      #compare .cmp-foot{margin-top:.7rem;font-size:var(--s-1);color:var(--muted)}
+      #compare .cmp-foot{margin-top:.7rem;font-size:var(--s-1);color:var(--muted);border-top:1px solid var(--rule);padding-top:.5rem}
+      #compare .rt-local b{color:var(--green-ink)}
+      #compare .rt-paid b{color:var(--slate)}
+      #compare .cmp-diff{float:right;font-family:var(--mono);font-size:.66rem;color:var(--muted);border:1px solid var(--rule-2);border-radius:5px;padding:.05rem .35rem}
       #compare .mono{font-family:var(--mono)}
     </style>
     <h2 class="lead">See for yourself — and the model behind each call</h2>
-    <p class="sub">Real measured runs (14 tasks, blind-judged 0–1). Same task, answered on a
-      small local model (a 3B, free) and by the frontier (paid). The quality gap is small; the
-      token bill isn't.</p>
+    <p class="sub">Real measured runs (15 tasks, blind-judged 0–1). Without hibrid, every task goes to
+      a paid frontier model. hibrid runs the easy ones on a small local model (free) and escalates
+      the hard ones to the paid model — so you keep almost all the quality for a fraction of the bill.</p>
     <div class="cmp-stats">
-      <div class="cmp-stat"><div class="n">97.5%</div><div class="l">of frontier quality kept<br>(local 0.829 vs 0.85, blind judge)</div></div>
-      <div class="cmp-stat"><div class="n">64.3%</div><div class="l">of tasks at parity or better vs the paid model</div></div>
-      <div class="cmp-stat"><div class="n">5,382→0</div><div class="l">paid tokens: the frontier spent 5,382, the local tier spent nothing</div></div>
+      <div class="cmp-stat"><div class="n">92.9%</div><div class="l">of paid-model quality kept<br>(hibrid routed vs all-paid, blind judge)</div></div>
+      <div class="cmp-stat"><div class="n">86.8%</div><div class="l">of paid quality on everyday tasks — for free, on a 3B local model</div></div>
+      <div class="cmp-stat"><div class="n">−11.4%</div><div class="l">paid tokens on this one-shot mix (9,487→8,401); far more on loop-heavy agent work</div></div>
     </div>
     
       <article class="cmp-card">
-        <div class="cmp-q"><span class="cmp-ax">general</span>List the planets in the solar system in order from the Sun.</div>
+        <div class="cmp-q"><span class="cmp-ax">general</span>List the planets in the solar system in order from the Sun.
+          <span class="cmp-diff">trivial</span></div>
         <div class="cmp-cols">
           <div class="cmp-col cmp-local">
-            <div class="cmp-h">with hibrid · <b>local, free</b></div>
-            <div class="cmp-meta"><span class="mono">llama3.2:3b</span>
-              · <b>0</b> paid tok · q&nbsp;<b>0.85</b></div>
-            <p class="cmp-ans">Here are the 8 planets in our solar system, listed in order from closest to farthest from the Sun: 1. Mercury 2. Venus 3. Earth 4. Mars 5. Jupiter 6. Saturn 7. Uranus 8. Neptune Note: Pluto was previously considered a planet, but it is now classified as a dwarf planet by the International Astronomic…</p>
-          </div>
-          <div class="cmp-col cmp-fro">
-            <div class="cmp-h">without hibrid · <b>frontier, paid</b></div>
-            <div class="cmp-meta"><span class="mono">llama3.2:3b</span>
-              · <b>147</b> paid tok · q&nbsp;<b>0.80</b></div>
-            <p class="cmp-ans">Here are the 8 planets in our solar system, listed in order from the Sun: 1. Mercury 2. Venus 3. Earth 4. Mars 5. Jupiter 6. Saturn 7. Uranus 8. Neptune Note: Pluto was previously considered a planet but is now classified as a dwarf planet. Also, it&#x27;s worth noting that there are other objects in the…</p>
-          </div>
-        </div>
-        <div class="cmp-foot">the model behind the local answer: <span class="mono">llama3.2:3b</span>
-          · quality gap <b>-0.05</b> · paid tokens saved on this task: <b>147</b></div>
-      </article>
-
-      <article class="cmp-card">
-        <div class="cmp-q"><span class="cmp-ax">writing</span>Write a 400-word thought-leadership LinkedIn post on local-first AI privacy: include a strong hook, three concrete insights, and a clear call to action.</div>
-        <div class="cmp-cols">
-          <div class="cmp-col cmp-local">
-            <div class="cmp-h">with hibrid · <b>local, free</b></div>
-            <div class="cmp-meta"><span class="mono">llama3.2:3b</span>
-              · <b>0</b> paid tok · q&nbsp;<b>0.85</b></div>
-            <p class="cmp-ans">**The Local-First Approach to AI Privacy: Why Your Data Matters Most** As we increasingly rely on Artificial Intelligence (AI) to power our daily lives, it&#x27;s becoming painfully clear that the line between convenience and compromise is getting perilously thin. With every passing day, our personal dat…</p>
-          </div>
-          <div class="cmp-col cmp-fro">
-            <div class="cmp-h">without hibrid · <b>frontier, paid</b></div>
-            <div class="cmp-meta"><span class="mono">llama3.2:3b</span>
-              · <b>609</b> paid tok · q&nbsp;<b>0.70</b></div>
-            <p class="cmp-ans">**The Dark Side of Globalization: Why Local-First AI Privacy Matters** As we continue to navigate the digital age, it&#x27;s easy to get caught up in the excitement of AI-driven innovation. From personalized product recommendations to autonomous vehicles, AI is transforming industries and redefining the …</p>
-          </div>
-        </div>
-        <div class="cmp-foot">the model behind the local answer: <span class="mono">llama3.2:3b</span>
-          · quality gap <b>-0.15</b> · paid tokens saved on this task: <b>609</b></div>
-      </article>
-
-      <article class="cmp-card">
-        <div class="cmp-q"><span class="cmp-ax">code</span>Implement a thread-safe LRU cache in Python with O(1) get and O(1) put. Use full type hints, a lock for concurrent access, and a brief docstring.</div>
-        <div class="cmp-cols">
-          <div class="cmp-col cmp-local">
-            <div class="cmp-h">with hibrid · <b>local, free</b></div>
+            <div class="cmp-h">local model · <b>free</b></div>
             <div class="cmp-meta"><span class="mono">llama3.2:3b</span>
               · <b>0</b> paid tok · q&nbsp;<b>1.00</b></div>
-            <p class="cmp-ans">import threading from collections import OrderedDict class LRUCache: &quot;&quot;&quot; A thread-safe implementation of an LRU (Least Recently Used) cache. Attributes: capacity (int): The maximum number of items the cache can hold. cache (OrderedDict): An ordered dictionary that stores the cached items. lock (thre…</p>
+            <p class="cmp-ans">Here are the planets in our solar system listed in order from the Sun: 1. Mercury 2. Venus 3. Earth 4. Mars 5. Jupiter 6. Saturn 7. Uranus 8. Neptune Note: Pluto was previously considered a planet but was reclassified as a dwarf planet in 2006 by the International Astronomical Union (IAU).</p>
           </div>
           <div class="cmp-col cmp-fro">
-            <div class="cmp-h">without hibrid · <b>frontier, paid</b></div>
-            <div class="cmp-meta"><span class="mono">llama3.2:3b</span>
-              · <b>257</b> paid tok · q&nbsp;<b>0.80</b></div>
-            <p class="cmp-ans">class LRUCache: &quot;&quot;&quot; A thread-safe LRU cache implemented using an OrderedDict. &quot;&quot;&quot; def __init__(self, capacity: int): self.capacity = capacity self.cache = {} self.lock = asyncio.Lock() async def get(self, key: int) -&gt; int: &quot;&quot;&quot;Get a value from the cache by key.&quot;&quot;&quot; with self.lock: if key in self.cache…</p>
+            <div class="cmp-h">frontier model · <b>paid</b></div>
+            <div class="cmp-meta"><span class="mono">claude-opus-4-8</span>
+              · <b>60</b> paid tok · q&nbsp;<b>0.95</b></div>
+            <p class="cmp-ans">Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune. (Pluto was reclassified as a dwarf planet in 2006, so it&#x27;s no longer counted among the eight planets.)</p>
           </div>
         </div>
-        <div class="cmp-foot">the model behind the local answer: <span class="mono">llama3.2:3b</span>
-          · quality gap <b>-0.20</b> · paid tokens saved on this task: <b>257</b></div>
+        <div class="cmp-foot rt-local">hibrid routes this to → <b>local — free, on your machine</b>
+          · quality gap local vs paid: <b>-0.05</b></div>
       </article>
 
       <article class="cmp-card">
-        <div class="cmp-q"><span class="cmp-ax">reasoning</span>A train travels at 60 mph for 2.5 hours. How far does it travel? Show your work.</div>
+        <div class="cmp-q"><span class="cmp-ax">reasoning</span>A train travels at 60 mph for 2.5 hours. How far does it travel? Show your work.
+          <span class="cmp-diff">trivial</span></div>
         <div class="cmp-cols">
           <div class="cmp-col cmp-local">
-            <div class="cmp-h">with hibrid · <b>local, free</b></div>
+            <div class="cmp-h">local model · <b>free</b></div>
             <div class="cmp-meta"><span class="mono">llama3.2:3b</span>
-              · <b>0</b> paid tok · q&nbsp;<b>1.00</b></div>
-            <p class="cmp-ans">To find the distance traveled, we need to multiply the speed of the train (in miles per hour) by the time it traveled. Speed = 60 mph Time = 2.5 hours Distance = Speed x Time = 60 x 2.5 = 150 miles So, the train travels 150 miles.</p>
+              · <b>0</b> paid tok · q&nbsp;<b>0.95</b></div>
+            <p class="cmp-ans">To find the distance traveled by the train, we need to multiply the speed of the train (in miles per hour) by the time it traveled. Speed = 60 mph Time = 2.5 hours Distance = Speed x Time = 60 mph x 2.5 hours = 150 miles Therefore, the train travels 150 miles in 2.5 hours.</p>
           </div>
           <div class="cmp-col cmp-fro">
-            <div class="cmp-h">without hibrid · <b>frontier, paid</b></div>
-            <div class="cmp-meta"><span class="mono">llama3.2:3b</span>
-              · <b>135</b> paid tok · q&nbsp;<b>1.00</b></div>
-            <p class="cmp-ans">To find the distance traveled by the train, we need to use the formula: Distance = Speed x Time Given values: Speed (mph) = 60 Time (hours) = 2.5 Now, let&#x27;s plug in the values: Distance = 60 mph x 2.5 hours Distance = 150 miles So, the train travels 150 miles in 2.5 hours.</p>
+            <div class="cmp-h">frontier model · <b>paid</b></div>
+            <div class="cmp-meta"><span class="mono">claude-opus-4-8</span>
+              · <b>86</b> paid tok · q&nbsp;<b>0.98</b></div>
+            <p class="cmp-ans">A train travels at 60 mph for 2.5 hours. **Distance = Speed × Time** - Speed = 60 miles per hour - Time = 2.5 hours Distance = 60 mph × 2.5 hours = **150 miles** The hours unit cancels out (60 miles/hour × 2.5 hours), leaving the answer in miles.</p>
           </div>
         </div>
-        <div class="cmp-foot">the model behind the local answer: <span class="mono">llama3.2:3b</span>
-          · quality gap <b>+0.00</b> · paid tokens saved on this task: <b>135</b></div>
+        <div class="cmp-foot rt-local">hibrid routes this to → <b>local — free, on your machine</b>
+          · quality gap local vs paid: <b>+0.03</b></div>
       </article>
 
       <article class="cmp-card">
-        <div class="cmp-q"><span class="cmp-ax">translation</span>Traduce al inglés: &#x27;La reunión de seguimiento es el martes a las tres de la tarde.&#x27;</div>
+        <div class="cmp-q"><span class="cmp-ax">general</span>What is the capital of France?
+          <span class="cmp-diff">trivial</span></div>
         <div class="cmp-cols">
           <div class="cmp-col cmp-local">
-            <div class="cmp-h">with hibrid · <b>local, free</b></div>
+            <div class="cmp-h">local model · <b>free</b></div>
             <div class="cmp-meta"><span class="mono">llama3.2:3b</span>
-              · <b>0</b> paid tok · q&nbsp;<b>0.80</b></div>
-            <p class="cmp-ans">Una buena opción sería: &quot;The follow-up meeting is scheduled for Tuesday at 3 pm.&quot; Otra forma podría ser: &quot;Please note that the follow-up meeting is on Tuesday, 3 pm.&quot; Ambas opciones son precisas y claras. La primera opción es más directa y concisa, mientras que la segunda opción añade un toque de fo…</p>
+              · <b>0</b> paid tok · q&nbsp;<b>0.95</b></div>
+            <p class="cmp-ans">The capital of France is Paris.</p>
           </div>
           <div class="cmp-col cmp-fro">
-            <div class="cmp-h">without hibrid · <b>frontier, paid</b></div>
-            <div class="cmp-meta"><span class="mono">llama3.2:3b</span>
-              · <b>71</b> paid tok · q&nbsp;<b>0.80</b></div>
-            <p class="cmp-ans">La traducción al inglés sería: &quot;The follow-up meeting is on Tuesday at 3 pm.&quot;</p>
+            <div class="cmp-h">frontier model · <b>paid</b></div>
+            <div class="cmp-meta"><span class="mono">claude-opus-4-8</span>
+              · <b>20</b> paid tok · q&nbsp;<b>1.00</b></div>
+            <p class="cmp-ans">The capital of France is **Paris**.</p>
           </div>
         </div>
-        <div class="cmp-foot">the model behind the local answer: <span class="mono">llama3.2:3b</span>
-          · quality gap <b>+0.00</b> · paid tokens saved on this task: <b>71</b></div>
+        <div class="cmp-foot rt-local">hibrid routes this to → <b>local — free, on your machine</b>
+          · quality gap local vs paid: <b>+0.05</b></div>
       </article>
+
+      <article class="cmp-card">
+        <div class="cmp-q"><span class="cmp-ax">reasoning</span>Prove that there are infinitely many prime numbers. Present Euclid&#x27;s proof step by step and explain the logic of each step.
+          <span class="cmp-diff">hard</span></div>
+        <div class="cmp-cols">
+          <div class="cmp-col cmp-local">
+            <div class="cmp-h">local model · <b>free</b></div>
+            <div class="cmp-meta"><span class="mono">llama3.2:3b</span>
+              · <b>0</b> paid tok · q&nbsp;<b>0.04</b></div>
+            <p class="cmp-ans">Euclid&#x27;s proof that there are infinitely many prime numbers is a fundamental result in number theory, first presented in his book &quot;Elements&quot; around 300 BCE. Here&#x27;s a step-by-step explanation of the proof: **Step 1: Let&#x27;s assume the contrary** Euclid starts by assuming the opposite of what we want to…</p>
+          </div>
+          <div class="cmp-col cmp-fro">
+            <div class="cmp-h">frontier model · <b>paid</b></div>
+            <div class="cmp-meta"><span class="mono">claude-opus-4-8</span>
+              · <b>1007</b> paid tok · q&nbsp;<b>0.98</b></div>
+            <p class="cmp-ans"># There Are Infinitely Many Primes — Euclid&#x27;s Proof **Theorem.** There is no largest prime; the set of prime numbers is infinite. Euclid&#x27;s argument (from *Elements*, Book IX, Proposition 20) is a **proof by contradiction**. We assume the opposite of what we want to prove, and show that assumption fo…</p>
+          </div>
+        </div>
+        <div class="cmp-foot rt-paid">hibrid routes this to → <b>the paid model — this one earns it</b>
+          · quality gap local vs paid: <b>+0.94</b></div>
+      </article>
+
+      <article class="cmp-card">
+        <div class="cmp-q"><span class="cmp-ax">reasoning</span>Design a rate-limiting algorithm for a distributed API gateway that handles burst traffic, is fair across users, and needs no central coordinator. Analyze time …
+          <span class="cmp-diff">hard</span></div>
+        <div class="cmp-cols">
+          <div class="cmp-col cmp-local">
+            <div class="cmp-h">local model · <b>free</b></div>
+            <div class="cmp-meta"><span class="mono">llama3.2:3b</span>
+              · <b>0</b> paid tok · q&nbsp;<b>0.28</b></div>
+            <p class="cmp-ans"># Rate Limiting Algorithm Design ## Overview To design a rate-limiting algorithm for a distributed API gateway that handles burst traffic without a central coordinator, we can implement a distributed token bucket algorithm. ### Token Bucket Algorithm Basics The token bucket algorithm is a common app…</p>
+          </div>
+          <div class="cmp-col cmp-fro">
+            <div class="cmp-h">frontier model · <b>paid</b></div>
+            <div class="cmp-meta"><span class="mono">claude-opus-4-8</span>
+              · <b>2075</b> paid tok · q&nbsp;<b>0.95</b></div>
+            <p class="cmp-ans">Let me design this directly. ## The problem, stated precisely We want each user *u* to be limited to a rate *R_u* (requests/sec) with an allowed burst *B_u*, enforced across *N* gateway nodes, where: - **No central coordinator** — no shared Redis/counter service on the request path (that&#x27;s a coordin…</p>
+          </div>
+        </div>
+        <div class="cmp-foot rt-paid">hibrid routes this to → <b>the paid model — this one earns it</b>
+          · quality gap local vs paid: <b>+0.67</b></div>
+      </article>
+    <p class="sub" style="margin-top:.9rem"><b>What that saves you.</b> A small local model already
+      matches the paid model on everyday tasks (87% of its quality, at zero cost); the
+      real gap is on hard reasoning, which hibrid sends to the paid model. On a loop-heavy agent
+      workload — where cheap, repetitive calls dominate — that routing avoids on the order of
+      <b>432,607 paid tokens/month</b> for an agent doing ~200 calls/day
+      (<a href="https://tokenstree.eu/newsletter/2026-06-29-agent-loop-token-savings.html">prior study: up to 87%</a>).</p>
     <p class="sub" style="margin-top:.6rem">Method &amp; full data:
-      <a href="https://github.com/vfalbor/hibrid/blob/main/docs/benchmarks/qa_report.md">evaluation report</a>.</p>
+      <a href="https://github.com/vfalbor/hibrid/blob/main/docs/benchmarks/hibrid_evaluation.pdf">the paper (PDF)</a> ·
+      <a href="https://github.com/vfalbor/hibrid/blob/main/docs/benchmarks/hibrid_evaluation.md">markdown</a>.</p>
   </section>
   <!--COMPARE_END-->
 

@@ -2,9 +2,9 @@
   "summary": {
     "n": 16,
     "tokens": {
-      "baseline_all_frontier": 6550,
-      "hibrid_routed": 6308,
-      "frontier_tokens_avoided_pct": 3.7
+      "baseline_all_frontier": 9645,
+      "hibrid_routed": 9390,
+      "frontier_tokens_avoided_pct": 2.6
     },
     "routing": {
       "kept_local": 1,
@@ -12,42 +12,42 @@
       "kept_local_pct": 6.2
     },
     "quality": {
-      "mean_local": 0.829,
-      "mean_frontier": 0.85,
-      "n_judged": 14,
-      "quality_retained_pct": 97.5,
-      "parity_count": 9,
-      "parity_pct": 64.3
+      "mean_local": 0.631,
+      "mean_frontier": 0.955,
+      "n_judged": 15,
+      "quality_retained_pct": 66.1,
+      "parity_count": 4,
+      "parity_pct": 26.7
     },
     "by_axis": {
       "general": {
-        "n": 2,
-        "mean_local_q": 0.925,
-        "mean_frontier_q": 0.9,
+        "n": 3,
+        "mean_local_q": 0.833,
+        "mean_frontier_q": 0.967,
         "kept_local": 0
       },
       "writing": {
         "n": 3,
-        "mean_local_q": 0.8,
-        "mean_frontier_q": 0.8,
+        "mean_local_q": 0.64,
+        "mean_frontier_q": 0.897,
         "kept_local": 0
       },
       "code": {
         "n": 3,
-        "mean_local_q": 0.833,
-        "mean_frontier_q": 0.8,
+        "mean_local_q": 0.65,
+        "mean_frontier_q": 0.967,
         "kept_local": 1
       },
       "reasoning": {
         "n": 4,
-        "mean_local_q": 0.812,
-        "mean_frontier_q": 0.9,
+        "mean_local_q": 0.398,
+        "mean_frontier_q": 0.965,
         "kept_local": 0
       },
       "multilingual": {
         "n": 2,
-        "mean_local_q": 0.8,
-        "mean_frontier_q": 0.85,
+        "mean_local_q": 0.75,
+        "mean_frontier_q": 0.985,
         "kept_local": 0
       }
     }
@@ -61,26 +61,26 @@
         "tier": "local_free",
         "model": "llama3.2:3b",
         "total_tokens": 40,
-        "dt": 7.16,
+        "dt": 6.86,
         "content": "The capital of France is Paris.",
-        "score": 1.0
+        "score": 0.95
       },
       "frontier": {
-        "tier": "local_free",
-        "model": "llama3.2:3b",
-        "total_tokens": 40,
-        "dt": 0.64,
-        "content": "The capital of France is Paris.",
+        "tier": "paid_strong",
+        "model": "claude-opus-4-8",
+        "total_tokens": 20,
+        "dt": 5.35,
+        "content": "The capital of France is **Paris**.",
         "score": 1.0
       },
       "routed": {
         "kind": "cloud_cheap",
         "tier": "paid_cheap",
         "model": "claude-haiku-4-5-20251001",
-        "frontier_tokens": 40,
+        "frontier_tokens": 20,
         "reason": "perfil=general (task_type=general) | elegido paid_cheap:cloud_cheap/claude-haiku-4-5-20251001 (U=-1.333)"
       },
-      "judge_reason": "Both answers are correct and complete, providing the same information about the capital city of France."
+      "judge_reason": "Both correctly identify Paris; B fully satisfies the request to return only JSON with clean emphasis while A is equally correct and complete."
     },
     {
       "axis": "general",
@@ -89,27 +89,27 @@
       "local": {
         "tier": "local_free",
         "model": "llama3.2:3b",
-        "total_tokens": 170,
-        "dt": 13.16,
-        "content": "Here are the 8 planets in our solar system, listed in order from closest to farthest from the Sun:\n\n1. Mercury\n2. Venus\n3. Earth\n4. Mars\n5. Jupiter\n6. Saturn\n7. Uranus\n8. Neptune\n\nNote: Pluto was previously considered a planet, but it is now classified as a dwarf planet by the International Astronomical Union (IAU).\n\nHere's a fun fact: You can remember the order of the planets using the mnemonic \"My Very Excellent Mother Just Served Us Nachos\": Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune!",
-        "score": 0.85
+        "total_tokens": 118,
+        "dt": 5.24,
+        "content": "Here are the planets in our solar system listed in order from the Sun:\n\n1. Mercury\n2. Venus\n3. Earth\n4. Mars\n5. Jupiter\n6. Saturn\n7. Uranus\n8. Neptune\n\nNote: Pluto was previously considered a planet but was reclassified as a dwarf planet in 2006 by the International Astronomical Union (IAU).",
+        "score": 1.0
       },
       "frontier": {
-        "tier": "local_free",
-        "model": "llama3.2:3b",
-        "total_tokens": 147,
-        "dt": 5.69,
-        "content": "Here are the 8 planets in our solar system, listed in order from the Sun:\n\n1. Mercury\n2. Venus\n3. Earth\n4. Mars\n5. Jupiter\n6. Saturn\n7. Uranus\n8. Neptune\n\nNote: Pluto was previously considered a planet but is now classified as a dwarf planet.\n\nAlso, it's worth noting that there are other objects in the solar system that could be considered planets, such as Eris and Ceres, but these 8 are the most commonly recognized planets.",
-        "score": 0.8
+        "tier": "paid_strong",
+        "model": "claude-opus-4-8",
+        "total_tokens": 60,
+        "dt": 4.29,
+        "content": "Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune.\n\n(Pluto was reclassified as a dwarf planet in 2006, so it's no longer counted among the eight planets.)",
+        "score": 0.95
       },
       "routed": {
         "kind": "cloud_cheap",
         "tier": "paid_cheap",
         "model": "claude-haiku-4-5-20251001",
-        "frontier_tokens": 147,
+        "frontier_tokens": 60,
         "reason": "perfil=general (task_type=general) | elegido paid_cheap:cloud_cheap/claude-haiku-4-5-20251001 (U=-1.333)"
       },
-      "judge_reason": "Both answers are correct and complete, but Answer B provides more details about Pluto being classified as a dwarf planet by the IAU."
+      "judge_reason": "Both list the eight planets correctly in order with accurate Pluto context, but B fully satisfies the explicit numbered-ordering request with clearer formatting while A uses a plain comma-separated list."
     },
     {
       "axis": "general",
@@ -118,27 +118,27 @@
       "local": {
         "tier": "local_free",
         "model": "llama3.2:3b",
-        "total_tokens": 868,
-        "dt": 57.32,
-        "content": "When it comes to building a scalable application, one of the most critical decisions is whether to adopt a microservices-based architecture or a monolithic approach. In this analysis, we'll explore the operational trade-offs for each approach as your startup scales up to 10 million users.\n\n**Monolithic Architecture**\n\nPros:\n\n1. **Easier development and deployment**: With a single codebase, developers can work on multiple features simultaneously, and deployment is simplified.\n2. **Predictable performance**: Since all components are tightly coupled, the overall system's behavior is easier to predict and maintain.\n3. **Less overhead**: There's no need for service discovery, communication between services, or handling service failures.\n\nCons:\n\n1. **Tight coupling**: As your application grows, each component becomes increasingly dependent on others, making it harder to make changes without affecting the entire system.\n2. **Single point of failure**: If one component fails, the entire system goes down, which can be detrimental for a large user base like 10 million.\n3. **Difficult scalability**: Scaling a monolithic application requires rewriting or re-architecting the entire system, which is time-consuming and costly.\n\n**Microservices Architecture**\n\nPros:\n\n1. **Loose coupling**: Each service operates independently, allowing for more flexibility and easier maintenance.\n2. **Fault tolerance**: If one service fails, others can continue to operate, ensuring high availability for your users.\n3. **Scalability**: New services can be added or removed as needed, without affecting the entire system.\n\nCons:\n\n1. **Increased complexity**: Managing multiple services requires additional overhead for service discovery, communication, and conflict resolution.\n2. **Higher operational overhead**: More components mean more resources are required to manage, monitor, and maintain each service.\n3. **Challenging coordination**: Ensuring consistency across services can be difficult, especially when dealing with complex domain logic.\n\n**Operational Trade-Offs for Scaling to 10 Million Users**\n\nAs your application grows to support 10 million users, the trade-offs between microservices and monolithic architecture become more pronounced:\n\n1. **Increased complexity**: With a large user base comes increased traffic, which can lead to performance issues. Microservices may be better equipped to handle this load by providing additional capacity through horizontal scaling.\n2. **Resource requirements**: More resources (e.g., CPU, memory) are needed to support the increased load. In a monolithic architecture, these resources could become bottlenecked, while in microservices, they can be allocated more efficiently across services.\n3. **Service discovery and communication**: As your application grows, service discovery and communication between services become increasingly important. Microservices require more sophisticated service discovery mechanisms, which add overhead.\n\n**Recommendation**\n\nFor a startup scaling to 10 million users, we recommend a microservices-based architecture initially, with the following conditions:\n\n1. **Start small**: Begin with a few key services that are critical to your user experience and scale from there.\n2. **Use containerization**: Leverage containerization (e.g., Docker) to manage service dependencies and reduce operational overhead.\n3. **Implement robust service discovery**: Use a reliable service discovery mechanism (e.g., etcd, Consul) to ensure services can find each other at runtime.\n4. **Monitor and optimize**: Continuously monitor your application's performance and optimize services as needed to ensure high availability and responsiveness.\n\nAs your application grows, reassess the trade-offs between microservices and monolithic architecture. If you find that your workload becomes too complex for a single service or that service discovery and communication become too difficult to manage, consider refactoring into a more monolithic approach or adopting a hybrid approach that balances the benefits of both architectures.\n\nIn summary, while microservices offer greater flexibility and scalability, they also introduce additional operational overhead. By starting small, using containerization, implementing robust service discovery, and monitoring performance, you can create a scalable microservices architecture that supports your 10 million user base and sets you up for future success.",
-        "score": null
+        "total_tokens": 809,
+        "dt": 48.67,
+        "content": "When it comes to building a scalable application for a growing number of users, two popular architectural approaches are microservices and monolithic architecture. Here's a step-by-step comparison of their operational trade-offs:\n\n**Monolithic Architecture**\n\nPros:\n\n1. **Simplified Development**: With a monolithic architecture, all components are tightly coupled and developed together, making it easier to manage complexity and simplify development.\n2. **Easier Communication**: Since all components are in the same \"bag,\" communication between them is straightforward and efficient.\n3. **Faster Iteration**: Developers can iterate quickly on the entire application without worrying about the impact of changes on other components.\n\nCons:\n\n1. **Scalability Challenges**: As the number of users grows, monolithic applications become increasingly difficult to scale, as each component must be scaled individually.\n2. **Higher Maintenance Costs**: With a single large codebase, maintenance becomes more complex and costly, especially when dealing with issues that affect multiple components.\n3. **Limited Fault Isolation**: If one component fails, it can take down the entire application, making it harder to isolate failures.\n\n**Microservices Architecture**\n\nPros:\n\n1. **Scalability and Flexibility**: Microservices allow for independent scaling of individual components, ensuring that each service can handle increased traffic without affecting the entire application.\n2. **Fault Isolation**: Since services are decoupled, if one fails, it won't bring down the entire application, reducing downtime and improving overall reliability.\n3. **Easier Maintenance**: With separate services for different features, maintenance becomes more manageable, as teams can focus on specific services without affecting others.\n\nCons:\n\n1. **Increased Complexity**: Microservices introduce additional complexity, including service discovery, communication protocols, and load balancing.\n2. **Higher Operational Overhead**: Managing multiple services requires more resources and expertise to ensure proper operation, deployment, and monitoring.\n3. **Communication Challenges**: With separate services, communication between them can become more complex, requiring additional development effort.\n\n**Comparison for a Startup Scaling to 10 Million Users**\n\nAssuming our startup starts with a small team and grows to handle 10 million users, here's how the operational trade-offs might play out:\n\n1. **Initial Growth Phase (0-100k users)**:\n\t* Monolithic architecture: Suitable for small teams and initial growth phases, as it allows for rapid development and iteration.\n\t* Microservices: May introduce additional complexity, but can provide a foundation for future scalability and flexibility.\n2. **Scaling Phase (100k-1M users)**:\n\t* Monolithic architecture: Begins to show limitations in scaling, leading to increased maintenance costs and downtime due to component failures.\n\t* Microservices: Offers better scalability and fault isolation, allowing the startup to handle increased traffic without compromising overall application reliability.\n3. **Large Scale Phase (1M-10M users)**:\n\t* Monolithic architecture: Becomes increasingly difficult to manage, with higher maintenance costs, reduced scalability, and increased downtime due to component failures.\n\t* Microservices: Provides a scalable foundation for the application, allowing the startup to handle massive traffic volumes without compromising performance or reliability.\n\n**Conclusion**\n\nFor a startup scaling to 10 million users, microservices architecture is likely a more suitable choice in the long run. While it introduces additional complexity and operational overhead, its scalability benefits, fault isolation, and maintainability advantages make it a better fit for handling large user bases.\n\nHowever, for small teams or initial growth phases, monolithic architecture can be a viable option, providing simplified development and easier communication between components. As the startup grows, it's essential to reassess the architecture and consider migrating to microservices if necessary to ensure scalability, reliability, and maintainability.",
+        "score": 0.55
       },
       "frontier": {
-        "tier": "local_free",
-        "model": "llama3.2:3b",
-        "total_tokens": 894,
-        "dt": 50.97,
-        "content": "When a startup is planning to scale from 1,000 to 10 million users, it's essential to consider the architectural implications of different design choices. Here's a comparison of microservices and monolithic architecture for scaling a startup:\n\n**Monolithic Architecture**\n\nPros:\n\n1. **Simplified Development**: Developers can work on multiple components simultaneously without worrying about communication between services.\n2. **Easier Debugging**: Since all components are part of the same application, debugging is more straightforward.\n3. **Less Overhead**: There's no need to worry about service discovery or inter-service communication.\n\nCons:\n\n1. **Scalability Issues**: As the number of users grows, monolithic applications can become slow and unresponsive due to increased load on a single server.\n2. **Single Point of Failure**: If one component fails, the entire application comes down.\n3. **Difficulty in Maintenance**: Updating code changes across multiple components simultaneously is challenging.\n\n**Microservices Architecture**\n\nPros:\n\n1. **Scalability**: Microservices allow for horizontal scaling and can handle increased load independently without affecting the overall system.\n2. **Fault Tolerance**: If one service fails, the other services can continue to operate, reducing downtime.\n3. **Flexibility**: Each microservice can be developed, tested, and deployed independently.\n\nCons:\n\n1. **Increased Complexity**: Communication between services requires additional overhead, which can lead to increased latency and complexity.\n2. **Higher Operational Overhead**: Service discovery, load balancing, and monitoring add operational complexity.\n3. **More Resources Required**: Multiple servers are needed to handle each microservice, increasing resource requirements.\n\n**Operational Trade-Offs**\n\n1. **Service Discovery**:\n\t* Monolithic: No need for service discovery; components are part of the same application.\n\t* Microservices: Requires implementing service discovery mechanisms (e.g., DNS, registry services) to find and communicate with microservices.\n2. **Load Balancing**:\n\t* Monolithic: No load balancing necessary; all traffic goes to a single server.\n\t* Microservices: Requires load balancing strategies (e.g., round-robin, IP hashing) to distribute traffic across multiple instances of each service.\n3. **Monitoring and Logging**:\n\t* Monolithic: Single console for monitoring and logging.\n\t* Microservices: Requires separate consoles or tools for monitoring and logging each microservice.\n4. **Security**:\n\t* Monolithic: Easier to implement security measures since all components are part of the same application.\n\t* Microservices: More complex to implement security measures, as each service needs to be secured independently.\n5. **Code Changes**:\n\t* Monolithic: Easier to make changes across multiple components simultaneously.\n\t* Microservices: More challenging to make changes across multiple services, requiring coordination and testing.\n\n**Recommendation for Scaling to 10 Million Users**\n\nFor a startup scaling from 1,000 to 10 million users, we recommend starting with a monolithic architecture. This will allow the team to focus on developing a high-quality product while maintaining simplicity and ease of development.\n\nOnce the product has gained traction and user engagement has increased, it's essential to consider introducing microservices to improve scalability and fault tolerance. A hybrid approach, where critical components are refactored into microservices while keeping core functionality in monolithic architecture, can also be a viable option.\n\nHere's a possible transition plan:\n\n1. **Initial Phase (1,000 - 10,000 users)**: Monolithic architecture.\n2. **Early Scaling (10,000 - 100,000 users)**: Implement load balancing and monitoring tools to improve system responsiveness.\n3. **Mid-Scale (100,000 - 1,000,000 users)**: Introduce service discovery mechanisms and start refactoring critical components into microservices.\n4. **Large Scale (1,000,000+ users)**: Complete the transition to a microservices architecture, ensuring each service is scalable, fault-tolerant, and secure.\n\nBy following this plan, the startup can balance development simplicity with scalability and maintainability as it grows in size and user base.",
-        "score": null
+        "tier": "paid_strong",
+        "model": "claude-opus-4-8",
+        "total_tokens": 1850,
+        "dt": 54.24,
+        "content": "Staff-engineer take, and I'll lead with the conclusion because the framing of the question hides a trap:\n\n**For a startup, \"microservices vs. monolith\" is the wrong binary. The real answer is: start with a well-structured modular monolith, and extract services surgically only when a specific operational pain forces you to. 10M users does not require microservices.** Shopify, Instagram (at 100M+), Stack Overflow, and GitHub all ran monoliths well past 10M users. Microservices solve an *organizational* scaling problem far more than a *traffic* one.\n\nLet me walk the operational trade-offs step by step so you can see *why*.\n\n---\n\n## Step 0: Reframe the scale question\n\n10M registered users is not 10M requests/sec. Do the math before choosing an architecture:\n\n- 10M users, assume 10% daily active = 1M DAU\n- Assume 50 requests/user/day = 50M requests/day\n- That's **~580 req/s average**, maybe **~3–5k req/s at peak**\n\nThat is *trivial* traffic. A single well-tuned Postgres + a horizontally-scaled monolith behind a load balancer handles this comfortably. **Traffic is not your reason to go micro.** Keep that anchored — a lot of teams cargo-cult microservices to solve a load problem they don't have.\n\n---\n\n## Step 1: Deployment & release operations\n\n| | Monolith | Microservices |\n|---|---|---|\n| Deploy unit | One artifact | N artifacts, N pipelines |\n| Rollback | Trivial (one version) | Coordinated across services |\n| Release coordination | None | Contract/versioning discipline required |\n\n**Monolith wins early.** One CI/CD pipeline, one rollback button. With microservices you now own N pipelines, service versioning, and backward-compatible API contracts *between your own teams*. For a small team this is a tax you pay every single day.\n\n**When micro wins:** when you have enough engineers that everyone deploying through one pipeline becomes a merge-queue bottleneck. That's an org signal (~roughly >2–3 teams stepping on each other), not a traffic signal.\n\n---\n\n## Step 2: Observability & debugging\n\n- **Monolith:** a stack trace is the whole story. Local reproduction is realistic. One log stream.\n- **Microservices:** a single user action fans out across services. You *cannot* operate them without distributed tracing (OpenTelemetry/Jaeger), centralized logging, and correlation IDs from day one. Debugging becomes \"which of 12 services and 3 network hops failed?\"\n\nThis is the most underestimated operational cost. Microservices convert **compile-time/local errors into runtime/distributed errors** — you trade a debugger for a forensics investigation. Budget real infra and engineering time for this *before* you split anything.\n\n---\n\n## Step 3: Data & consistency (the hardest part)\n\nThis is where the decision actually bites.\n\n- **Monolith:** one database, ACID transactions, foreign keys. Want to update an order and decrement inventory atomically? `BEGIN; ... COMMIT;`. Done.\n- **Microservices:** each service owns its data (if it shares a DB, it's a distributed monolith — the worst of both worlds). Cross-service consistency now needs the **Saga pattern**, outbox tables, idempotency keys, and eventual consistency. You will write compensating transactions and reconciliation jobs.\n\nYou are giving up ACID and buying a distributed-systems problem. **CAP theorem stops being interview trivia and becomes your on-call pager.** Do not distribute your data until a bounded context has genuinely earned its own store.\n\n---\n\n## Step 4: Failure modes & resilience\n\n- **Monolith:** the whole thing is up or down. Simple to reason about. A single memory leak or bad query can take everything down — one blast radius, but it's a *big* one.\n- **Microservices:** partial failure is normal. Payment down but browsing up. Sounds great — but you now *must* build timeouts, retries with backoff, circuit breakers, and bulkheads, or one slow service cascades into total outage. Naive microservices are *less* reliable than a monolith because you multiplied your failure surface across an unreliable network.\n\nIsolation is a benefit **only after** you've done the resilience engineering. Out of the box, more moving parts = more failures.\n\n---\n\n## Step 5: Scaling economics\n\n- **Monolith:** scales horizontally by cloning the whole app behind a load balancer. Coarse-grained — if only image-processing is hot, you still duplicate everything. Slightly wasteful, but cheap and simple.\n- **Microservices:** scale each service independently. The image processor gets 20 nodes; the profile service gets 2. Efficient — **at high scale**.\n\nAt 3–5k req/s the \"wasteful\" monolith cloning costs you maybe a few extra VMs. That's dramatically cheaper than the salaries required to run a fleet of services. **Fine-grained scaling is a real win, but only once your cost curve is dominated by compute, not by engineers.** You are almost certainly engineer-bound, not compute-bound.\n\n---\n\n## Step 6: The organizational reality (the actual deciding factor)\n\n**Conway's Law** is the honest answer: your architecture will mirror your communication structure. Microservices pay off when you have enough people that independent teams owning independent deploys removes coordination friction.\n\nRough heuristic:\n- **< ~20–30 engineers:** modular monolith, almost always.\n- **Growing past that, with clear domain boundaries and teams tripping over each other:** start extracting services along those boundaries.\n\n---\n\n## Recommendation: the modular monolith → strangler path\n\n1. **Build a modular monolith.** Enforce hard internal module boundaries (separate packages/namespaces, no cross-module DB reads, communication through defined interfaces). This is the critical discipline — it's what makes future extraction *cheap*.\n2. **Split the data conceptually now, physically later.** Give each module its own schema/tables and forbid cross-schema joins in code. You get logical separation without distributed-systems pain.\n3. **Extract the first service only when a concrete pain appears** — e.g., one component needs radically different scaling (video transcoding), a different runtime, or a team is genuinely blocked by the shared deploy. Use the **Strangler Fig pattern**: peel that one capability out behind a facade, leave the rest.\n4. **Invest in observability *before* your first extraction**, not after the outage.\n\nThe expensive mistake I see repeatedly: a 6-person startup adopts 15 microservices, and now spends 60% of its engineering time on infra plumbing (service mesh, tracing, contract versioning, distributed debugging) instead of product. They built a **distributed monolith** — services so chatty and co-dependent they must deploy together, so they got every cost of distribution and none of the benefits.\n\n---\n\n**Bottom line:** For scaling to 10M users, choose a **modular monolith with clean, data-isolated boundaries**, and let real operational pain — not traffic projections and not fashion — pull you toward extracting services one at a time. Architect for the *option* to split, but don't pay for the split until it earns its keep.\n\nIf you tell me your **team size, domain (e-commerce? social? SaaS?), and where you actually feel pain today**, I'll give you a concrete extraction sequence and the specific first service to peel off.",
+        "score": 0.95
       },
       "routed": {
         "kind": "cloud_cheap",
         "tier": "paid_cheap",
         "model": "claude-haiku-4-5-20251001",
-        "frontier_tokens": 894,
+        "frontier_tokens": 1850,
         "reason": "perfil=general (task_type=general) | elegido paid_cheap:cloud_cheap/claude-haiku-4-5-20251001 (U=-1.333)"
       },
-      "judge_reason": "judge failed: 'score_b'"
+      "judge_reason": "Answer A is technically rigorous, correctly reframes the traffic-vs-org distinction, quantifies load, and gives a defensible modular-monolith recommendation, whereas Answer B repeats common misconceptions (e.g. that 10M users requires microservices and that monoliths inherently scale poorly) and lacks operational specifics."
     },
     {
       "axis": "writing",
@@ -147,27 +147,27 @@
       "local": {
         "tier": "local_free",
         "model": "llama3.2:3b",
-        "total_tokens": 97,
-        "dt": 9.17,
-        "content": "Elevate your coding game with the CodeMaster, a wireless mechanical keyboard designed specifically for developers like you. With its precision-tuned switches, customizable backlighting, and long-lasting battery life, this ergonomic keyboard empowers you to focus on the code, not the commute.",
-        "score": 0.85
+        "total_tokens": 126,
+        "dt": 5.39,
+        "content": "The DevoKey is a high-performance, wireless mechanical keyboard designed specifically for developers and coders, featuring customizable backlighting, macro keys, and a sleek, compact design that allows for optimal typing experience in any environment. With its long-lasting battery life, fast charging capabilities, and seamless connectivity via Bluetooth or USB-C, the DevoKey empowers developers to stay productive and focused on their code, anywhere, anytime.",
+        "score": 0.82
       },
       "frontier": {
-        "tier": "local_free",
-        "model": "llama3.2:3b",
-        "total_tokens": 101,
-        "dt": 3.54,
-        "content": "Elevate your coding productivity with the XCode Pro, a wireless mechanical keyboard designed specifically for developers like you. With its durable switches, customizable backlighting, and long battery life, this keyboard lets you focus on writing code without interruption, whether you're working solo or collaborating with a team.",
-        "score": 0.8
+        "tier": "paid_strong",
+        "model": "claude-opus-4-8",
+        "total_tokens": 138,
+        "dt": 7.56,
+        "content": "Meet the keyboard built for people who live in their editor: a wireless mechanical board with hot-swappable switches, low-latency Bluetooth and 2.4GHz connectivity, and a compact layout that keeps every shortcut under your fingertips. With per-key programmability, cross-platform support for macOS, Windows, and Linux, and a battery that lasts weeks between charges, it's the tactile, clutter-free companion your workflow has been waiting for.",
+        "score": 0.95
       },
       "routed": {
         "kind": "cloud_cheap",
         "tier": "paid_cheap",
         "model": "claude-haiku-4-5-20251001",
-        "frontier_tokens": 101,
+        "frontier_tokens": 138,
         "reason": "perfil=write (task_type=write) | elegido paid_cheap:cloud_cheap/claude-haiku-4-5-20251001 (U=-1.323)"
       },
-      "judge_reason": "Both answers provide useful information about the XCode Pro and CodeMaster wireless mechanical keyboards designed for developers. However, Answer B focuses on ergonomics, which is a more comprehensive description of the product's features."
+      "judge_reason": "Both are two well-crafted sentences targeting developers, but A is more concrete and developer-specific (hot-swappable switches, per-key programmability, cross-platform OS support) while B relies on more generic marketing language and a fictional product name."
     },
     {
       "axis": "writing",
@@ -176,27 +176,27 @@
       "local": {
         "tier": "local_free",
         "model": "llama3.2:3b",
-        "total_tokens": 96,
-        "dt": 9.54,
-        "content": "Here is a possible 3-line out-of-office email reply:\n\n\"I am currently on vacation and will be unavailable until [Date]. During this time, I will have limited access to emails and responses. If you have an urgent matter, please contact [Alternate Contact Info].\"",
-        "score": 0.7
+        "total_tokens": 124,
+        "dt": 5.46,
+        "content": "Here is a draft of a 3-line out-of-office email reply:\n\n\"Dear All,\n\nI am currently out of the office on vacation and will be unavailable from [start date] to [end date]. During this time, I will respond to your emails upon my return. If you have an urgent matter that requires attention, please contact [alternate contact person or department].\n\nBest regards,\n[Your Name]\"",
+        "score": 0.55
       },
       "frontier": {
-        "tier": "local_free",
-        "model": "llama3.2:3b",
-        "total_tokens": 107,
-        "dt": 3.79,
-        "content": "Here is a 3-line out-of-office email reply:\n\n\"I am currently out of the office on vacation and will not be checking emails until my return date, [Date]. If your inquiry is urgent, please contact [Alternate Contact Person's Email or Phone Number]. I look forward to responding to your message upon my return.\"",
-        "score": 0.9
+        "tier": "paid_strong",
+        "model": "claude-opus-4-8",
+        "total_tokens": 134,
+        "dt": 7.22,
+        "content": "Here's a 3-line out-of-office reply:\n\n---\n\n**Subject: Out of Office — Back [Return Date]**\n\nThank you for your email. I'm currently out of the office on vacation until [return date] with limited access to email.\n\nI'll respond to your message as soon as I can after I return; for anything urgent in the meantime, please contact [name] at [email].\n\n---\n\nJust swap in your return date and backup contact. Want a warmer/more casual version or a more formal one?",
+        "score": 0.82
       },
       "routed": {
         "kind": "cloud_cheap",
         "tier": "paid_cheap",
         "model": "claude-haiku-4-5-20251001",
-        "frontier_tokens": 107,
+        "frontier_tokens": 134,
         "reason": "perfil=write (task_type=write) | elegido paid_cheap:cloud_cheap/claude-haiku-4-5-20251001 (U=-1.323)"
       },
-      "judge_reason": "Answer B is more complete, maintains a professional tone, and provides contact information for emergencies."
+      "judge_reason": "Both provide usable drafts, but B better honors the 3-line constraint with a tighter, well-structured reply including subject line, whereas A's single paragraph is longer and less aligned with the requested format."
     },
     {
       "axis": "writing",
@@ -205,27 +205,27 @@
       "local": {
         "tier": "local_free",
         "model": "llama3.2:3b",
-        "total_tokens": 572,
-        "dt": 277.38,
-        "content": "**The Local-First Approach to AI Privacy: Why Your Data Matters Most**\n\nAs we increasingly rely on Artificial Intelligence (AI) to power our daily lives, it's becoming painfully clear that the line between convenience and compromise is getting perilously thin. With every passing day, our personal data is being harvested, analyzed, and exploited by companies eager to stay ahead of the curve – but what about those who are left behind?\n\nThink back to a time when you walked down the street without being tracked, or made a purchase without revealing your browsing history. Those were the days before Big Tech's all-knowing gaze descended upon our lives. But as AI's reach expands, so too does its capacity for surveillance.\n\nSo what does this mean for local businesses and individuals who value their data autonomy? In short, it means that the 'one-size-fits-all' approach to AI is no longer tenable. The time has come to adopt a **local-first** strategy – one that puts community needs at the forefront of decision-making.\n\nHere are three concrete insights that support this shift:\n\n1.  **Data ownership matters**: By prioritizing local control, we can ensure that our data remains in the hands of trusted authorities who understand our values and concerns.\n2.  **Context is key**: AI systems designed with a local-first approach will better account for regional nuances, cultural differences, and community-specific needs – leading to more effective solutions.\n3.  **Collaboration is critical**: By engaging with local stakeholders and fostering dialogue around data governance, we can build stronger, more resilient communities that thrive in the digital age.\n\nSo what's the next step? We need to redefine our relationship with AI, one that prioritizes transparency, trust, and community involvement. This means:\n\n*   **Demanding better data practices**: From companies and governments alike, we must insist on clear, actionable guidelines for AI development and deployment.\n*   **Supporting local innovation**: By championing local startups and initiatives, we can foster a culture of creativity and problem-solving that prioritizes people over profit.\n*   **Building inclusive policies**: Policy-makers must recognize the value of community-driven decision-making and work to create frameworks that support local control and data ownership.\n\nThe future of AI is not about sacrificing our privacy for the sake of convenience – it's about designing systems that serve us, rather than the other way around. Let's join forces to shape a more equitable, local-first approach to AI. Together, we can build a brighter future where data is power, not a commodity.",
-        "score": 0.85
+        "total_tokens": 627,
+        "dt": 35.43,
+        "content": "**The Locality Paradox: Why Centralizing Data for \"Global\" AI Can Put Your Customers' Privacy at Risk**\n\nAs the world of Artificial Intelligence (AI) continues to expand, the debate over data privacy has reached a fever pitch. While many are focused on the \"one-size-fits-all\" approach to data governance, I'd like to introduce you to a crucial concept that's been overlooked in the AI industry: local-first AI privacy.\n\nIn recent years, companies have sought to centralize their data to create a single, unified view of customer information. This approach promises efficiency and scalability, but it also poses a significant risk to individual customers' right to privacy. By aggregating data from multiple sources, companies can inadvertently expose sensitive information that was meant to be protected.\n\nSo, what are the consequences of this \"global\" approach to AI? Here are three concrete insights:\n\n **Personalization at the Expense of Privacy**: When data is aggregated and shared across platforms, it can create a false sense of personalization. Companies may claim to be tailoring their services to individual customers, but in reality, they're only using a sanitized version of that data to create a generic experience.\n\n**Data Silos Become Security Risks**: Centralized data storage can lead to a single point of failure, where a breach or hack compromises the entire dataset. This is particularly concerning for companies handling sensitive information like financial data or healthcare records.\n\n**Local Context Matters**: AI models trained on aggregated data often neglect local context and nuances that are essential for making informed decisions. By prioritizing global optimization over local considerations, companies may inadvertently perpetuate biases and unfair outcomes.\n\nSo, what can we do instead? Here's a call to action:\n\n **Implement Local-First Data Governance Principles**: Companies should adopt a decentralized approach to data governance, where individual nodes or regions are given autonomy to manage their own data. This will require significant changes in how companies think about data ownership, consent, and control.\n\n**Develop AI Models That Account for Local Context**: By incorporating local context into AI models, companies can create more accurate and fair decision-making processes. This might involve using location-based data or contextual information to inform model outputs.\n\n **Educate Your Customers About Their Data Rights**: As a company, it's essential to communicate the importance of local-first data governance to your customers. Provide clear guidance on how their data is being used, what options they have for consent and control, and how you're working to protect their privacy.\n\nIn conclusion, the locality paradox highlights the critical need for companies to rethink their approach to AI and data privacy. By prioritizing local-first governance principles, developing AI models that account for context, and educating customers about their rights, we can create a more equitable and secure future for all. Are you ready to join the local-first revolution?",
+        "score": 0.55
       },
       "frontier": {
-        "tier": "local_free",
-        "model": "llama3.2:3b",
-        "total_tokens": 609,
-        "dt": 32.5,
-        "content": "**The Dark Side of Globalization: Why Local-First AI Privacy Matters**\n\nAs we continue to navigate the digital age, it's easy to get caught up in the excitement of AI-driven innovation. From personalized product recommendations to autonomous vehicles, AI is transforming industries and redefining the way we live and work. However, as we increasingly rely on AI to make decisions that impact our lives, a concerning trend has emerged: the erosion of local-first AI privacy.\n\nIn a world where global companies wield significant power over personal data, the risks associated with centralized AI decision-making are becoming harder to ignore. From compromised user consent to biased algorithms that perpetuate systemic inequalities, the consequences of prioritizing global AI interests over local needs are dire.\n\nSo, what's driving this shift towards globalization? Here are three concrete insights that highlight the need for a local-first approach:\n\n **1. Data is power**: The majority of personal data is created and consumed locally. Yet, most AI systems are designed to operate at scale, leveraging vast amounts of global data to inform decision-making. This means that local needs and concerns are often overlooked in favor of centralized control. By prioritizing local-first AI privacy, we can ensure that our most critical data remains under local jurisdiction.\n\n **2. Bias is baked-in**: AI systems that rely on global data are more likely to perpetuate existing biases and inequalities. For example, facial recognition technology has been shown to be less accurate for darker-skinned individuals. By designing AI systems with a local-first approach, we can mitigate these biases and create a more inclusive digital landscape.\n\n **3. Trust is lost**: When companies prioritize global interests over local needs, trust is eroded. In the age of data breaches and algorithmic errors, consumers are increasingly wary of sharing their personal data. By prioritizing local-first AI privacy, we can rebuild trust between individuals and organizations by putting local control back in our hands.\n\nSo, what can you do to support a shift towards local-first AI privacy? Here's a clear call to action:\n\n **Demand transparency**: From tech companies to governments, demand that institutions provide clear information about their data collection practices and AI decision-making processes.\n\n **Support local innovation**: Invest in startups and initiatives that prioritize local-first approaches to AI development and deployment.\n\n **Advocate for policy change**: Push for legislation that prioritizes local jurisdiction over global interests when it comes to personal data and AI decision-making.\n\nTogether, we can create a future where AI serves the needs of individuals and communities, not just the interests of corporations. It's time to rethink our approach to AI development and prioritize local-first privacy above all else. The future is in our hands – let's make sure it's a future that truly serves us all.",
-        "score": 0.7
+        "tier": "paid_strong",
+        "model": "claude-opus-4-8",
+        "total_tokens": 683,
+        "dt": 23.05,
+        "content": "Here's the post — built on the LinkedIn Authority Builder structure (scroll-stopping hook, body of 1-3 line paragraphs, three concrete insights, one clear CTA), and run through the anti-AI rules.\n\n---\n\nYour AI assistant reads everything. Your emails, your health questions, your half-finished ideas at 2am.\n\nAnd most of the time, all of it leaves your device before it does anything useful.\n\nWe've accepted this as the price of smart software. It isn't. Local-first AI — models that run on your own hardware — is quietly making \"send it to the cloud\" a choice instead of a default.\n\nThree things I've learned watching this shift up close:\n\n**1. Privacy stops being a policy and becomes physics.**\nA cloud AI protects your data with promises: terms of service, retention windows, a legal team. Local AI protects it with distance — the data never leaves the machine, so there's nothing to leak, subpoena, or train on. You don't have to trust the vendor. There's nothing to trust them with.\n\n**2. \"Good enough\" now runs on a laptop.**\nTwo years ago, on-device models were toys. Today a 7B model handles classification, summarizing, extraction, and drafting on a mid-range machine — no GPU cluster, no per-token bill. The frontier still lives in the cloud. But most real work isn't frontier work. It's small, repetitive, and sensitive. That's exactly where local wins.\n\n**3. The smart pattern is hybrid, not purist.**\nYou don't have to choose. Keep the private, cheap, high-volume tasks local. Escalate only the genuinely hard ones to a big model — with the sensitive parts stripped out first. Your data stays home by default and travels only when it earns the trip. Cheaper, faster, and private without the martyrdom of running everything yourself.\n\nThe companies that get this will win a kind of trust you can't buy back once you've lost it. The ones that keep shipping every keystroke to someone else's server are building on borrowed goodwill.\n\nHere's what I'd ask you to do this week: open one AI tool you use daily and find out where your data actually goes. Read the setting, not the marketing. If the answer is \"everywhere,\" start looking for the local-first alternative. There's probably one now that didn't exist a year ago.\n\nPrivacy shouldn't be the feature you pay extra for. It should be the floor.\n\nWhere does your AI send your data? Curious how many of you actually know. 👇\n\n---\n\nThat's ~400 words. Want a punchier variant (shorter paragraphs, more line breaks for mobile), or a version aimed specifically at founders/CTOs rather than a general audience?",
+        "score": 0.92
       },
       "routed": {
         "kind": "cloud_cheap",
         "tier": "paid_cheap",
         "model": "claude-haiku-4-5-20251001",
-        "frontier_tokens": 609,
+        "frontier_tokens": 683,
         "reason": "perfil=write (task_type=write) | elegido paid_cheap:cloud_cheap/claude-haiku-4-5-20251001 (U=-1.323)"
       },
-      "judge_reason": "While both answers provide valuable insights, Answer A offers a more nuanced and comprehensive approach to local-first AI privacy, highlighting the importance of data ownership, context, collaboration, and community involvement. Answer B, while informative, is overly simplistic and lacks depth in its discussion of the role of global companies."
+      "judge_reason": "B nails the brief with a strong hook, three concrete privacy-specific insights, and a clear single CTA at ~400 words, while A drifts off-topic into data governance/bias, offers a diffuse six-point structure, and reads generically."
     },
     {
       "axis": "code",
@@ -234,18 +234,18 @@
       "local": {
         "tier": "local_free",
         "model": "qwen2.5-coder:1.5b",
-        "total_tokens": 283,
-        "dt": 7.7,
-        "content": "```python\ndef factorial(n):\n    \"\"\"\n    Calculate the factorial of a non-negative integer n using recursion.\n\n    Args:\n    n (int): A non-negative integer whose factorial is to be calculated.\n\n    Returns:\n    int: The factorial of the given number n.\n    \"\"\"\n    if n == 0 or n == 1:\n        return 1\n    else:\n        return n * factorial(n-1)\n```\nIn this solution, we define a function `factorial` that calculates the factorial of a non-negative integer `n` using recursion. The function includes a docstring that explains the purpose of the function, its parameters, and its return value. The base case for the recursion is when `n` is 0 or 1, in which case the function returns 1 because the factorial of both 0 and 1 is 1. For other values of `n`, the function calls itself with `n-1` and multiplies the result by `n`. This recursive call continues until it reaches the base case, at which point the recursion unwinds, multiplying all the results together to get the factorial of `n`.",
-        "score": 0.8
+        "total_tokens": 303,
+        "dt": 82.34,
+        "content": "```python\ndef factorial(n):\n    \"\"\"\n    Calculate the factorial of a given number n.\n    \n    Args:\n    n (int): The number to calculate the factorial of.\n    \n    Returns:\n    int: The factorial of n.\n    \"\"\"\n    # Base case: factorial of 0 or 1 is 1\n    if n == 0 or n == 1:\n        return 1\n    \n    # Recursive case: n * factorial of (n-1)\n    else:\n        return n * factorial(n - 1)\n\n# Test the function with a few examples\nprint(factorial(5))  # Output: 120\nprint(factorial(3))  # Output: 6\nprint(factorial(0))  # Output: 1\n```\n\nIn this solution, we define a recursive function `factorial` that computes the factorial of a number `n`. The function handles two cases:\n1. If `n` is 0 or 1, it returns 1 because the factorial of both 0 and 1 is 1.\n2. For any other positive integer `n`, it returns `n` multiplied by the factorial of `n-1`, effectively using recursion to calculate the factorial.",
+        "score": 0.85
       },
       "frontier": {
-        "tier": "local_free",
-        "model": "qwen2.5-coder:1.5b",
-        "total_tokens": 242,
-        "dt": 6.14,
-        "content": "```python\ndef factorial(n):\n    \"\"\"\n    Calculate the factorial of a non-negative integer n.\n\n    Args:\n    n (int): A non-negative integer whose factorial is to be calculated.\n\n    Returns:\n    int: The factorial of n.\n    \"\"\"\n    if n == 0 or n == 1:\n        return 1\n    else:\n        return n * factorial(n-1)\n```\n\nIn this solution, the function `factorial` calculates the factorial of a non-negative integer using recursion. The docstring provides a clear explanation of the problem, arguments, and return value. It uses an if-elif-else statement to handle the base case where `n` is 0 or 1, returning 1. For all other values of `n`, it calls itself with `n-1` until it reaches the base case. This recursive approach is a common method for calculating factorials in programming and is efficient for small numbers.",
-        "score": 0.8
+        "tier": "paid_strong",
+        "model": "claude-opus-4-8",
+        "total_tokens": 255,
+        "dt": 19.54,
+        "content": "Here's the function:\n\n```python\ndef factorial(n):\n    \"\"\"Return the factorial of n (n!) computed recursively.\n\n    Args:\n        n: A non-negative integer.\n\n    Returns:\n        The factorial of n, i.e. the product of all positive integers\n        up to and including n. factorial(0) is 1.\n\n    Raises:\n        ValueError: If n is negative.\n    \"\"\"\n    if n < 0:\n        raise ValueError(\"n must be non-negative\")\n    if n <= 1:\n        return 1\n    return n * factorial(n - 1)\n```\n\nI tried to save this to `factorial.py`, but the write wasn't permitted. Let me know if you'd like it written to a file (and where), or feel free to copy it directly.\n\nNotes: base case covers `0` and `1` (both return `1`), and negative input raises `ValueError` since factorial is undefined there. For large `n`, recursion will hit Python's recursion limit (~1000) — an iterative version or `math.factorial` avoids that if you need it.",
+        "score": 0.95
       },
       "routed": {
         "kind": "local",
@@ -254,7 +254,7 @@
         "frontier_tokens": 0,
         "reason": "perfil=code (task_type=code) | elegido local_free:local/qwen2.5-coder:1.5b (U=-0.717)"
       },
-      "judge_reason": "Both answers are correct and adhere to the task requirements of writing a Python function that returns the factorial of n using recursion, including a docstring."
+      "judge_reason": "Both correctly implement recursive factorial with docstrings, but B adds proper negative-input handling and clearer documentation while A only demonstrates the core requirement without edge-case guarding."
     },
     {
       "axis": "code",
@@ -263,27 +263,27 @@
       "local": {
         "tier": "local_free",
         "model": "llama3.2:3b",
-        "total_tokens": 222,
-        "dt": 16.39,
-        "content": "-- Get Top 5 Customers by Total Order Value\nSELECT customer_name, SUM(order_value) AS total_order_value\nFROM orders\nGROUP BY customer_name\nORDER BY total_order_value DESC\nLIMIT 5;\n\n-- Explanation:\n--\n-- This SQL query works as follows:\n--\n-- - It selects the 'customer_name' and calculates the sum of all order values for each customer using the GROUP BY clause.\n-- - The SUM function groups row by row by the group_by column, i.e., it returns the total value of every group in the result set. In other words, it sums up the order_value from top to bottom.\n-- - It orders these totals in descending order (largest first).\n-- - Finally, it limits the results to 5 rows.\n\nNote: Replace 'customer_name', and 'order_value' with actual column names as per your database schema.",
-        "score": 0.7
+        "total_tokens": 178,
+        "dt": 13.7,
+        "content": "Here's how you can do it in SQL:\n\n```sql\nSELECT customers.name, SUM(orders.total_amount) as total_order_value\nFROM customers\nJOIN orders ON customers.customer_id = orders.customer_id\nGROUP BY customers.name\nORDER BY total_order_value DESC\nLIMIT 5;\n```\n\nThis query will return the top 5 customers by total order value. It joins the `customers` and `orders` tables on the customer ID, then groups the results by the customer name. The SUM function is used to calculate the total order value for each customer.\n\nNote: The LIMIT clause is used to limit the number of rows returned in the result set.",
+        "score": 0.55
       },
       "frontier": {
-        "tier": "local_free",
-        "model": "llama3.2:3b",
-        "total_tokens": 231,
-        "dt": 10.21,
-        "content": "Here's an example of how you can do this using SQL:\n```sql\nSELECT *\nFROM customers\nORDER BY SUM(order_total) DESC\nLIMIT 5;\n```\nThis will return all columns (`*`) for the top 5 customers with the highest total order value.\n\nAlternatively, if there are ties and you want to include them in the result set as well, you can use a subquery like this:\n```sql\nSELECT *\nFROM customers c1\nWHERE (SUM(order_total) \n        OVER (ORDER BY SUM(order_total) DESC)) <= c1.order_id\nLIMIT 5;\n```\nThis query works by ordering all customers by their total order value in descending order, then it selects all rows where the order's position is less than or equal to the current row.\n\nPlease note that this approach might not be efficient for large tables and can lead to performance issues if there are a lot of ties.",
-        "score": 0.8
+        "tier": "paid_strong",
+        "model": "claude-opus-4-8",
+        "total_tokens": 352,
+        "dt": 16.17,
+        "content": "Here's the query. \"Including ties\" means if several customers tie at the 5th-place value, you want all of them — so a simple `LIMIT 5` won't do. Two portable ways:\n\n**Window function (works in PostgreSQL, SQL Server, MySQL 8+, most engines):**\n\n```sql\nSELECT customer_id, total_value\nFROM (\n    SELECT\n        o.customer_id,\n        SUM(o.order_value) AS total_value,\n        RANK() OVER (ORDER BY SUM(o.order_value) DESC) AS rnk\n    FROM orders o\n    GROUP BY o.customer_id\n) ranked\nWHERE rnk <= 5\nORDER BY total_value DESC;\n```\n\n**`WITH TIES` (PostgreSQL 13+, SQL Server, Oracle):**\n\n```sql\nSELECT customer_id, SUM(order_value) AS total_value\nFROM orders\nGROUP BY customer_id\nORDER BY total_value DESC\nFETCH FIRST 5 ROWS WITH TIES;\n```\n\nNotes:\n- `RANK()` is the key: it leaves gaps after ties, so `rnk <= 5` returns all customers sharing a top-5 total value (you may get more than 5 rows). If you'd rather cap at 5 *distinct* value levels, swap in `DENSE_RANK()`.\n- Both assume order value lives on `orders`. If it comes from line items, join `order_items` and sum `quantity * unit_price` instead.\n- Add a `JOIN customers` if you want names rather than just IDs.\n\nWhich database are you on? I can tailor it (e.g. MySQL before 8.0 has no window functions or `WITH TIES`, so it needs a different approach).",
+        "score": 0.98
       },
       "routed": {
         "kind": "cloud_cheap",
         "tier": "paid_cheap",
         "model": "claude-haiku-4-5-20251001",
-        "frontier_tokens": 231,
+        "frontier_tokens": 352,
         "reason": "perfil=code (task_type=write) | elegido paid_cheap:cloud_cheap/claude-haiku-4-5-20251001 (U=-1.323)"
       },
-      "judge_reason": "Answer B is more detailed and includes a clear explanation of how the query works."
+      "judge_reason": "Answer A correctly handles the 'including ties' requirement with RANK() and WITH TIES, while Answer B uses a plain LIMIT 5 that silently drops tied customers, missing the core requirement."
     },
     {
       "axis": "code",
@@ -292,27 +292,27 @@
       "local": {
         "tier": "local_free",
         "model": "llama3.2:3b",
-        "total_tokens": 543,
-        "dt": 35.37,
-        "content": "import threading\nfrom collections import OrderedDict\n\nclass LRUCache:\n    \"\"\"\n    A thread-safe implementation of an LRU (Least Recently Used) cache.\n\n    Attributes:\n        capacity (int): The maximum number of items the cache can hold.\n        cache (OrderedDict): An ordered dictionary that stores the cached items.\n        lock (threading.Lock): A lock to ensure exclusive access to the cache.\n\n    Methods:\n        get(key): Retrieves the value associated with a given key from the cache.\n        put(key, value): Inserts or updates a key-value pair in the cache.\n    \"\"\"\n\n    def __init__(self, capacity: int):\n        \"\"\"\n        Initializes an LRU cache with the specified capacity.\n\n        Args:\n            capacity (int): The maximum number of items the cache can hold.\n        \"\"\"\n        self.capacity = capacity\n        self.cache = OrderedDict()\n        self.lock = threading.Lock()\n\n    def get(self, key: str) -> any:\n        \"\"\"\n        Retrieves the value associated with a given key from the cache.\n\n        Args:\n            key (str): The key to look up in the cache.\n\n        Returns:\n            any: The value associated with the key if found; otherwise None.\n        \"\"\"\n        with self.lock:\n            if key not in self.cache:\n                return None\n            value = self.cache.pop(key)\n            self.cache[key] = value  # Move the accessed item to the end of the order\n            return value\n\n    def put(self, key: str, value: any) -> None:\n        \"\"\"\n        Inserts or updates a key-value pair in the cache.\n\n        Args:\n            key (str): The key to insert or update.\n            value (any): The value associated with the key.\n        \"\"\"\n        with self.lock:\n            if key in self.cache:\n                del self.cache[key]\n            elif len(self.cache) >= self.capacity:\n                self.cache.popitem(last=False)\n            self.cache[key] = value\n\n# Example usage:\ncache = LRUCache(2)\n\ndef worker(key, value):\n    cache.put(key, value)\n    print(cache.get(key))\n\nthreads = []\nfor i in range(3):\n    thread = threading.Thread(target=worker, args=(f\"key{i}\", f\"value{i}\"))\n    threads.append(thread)\n    thread.start()\n\nfor thread in threads:\n    thread.join()",
-        "score": 1.0
+        "total_tokens": 933,
+        "dt": 54.7,
+        "content": "Here is an implementation of a thread-safe LRU Cache in Python using `OrderedDict` from `collections`, a lock from `threading`, and type hints:\n```python\nimport collections\nfrom typing import Any, Optional\n\nclass LRUCache:\n    \"\"\"\n    A thread-safe LRU cache with O(1) get and put operations.\n    \n    Attributes:\n        capacity (int): The maximum number of items to store in the cache.\n        lock (threading.Lock): A lock for ensuring thread safety during access.\n        cache (OrderedDict): An ordered dictionary storing the cached items.\n    \"\"\"\n\n    def __init__(self, capacity: int):\n        self.capacity = capacity\n        self.lock = threading.Lock()\n        self.cache = collections.OrderedDict()\n\n    def get(self, key: Any) -> Optional[Any]:\n        \"\"\"\n        Retrieves a value from the cache by its key.\n\n        Args:\n            key (Any): The key of the item to retrieve.\n\n        Returns:\n            Optional[Any]: The cached item if found; otherwise None.\n        \"\"\"\n        with self.lock:\n            # Check if the key exists in the cache\n            if key in self.cache:\n                # Move the accessed item to the end of the ordered dictionary\n                value = self.cache.pop(key)\n                self.cache[key] = value\n                return value\n\n    def put(self, key: Any, value: Any) -> None:\n        \"\"\"\n        Inserts a new item into the cache or updates an existing one.\n\n        Args:\n            key (Any): The key of the item to insert.\n            value (Any): The value associated with the key.\n        \"\"\"\n        with self.lock:\n            # Check if the key already exists in the cache\n            if key in self.cache:\n                # Update the existing value and move it to the end\n                del self.cache[key]\n            elif len(self.cache) >= self.capacity:\n                # Remove the least recently used item (the first item in the ordered dictionary)\n                self.cache.popitem(last=False)\n            # Insert the new or updated item at the end\n            if key not in self.cache:\n                self.cache[key] = value\n\n    def delete(self, key: Any) -> None:\n        \"\"\"\n        Removes an item from the cache by its key.\n\n        Args:\n            key (Any): The key of the item to remove.\n        \"\"\"\n        with self.lock:\n            # Check if the key exists in the cache\n            if key in self.cache:\n                del self.cache[key]\n```\nHere's a brief explanation:\n\n*   We use an `OrderedDict` from the `collections` module, which provides O(1) access to both keys and values.\n*   A lock is acquired for ensuring thread safety during access to the cache. This prevents concurrent modifications when multiple threads try to update the same item simultaneously.\n*   In the `put` method, we check if the key already exists in the cache. If it does, we update its value and move it to the end of the ordered dictionary to mark it as recently used. If not, we insert a new item at the end.\n*   When the cache is full and a new item needs to be added (in the `put` method), we remove the least recently used item from the beginning of the ordered dictionary.\n\nExample usage:\n```python\nimport threading\n\ndef worker(cache: LRUCache) -> None:\n    for i in range(10):\n        cache.put(f\"key_{i}\", f\"value_{i}\")\n        print(cache.get(\"key_5\"))  # Should print \"value_5\"\n\ncache = LRUCache(3)\nthreads = []\n\nfor _ in range(5):\n    t = threading.Thread(target=worker, args=(cache,))\n    threads.append(t)\n    t.start()\n\nfor t in threads:\n    t.join()\n```\nThis example demonstrates how to create an instance of the `LRUCache` class with a capacity of 3. It then starts 5 worker threads that concurrently insert items into the cache and retrieve values by their keys.\n\nNote: The `delete` method is not shown above, but it can be implemented similarly as in the `put` method, checking if the key exists in the cache before removing it.",
+        "score": 0.55
       },
       "frontier": {
-        "tier": "local_free",
-        "model": "llama3.2:3b",
-        "total_tokens": 257,
-        "dt": 10.81,
-        "content": "class LRUCache:\n    \"\"\"\n    A thread-safe LRU cache implemented using an OrderedDict.\n    \"\"\"\n\n    def __init__(self, capacity: int):\n        self.capacity = capacity\n        self.cache = {}\n        self.lock = asyncio.Lock()\n\n    async def get(self, key: int) -> int:\n        \"\"\"Get a value from the cache by key.\"\"\"\n        with self.lock:\n            if key in self.cache:\n                value = self.cache[key]\n                del self.cache[key]\n                self.cache[key] = value  # move key to end\n                return value\n\n    async def put(self, key: int, value: int) -> None:\n        \"\"\"Add a new entry to the cache or update an existing one.\"\"\"\n        with self.lock:\n            if key in self.cache:\n                del self.cache[key]\n            elif len(self.cache) >= self.capacity:\n                self.cache.popitem(last=False)\n            self.cache[key] = value",
-        "score": 0.8
+        "tier": "paid_strong",
+        "model": "claude-opus-4-8",
+        "total_tokens": 683,
+        "dt": 18.35,
+        "content": "Here's a thread-safe generic LRU cache backed by `OrderedDict`, which gives O(1) `move_to_end` and `popitem`:\n\n```python\nfrom collections import OrderedDict\nfrom threading import Lock\nfrom typing import Generic, Hashable, Optional, TypeVar\n\nK = TypeVar(\"K\", bound=Hashable)\nV = TypeVar(\"V\")\n\n\nclass LRUCache(Generic[K, V]):\n    \"\"\"Thread-safe least-recently-used cache with O(1) get and put.\n\n    Backed by an OrderedDict (get/put touch it via move_to_end / popitem,\n    both O(1)) and guarded by a single lock for safe concurrent access.\n    When the cache is full, the least-recently-used entry is evicted.\n    \"\"\"\n\n    def __init__(self, capacity: int) -> None:\n        if capacity <= 0:\n            raise ValueError(\"capacity must be a positive integer\")\n        self._capacity: int = capacity\n        self._store: \"OrderedDict[K, V]\" = OrderedDict()\n        self._lock: Lock = Lock()\n\n    def get(self, key: K) -> Optional[V]:\n        \"\"\"Return the value for key and mark it most-recently-used, else None.\"\"\"\n        with self._lock:\n            if key not in self._store:\n                return None\n            self._store.move_to_end(key)\n            return self._store[key]\n\n    def put(self, key: K, value: V) -> None:\n        \"\"\"Insert or update key, marking it most-recently-used; evict LRU if full.\"\"\"\n        with self._lock:\n            if key in self._store:\n                self._store.move_to_end(key)\n            self._store[key] = value\n            if len(self._store) > self._capacity:\n                self._store.popitem(last=False)\n\n    def __len__(self) -> int:\n        with self._lock:\n            return len(self._store)\n\n    def __contains__(self, key: object) -> bool:\n        with self._lock:\n            return key in self._store\n```\n\nKey points:\n\n- **O(1) operations** — `OrderedDict` maintains insertion order via a doubly linked list; `move_to_end` and `popitem(last=False)` (pop the LRU end) are both constant time, as are dict lookups.\n- **Thread safety** — every access to `_store` is inside `with self._lock`, so concurrent `get`/`put` calls can't interleave and corrupt the ordering or size.\n- **Eviction** — `put` appends/updates, then evicts the oldest entry only if capacity is exceeded.\n\nA note on `get` returning `Optional[V]`: it can't distinguish \"missing\" from \"present with value `None`\". If you need that distinction, use a sentinel default or add a separate `peek`/`__contains__` check — let me know and I'll adjust.\n\nWant me to save this to a file in the repo and add a small test suite (including a concurrency stress test)?",
+        "score": 0.97
       },
       "routed": {
         "kind": "cloud_cheap",
         "tier": "paid_cheap",
         "model": "claude-haiku-4-5-20251001",
-        "frontier_tokens": 257,
+        "frontier_tokens": 683,
         "reason": "perfil=code (task_type=general) | elegido paid_cheap:cloud_cheap/claude-haiku-4-5-20251001 (U=-1.333)"
       },
-      "judge_reason": "Both answers are correct and complete, but A uses asyncio for concurrency which is more modern and preferred in Python for such tasks."
+      "judge_reason": "A is correct, fully type-hinted, generic, O(1), and thread-safe; B forgets to import threading (NameError at instantiation) and lacks proper generic typing though its logic is otherwise sound."
     },
     {
       "axis": "reasoning",
@@ -321,27 +321,27 @@
       "local": {
         "tier": "local_free",
         "model": "llama3.2:3b",
-        "total_tokens": 120,
-        "dt": 10.62,
-        "content": "To find the distance traveled, we need to multiply the speed of the train (in miles per hour) by the time it traveled.\n\nSpeed = 60 mph\nTime = 2.5 hours\n\nDistance = Speed x Time\n= 60 x 2.5\n= 150 miles\n\nSo, the train travels 150 miles.",
-        "score": 1.0
+        "total_tokens": 131,
+        "dt": 5.38,
+        "content": "To find the distance traveled by the train, we need to multiply the speed of the train (in miles per hour) by the time it traveled.\n\nSpeed = 60 mph\nTime = 2.5 hours\n\nDistance = Speed x Time\n= 60 mph x 2.5 hours\n= 150 miles\n\nTherefore, the train travels 150 miles in 2.5 hours.",
+        "score": 0.95
       },
       "frontier": {
-        "tier": "local_free",
-        "model": "llama3.2:3b",
-        "total_tokens": 135,
-        "dt": 5.03,
-        "content": "To find the distance traveled by the train, we need to use the formula:\n\nDistance = Speed x Time\n\nGiven values:\nSpeed (mph) = 60\nTime (hours) = 2.5\n\nNow, let's plug in the values:\n\nDistance = 60 mph x 2.5 hours\nDistance = 150 miles\n\nSo, the train travels 150 miles in 2.5 hours.",
-        "score": 1.0
+        "tier": "paid_strong",
+        "model": "claude-opus-4-8",
+        "total_tokens": 86,
+        "dt": 11.36,
+        "content": "A train travels at 60 mph for 2.5 hours.\n\n**Distance = Speed × Time**\n\n- Speed = 60 miles per hour\n- Time = 2.5 hours\n\nDistance = 60 mph × 2.5 hours = **150 miles**\n\nThe hours unit cancels out (60 miles/hour × 2.5 hours), leaving the answer in miles.",
+        "score": 0.98
       },
       "routed": {
         "kind": "cloud_cheap",
         "tier": "paid_cheap",
         "model": "claude-haiku-4-5-20251001",
-        "frontier_tokens": 135,
+        "frontier_tokens": 86,
         "reason": "perfil=deep_reason (task_type=general) | elegido paid_cheap:cloud_cheap/claude-haiku-4-5-20251001 (U=-1.333)"
       },
-      "judge_reason": "Both answers are correct and complete in showing how to calculate distance using the formula: Distance = Speed x Time. The answers are identical and use the provided values without any discrepancies."
+      "judge_reason": "Both correctly compute 150 miles with clear work shown, but A additionally explains the unit cancellation which is a small completeness edge."
     },
     {
       "axis": "reasoning",
@@ -350,27 +350,27 @@
       "local": {
         "tier": "local_free",
         "model": "llama3.2:3b",
-        "total_tokens": 276,
-        "dt": 19.23,
-        "content": "Euclid's proof that there are infinitely many prime numbers is a classic result in number theory, first presented by the ancient Greek mathematician Euclid in his book \"Elements\". Here's a step-by-step explanation of the proof:\n\n**Step 1: Assume the contrary**\n\nLet's assume that there are only finitely many prime numbers. We'll call them p1, p2, ..., pn.\n\n**Step 2: Consider a number that is not divisible by any of these primes**\n\nWe consider a new number, m, such that it is not divisible by any of the primes p1, p2, ..., pn. This means that m is not a multiple of any of these primes.\n\n**Step 3: Show that if m is prime, then there must be another prime**\n\nIf m is prime, then it cannot be divided evenly by any of the primes p1, p2, ..., pn. However, since we assumed that m is not divisible by any of these primes, this means that m itself has a prime factorization with no common factors among p1, p2, ...,",
-        "score": 0.85
+        "total_tokens": 567,
+        "dt": 32.53,
+        "content": "Euclid's proof that there are infinitely many prime numbers is a fundamental result in number theory, first presented in his book \"Elements\" around 300 BCE. Here's a step-by-step explanation of the proof:\n\n**Step 1: Let's assume the contrary**\n\nEuclid starts by assuming the opposite of what we want to prove: that there are only finitely many prime numbers. This assumption is known as the \"finite primes hypothesis.\"\n\nLet's denote the finite set of all prime numbers as P = {p1, p2, ..., pn}. According to this assumption, we can list all the prime numbers in a finite sequence.\n\n**Step 2: Consider two cases**\n\nNow, Euclid considers two possible cases:\n\nCase A: The number 1 is prime.\nIn this case, since 1 is included in our set P of primes, it contradicts our original assumption that there are only finitely many prime numbers.\n\n**Step 3: Case B - assume the smallest prime is composite**\n\nNow let's consider the opposite scenario:\n\nCase B: The number 1 is not prime, and the smallest prime p1 is composite (i.e., can be factored into smaller positive integers).\n\nIn this case, we have a contradiction because, if p1 is composite, it means there exists some integer x ≠ 1 such that p1 = xx'. Therefore, since 2 divides both x and x', it follows that 2 also divides p1, which contradicts our assumption that p1 is prime.\n\n**Step 4: Conclusion**\n\nSince we cannot have a situation where the smallest prime is composite (Case B) without leading to a contradiction, we are left with only one possibility:\n\nThe number 1 must be prime.\n\nThis leads to another contradiction because if 1 is prime, then it can be divided by any integer x ≠ 0, which contradicts our original assumption that there are only finitely many prime numbers.\n\n**Step 5: Conclusion**\n\nSince we reached a contradiction in both cases (A and B), Euclid's proof concludes:\n\n\"There cannot exist an infinite number of primes.\"\n\nThis means that the assumption that all prime numbers can be listed in a finite sequence is false, which implies that there are infinitely many prime numbers.\n\nEuclid's proof relies on logical contradictions to demonstrate that his initial assumption (there are only finitely many prime numbers) must be incorrect. By showing that this assumption leads to two mutually exclusive conclusions, he establishes the existence of an infinite number of prime numbers.",
+        "score": 0.04
       },
       "frontier": {
-        "tier": "local_free",
-        "model": "llama3.2:3b",
-        "total_tokens": 834,
-        "dt": 47.16,
-        "content": "Euclid's proof of the infinitude of prime numbers is a classic example of mathematical induction. Here's the step-by-step proof:\n\n**Step 1: State the assumption**\n\nAssume that there are only a finite number of prime numbers, say p1, p2, ..., pn.\n\n**Step 2: Define the set of all positive integers less than or equal to n**\n\nLet N be the set of all positive integers less than or equal to n. In other words, N = {1, 2, 3, ..., n}.\n\n**Step 3: Show that there exists an integer k in N such that k is not divisible by any of p1, p2, ..., pn**\n\nSince there are only a finite number of prime numbers (p1, p2, ..., pn), we can apply the Pigeonhole Principle to conclude that there must exist at least one integer k in N that is not divisible by any of these primes.\n\n**Step 4: Prove that k is either prime or can be factored into two smaller positive integers**\n\nSuppose that k is not prime. Then, it can be written as the product of two smaller positive integers a and b (k = ab). Since neither a nor b can divide k, both a and b must be less than k.\n\nBy the same reasoning as in Step 3, there exist integers x and y such that xy < k and neither x nor y divides any of p1, p2, ..., pn.\n\n**Step 5: Apply the division algorithm**\n\nSince xy > 0, we can apply the division algorithm to conclude that there exist unique integers q and r such that:\n\nxy = qk + r\n\nwhere 0 ≤ r < k. Since q and r are both less than k, neither q nor r can divide any of p1, p2, ..., pn.\n\n**Step 6: Derive a contradiction**\n\nNow, consider the product pq + r. By construction, this quantity is not divisible by any of p1, p2, ..., pn (since none of these primes can divide x or y). Furthermore, pq + r > xy > k, so pq + r is greater than k.\n\nThis means that pq + r must be a positive integer greater than k, but less than n. Therefore, pq + r belongs to the set N = {1, 2, ..., n}.\n\nHowever, since we assumed that there are only finitely many prime numbers (p1, p2, ..., pn), and pq + r is not divisible by any of these primes, it must be a composite number that cannot be factored further. This is a contradiction, since pq + r belongs to the set N = {1, 2, ..., n}.\n\n**Conclusion**\n\nSince we have derived a contradiction, our initial assumption that there are only finitely many prime numbers must be false. Therefore, there are infinitely many prime numbers.\n\nThe logic behind this proof is as follows:\n\n* We start with an arbitrary finite set of prime numbers (p1, p2, ..., pn).\n* We then show that there exists an integer k in N = {1, 2, 3, ..., n} that is not divisible by any of these primes.\n* We prove that k can be factored into two smaller positive integers a and b.\n* We apply the division algorithm to derive a contradiction.\n\nThe key insight here is that if there are only finitely many prime numbers, then we can find an integer k that is not divisible by any of them. But this leads us to a contradiction, since we cannot show that k can be factored into two smaller positive integers that do not divide any of the primes.\n\nTherefore, our initial assumption must be false, and there are infinitely many prime numbers.",
-        "score": 0.9
+        "tier": "paid_strong",
+        "model": "claude-opus-4-8",
+        "total_tokens": 1007,
+        "dt": 23.51,
+        "content": "# There Are Infinitely Many Primes — Euclid's Proof\n\n**Theorem.** There is no largest prime; the set of prime numbers is infinite.\n\nEuclid's argument (from *Elements*, Book IX, Proposition 20) is a **proof by contradiction**. We assume the opposite of what we want to prove, and show that assumption forces an impossibility.\n\n---\n\n## Step 1 — Assume the opposite (for contradiction)\n\nSuppose, for the sake of argument, that there are only **finitely many** primes. Then we can list every single one of them:\n\n$$p_1, p_2, p_3, \\dots, p_n$$\n\n**Logic:** If the set is finite, it has a definite size $n$, so a complete list exists. Everything that follows will show this list *can't* actually be complete — which is what breaks the assumption.\n\n---\n\n## Step 2 — Multiply them all together and add 1\n\nConstruct a new number:\n\n$$N = (p_1 \\cdot p_2 \\cdot p_3 \\cdots p_n) + 1$$\n\nThat is: take the product of *all* the primes on our supposedly complete list, then add 1.\n\n**Logic:** This is the clever move. The product $p_1 p_2 \\cdots p_n$ is divisible by every prime on the list. Adding 1 deliberately nudges it *just past* a multiple of each prime, which is what the next step exploits.\n\n---\n\n## Step 3 — Ask: is $N$ prime or composite?\n\nEvery integer greater than 1 is either prime or composite (this is guaranteed by the Fundamental Theorem of Arithmetic — every such number has at least one prime divisor). So $N$ falls into one of two cases. We examine both.\n\n---\n\n## Step 4 — Case A: $N$ is prime\n\nSince $N = (p_1 \\cdots p_n) + 1$ is clearly **larger** than every $p_i$ on our list, $N$ would be a prime that is *not* on the list.\n\n**Logic:** But our list was supposed to contain *all* primes. A contradiction — we found a prime we missed.\n\n---\n\n## Step 5 — Case B: $N$ is composite\n\nThen $N$ has some prime divisor; call it $q$. Now ask: could $q$ be one of the primes on our list, say $p_k$?\n\nIf $q = p_k$, then $q$ divides the product $p_1 p_2 \\cdots p_n$ (because $p_k$ is one of its factors). But $q$ also divides $N$ by assumption. If a number divides both $N$ and the product, it must divide their **difference**:\n\n$$N - (p_1 p_2 \\cdots p_n) = 1$$\n\nSo $q$ would have to divide 1. **But no prime divides 1** (the smallest prime is 2). Contradiction.\n\nTherefore $q$ is a prime **not** on our list.\n\n**Logic:** This is the heart of the \"+1\". It guarantees that *no* prime on the list can divide $N$ — each one leaves a remainder of exactly 1. So $N$'s prime factor must be a brand-new prime.\n\n---\n\n## Step 6 — Both cases contradict the assumption\n\n- If $N$ is prime → we found a new prime not on the list.\n- If $N$ is composite → its prime factor $q$ is a new prime not on the list.\n\nEither way, our \"complete\" list was **not** complete. This contradicts Step 1's assumption that we had listed *all* the primes.\n\n---\n\n## Step 7 — Conclude\n\nSince assuming finitely many primes leads to a contradiction in every case, that assumption must be false. Therefore:\n\n$$\\boxed{\\text{There are infinitely many prime numbers.} \\qquad \\blacksquare}$$\n\n---\n\n### Two common misconceptions worth clearing up\n\n1. **$N$ itself is not always prime.** A frequent misreading is \"product of primes plus 1 is always prime.\" False. For example, using the first primes:\n$$2 \\cdot 3 \\cdot 5 \\cdot 7 \\cdot 11 \\cdot 13 + 1 = 30031 = 59 \\times 509.$$\nHere $N$ is composite — but notice its factors **59** and **509** are *new* primes, not in $\\{2,3,5,7,11,13\\}$. That's exactly Case B working as intended. The proof never claims $N$ is prime; it claims $N$ *reveals* a prime outside the list.\n\n2. **It's not truly \"constructive.\"** The proof shows a new prime *must exist*, but doesn't hand you that prime directly — you'd still have to factor $N$ to find it.\n\nThe whole elegance is in Step 2: the \"+1\" makes $N$ coprime to every prime you already have, so any prime factor it possesses is necessarily something new.",
+        "score": 0.98
       },
       "routed": {
         "kind": "cloud_cheap",
         "tier": "paid_cheap",
         "model": "claude-haiku-4-5-20251001",
-        "frontier_tokens": 834,
+        "frontier_tokens": 1007,
         "reason": "perfil=deep_reason (task_type=general) | elegido paid_cheap:cloud_cheap/claude-haiku-4-5-20251001 (U=-1.333)"
       },
-      "judge_reason": "Answer A provides a detailed and comprehensive proof of Euclid's infinitude of prime numbers, while Answer B is a simplified explanation that does not fully capture the underlying logic. Answer A includes the Pigeonhole Principle, division algorithm, and contradiction, whereas Answer B only presents the step-by-step reasoning without the necessary details."
+      "judge_reason": "Answer A gives a correct, complete, well-explained step-by-step Euclid proof, while Answer B is mathematically incoherent nonsense that never presents the actual proof and reaches a false conclusion."
     },
     {
       "axis": "reasoning",
@@ -379,27 +379,27 @@
       "local": {
         "tier": "local_free",
         "model": "llama3.2:3b",
-        "total_tokens": 1045,
-        "dt": 66.53,
-        "content": "# Rate-Limiting Algorithm Design\n=====================================\n\nThe proposed rate-limiting algorithm, dubbed \"Token Bucket Algorithm with Distributed Hash Map\", aims to handle burst traffic while maintaining fairness across users without relying on a central coordinator.\n\n## Algorithm Overview\n\n1.  **Distributed Hash Map (DHM)**: Utilize a distributed hash map to store user-specific token buckets.\n2.  **Token Bucket**: Implement the token bucket algorithm for rate limiting.\n3.  **Burst Traffic Handling**: Use exponential backoff and retry mechanisms to handle burst traffic.\n\n## Algorithm Components\n\n### Distributed Hash Map (DHM)\n\n*   Each node in the distributed system maintains a DHM.\n*   The DHM maps user IDs to their respective token buckets.\n*   When a request is made, the API gateway checks its local DHM for an available token.\n\n### Token Bucket Algorithm with Exponential Backoff\n\n*   Maintain a queue of requests for each user.\n*   Each time a request is made, add 1 token to the bucket. If no tokens are available, wait for a short period before retrying.\n*   When a burst occurs, implement exponential backoff.\n\n## Implementation\n\n### Python Code\n\n```python\nimport hashlib\nimport time\nfrom collections import defaultdict, deque\n\nclass DistributedHashMap:\n    def __init__(self):\n        self.dhm = {}\n\n    def get(self, user_id):\n        return self.dhm.get(user_id, {time.time() + 3600: 10})  # default to 10 tokens for 1 hour\n\n    def put(self, user_id, tokens=10, expiration_time=3600):\n        self.dhm[user_id] = {\n            time.time(): tokens,\n            time.time() + expiration_time: None\n        }\n\nclass TokenBucket:\n    def __init__(self, rate, max_tokens):\n        self.rate = rate\n        self.max_tokens = max_tokens\n        self.tokens_available = 0\n        self.request_timestamps = deque()\n\n    def wait(self, max_timeout):\n        current_time = time.time()\n        while True:\n            while self.request_timestamps and self.request_timestamps[0] <= current_time - max_timeout:\n                self.request_timestamps.popleft()\n            available_tokens = min(self.tokens_available + (current_time / self.rate), self.max_tokens)\n            if not self.request_timestamps:\n                return available_tokens\n            self.request_timestamps.append(current_time)\n\nclass BurstTrafficHandler:\n    def __init__(self, rate):\n        self.token_bucket = TokenBucket(rate, 1000)  # default to 1000 tokens\n\n    def handle_burst(self, user_id, num_requests):\n        start_time = time.time()\n        for _ in range(num_requests):\n            available_tokens = self.token_bucket.wait(time.time() - start_time)\n            if not available_tokens:\n                return\n            # add request to queue\n            pass\n```\n\n### Algorithm Flow\n\n1.  Initialize the DHM and Token Bucket instances.\n2.  Check the local DHM for an available token when a request is made.\n3.  If no tokens are available, wait according to the Token Bucket algorithm.\n4.  When a burst occurs, handle it using exponential backoff.\n\n## Time Complexity Analysis\n\n*   DHM operations (get and put): O(1)\n*   Token Bucket wait: O(n) where n is the number of requests in the queue\n*   Burst traffic handling: O(n) where n is the number of requests in the burst\n\n## Space Complexity Analysis\n\n*   DHM: O(n) where n is the number of users\n*   Token Bucket: O(1)\n*   Burst Traffic Handler: O(n) where n is the number of requests in the burst\n\n## Trade-Offs\n\nThe proposed algorithm balances fairness, burst traffic handling, and scalability. However, it may require more complex implementation and debugging due to its distributed nature.\n\n### Advantages:\n\n*   **Fairness**: The DHM ensures that users receive tokens based on their historical behavior.\n*   **Burst Traffic Handling**: Exponential backoff helps mitigate the impact of sudden increases in traffic.\n*   **Scalability**: The algorithm can handle a large number of users and requests without relying on a central coordinator.\n\n### Disadvantages:\n\n*   **Complexity**: The distributed nature of the algorithm may make it more challenging to implement and debug.\n*   **Resource Usage**: The DHM and Token Bucket instances require additional resources (e.g., memory, CPU cycles).\n\n### Recommendations:\n\n*   **Implement Carefully**: Ensure that the algorithm is thoroughly tested and validated before deployment in production.\n*   **Monitor Performance**: Continuously monitor the algorithm's performance and adjust parameters as necessary to maintain fairness and scalability.",
-        "score": 0.8
+        "total_tokens": 1291,
+        "dt": 81.92,
+        "content": "# Rate Limiting Algorithm Design\n## Overview\n\nTo design a rate-limiting algorithm for a distributed API gateway that handles burst traffic without a central coordinator, we can implement a distributed token bucket algorithm.\n\n### Token Bucket Algorithm Basics\n\nThe token bucket algorithm is a common approach to rate limiting in distributed systems. It works by maintaining a bucket of tokens and allowing users to take tokens at a fixed rate. When the user requests more tokens than available, they are blocked until new tokens become available.\n\n## Implementation\n\nWe'll implement a distributed token bucket algorithm using a simple lock-free data structure that allows each node to independently manage its own bucket.\n\n### Token Bucket Node Class\n```python\nimport time\nimport random\n\nclass TokenBucketNode:\n    def __init__(self, rate, capacity):\n        \"\"\"\n        Initialize the token bucket with the given rate and capacity.\n\n        :param rate: The rate at which new tokens are added to the bucket (tokens per second).\n        :param capacity: The maximum number of tokens in the bucket.\n        \"\"\"\n        self.rate = rate\n        self.capacity = capacity\n        self.tokens = 0\n        self.last refill = time.time()\n        \n    def get_token(self):\n        \"\"\"\n        Get a token from the bucket if available.\n\n        :return: A token if available, None otherwise.\n        \"\"\"\n        current_time = time.time()\n        elapsed_time = current_time - self.last_refill\n        \n        # Refill tokens based on the rate and elapsed time\n        new_tokens = min(elapsed_time * self.rate, self.capacity - self.tokens)\n        \n        # Update the bucket with new tokens\n        self.tokens += new_tokens\n        self.last_refill = current_time\n        \n        return None if self.tokens < 1 else self.tokens - 1\n\n    def is_available(self):\n        \"\"\"\n        Check if a token is available in the bucket.\n\n        :return: True if a token is available, False otherwise.\n        \"\"\"\n        return self.get_token() is not None\n```\n\n### Distributed Token Bucket Algorithm\n```python\nclass DistributedTokenBucket:\n    def __init__(self, nodes, rate, capacity):\n        \"\"\"\n        Initialize the distributed token bucket with the given number of nodes, rate, and capacity.\n\n        :param nodes: A list of node names (used for communication).\n        :param rate: The rate at which new tokens are added to each node's bucket (tokens per second).\n        :param capacity: The maximum number of tokens in each node's bucket.\n        \"\"\"\n        self.nodes = nodes\n        self.rate = rate\n        self.capacity = capacity\n        self.tokens = {}\n        \n    def get_token(self, node_name):\n        \"\"\"\n        Get a token from the distributed bucket if available.\n\n        :param node_name: The name of the node to get the token from.\n        :return: A token if available, None otherwise.\n        \"\"\"\n        if not self.nodes:\n            return None\n        \n        node = self.nodes[node_name]\n        \n        # Check if the node has a token available\n        if node.is_available():\n            # Get a token from the node's bucket\n            token = node.get_token()\n            \n            # If a token is available, remove it from the node's bucket and add it to the distributed bucket\n            if token is not None:\n                node.tokens -= 1\n                self.tokens[node_name] = (token, time.time())\n                \n                return token\n        \n        return None\n    \n    def is_available(self, node_name):\n        \"\"\"\n        Check if a token is available in the distributed bucket.\n\n        :param node_name: The name of the node to check.\n        :return: True if a token is available, False otherwise.\n        \"\"\"\n        if not self.nodes:\n            return False\n        \n        node = self.nodes[node_name]\n        \n        # If the node has a token available, it is considered available in the distributed bucket\n        if node.is_available():\n            return True\n        \n        # Otherwise, check the distributed bucket for available tokens\n        if self.tokens.get(node_name) is not None:\n            return True\n        \n        return False\n```\n\n## Analysis\n\n### Time Complexity\n\n* The `TokenBucketNode` class has a time complexity of O(1) for getting and checking availability of tokens.\n* The `DistributedTokenBucket` class has an average time complexity of O(1) for getting and checking availability of tokens, assuming that the nodes are able to communicate efficiently.\n\n### Space Complexity\n\n* The `TokenBucketNode` class has a space complexity of O(1) since it only stores a fixed amount of data.\n* The `DistributedTokenBucket` class has a space complexity of O(n) where n is the number of nodes, since it stores all tokens for each node in its distributed bucket.\n\n### Trade-offs\n\n* The algorithm assumes that the nodes are able to communicate efficiently with each other. If communication is slow or unreliable, the algorithm may not be able to handle burst traffic effectively.\n* The algorithm does not provide any mechanism for adjusting the rate limits based on usage patterns. This means that if a node experiences high traffic, it will continue to increase its rate limit without any adjustment.\n\n## Usage\n\nTo use the `DistributedTokenBucket` class, create an instance with the desired number of nodes, rate, and capacity:\n```python\nnodes = [\"node1\", \"node2\", \"node3\"]\nrate = 10  # tokens per second\ncapacity = 1000\n\nbucket = DistributedTokenBucket(nodes, rate, capacity)\n```\nTo get a token from a specific node, call the `get_token` method:\n```python\ntoken = bucket.get_token(\"node1\")\nif token is not None:\n    print(\"Token obtained:\", token)\nelse:\n    print(\"No tokens available.\")\n```\nTo check if a token is available in the distributed bucket for a specific node, call the `is_available` method:\n```python\navailable = bucket.is_available(\"node2\")\nprint(\"Token available:\", available)\n```",
+        "score": 0.28
       },
       "frontier": {
-        "tier": "local_free",
-        "model": "llama3.2:3b",
-        "total_tokens": 1479,
-        "dt": 88.14,
-        "content": "Here's an example of a rate-limiting algorithm that implements a token bucket algorithm with a Moving Average (MA) decay to handle both burst traffic and fairness for users without a centralized coordinator.\n\nAlgorithm Overview:\n------------------\n\nThe proposed algorithm, called \"Rate-Limiter\", consists of two components: \n\n1.  **Token Bucket**: This component ensures that no user can make too many requests within a fixed time window (e.g., one minute). The token bucket is replenished periodically.\n2.  **Moving Average (MA) Decay**: This component helps to detect and prevent burst traffic.\n\nHow it works:\n--------------\n\n1.  Each user gets assigned a unique token for every request made by them within the time window of interest. These tokens are stored in memory, which makes them suitable for use with distributed systems.\n2.  A moving average (MA) decay component is used to analyze the rate at which users are making requests over a certain period of time (e.g., one hour). It calculates a moving average of the number of requests made by a user within that time frame.\n3.  The MA decay rate determines how quickly tokens will be replenished for a user. This ensures fairness and prevents an individual from monopolizing tokens.\n\n Implementation:\n--------------\n\n```python\nimport time\nfrom collections import defaultdict\n\nclass RateLimiter:\n    def __init__(self, bucket_size, ma_decay_rate):\n        self.bucket_size = bucket_size  # Maximum number of tokens that can be stored in the bucket.\n        self.ma_decay_rate = ma_decay_rate  # Rate at which to decay the moving average.\n\n        # Initialize a dictionary where keys are user IDs and values are lists\n        # representing their tokens over time. The list has length equal to\n        # bucket_size, with each element corresponding to a unique request from the\n        # same user.\n        self.tokens = defaultdict(list)\n\n    def add_token(self, user_id):\n        # Add a new token for a given user and update the moving average.\n        if len(self.tokens[user_id]) < self.bucket_size:\n            # If not full yet, just add it in.\n            return\n        else:\n            # Calculate the time elapsed since last request from this user.\n            current_time = int(time.time())\n            start_index = 0\n            end_index = 1\n\n            while True:\n                if len(self.tokens[user_id]) == self.bucket_size:\n                    break\n                mid_index = (start_index + end_index) // 2\n                time_since_mid_index = self.tokens[user_id][mid_index] - current_time\n\n                # If the time since the last request is more than bucket size,\n                # then remove all tokens before this index.\n                if time_since_mid_index > self.bucket_size:\n                    start_index = mid_index + 1\n                else:\n                    end_index = mid_index\n\n            # Remove tokens until there's an available slot in the bucket for new requests.\n            while len(self.tokens[user_id]) >= self.bucket_size:\n                self.tokens[user_id].pop(0)\n\n        # Add a new token to the user, along with its timestamp.\n        current_time = int(time.time())\n        self.tokens[user_id].append(current_time)\n\n    def remove_token(self, user_id):\n        if not self.tokens[user_id]:\n            return None  # No tokens available for this user.\n\n        current_time = int(time.time())\n\n        while len(self.tokens[user_id]) > 0 and \\\n                self.tokens[user_id][self.tokens[user_id].index(current_time)] < current_time:\n            self.tokens[user_id].pop(0)\n\n        if not self.tokens[user_id]:\n            return None\n        else:\n            # Remove the most recent token from the user.\n            self.tokens[user_id].pop()\n\n    def get_token_count(self, user_id):\n        \"\"\"\n        Returns a list of timestamps for all tokens made by this user within last 1 hour.\n        \n        :param user_id: ID of the user to query\n        :return: List of time stamps corresponding to each token made by this user in the last hour\n        \"\"\"\n        current_time = int(time.time())\n        if user_id not in self.tokens:\n            return None\n\n        # Filter out tokens older than 1 hour.\n        timestamps_to_return = [\n            timestamp for timestamp in self.tokens[user_id] \n            if current_time - timestamp <= 3600]\n        return timestamps_to_return\n\n\n# Example usage\nlimiter = RateLimiter(bucket_size=10, ma_decay_rate=0.5)\nuser_ids = ['user1', 'user2']\nusers_request_counts = defaultdict(int)\n\nfor i in range(20):\n    for user_id in user_ids:\n        limiter.add_token(user_id)\n        users_request_counts[user_id] += 1\n    # Simulate some burst traffic by requesting more than the bucket limit.\n    while True:\n        try:\n            # Add a request, which is also a token at this point.\n            limiter.add_token('user3')\n            break\n        except Exception as e:\n            pass\n    time.sleep(0.1)\n```\n\n Analysis:\n---------\n\nThis algorithm provides fairness across users and handles burst traffic effectively.\n\n-   **Fairness**: Each user gets assigned a unique token for every request made by them within the time window of interest, ensuring that each user is treated equally regardless of their usage patterns.\n-   **Burst Traffic Handling**: The Moving Average decay rate ensures that tokens are replenished at a consistent rate even when there's an increase in requests from an individual. However, due to the bucket size limit, it prevents users from monopolizing all available tokens.\n\nTime Complexity:\n--------------\n\n1.  `add_token(user_id)` : O(1) - Constant time complexity as we're simply updating and adding elements to our lists.\n2.  `remove_token(user_id)` : O(n) where n is the number of tokens stored for user 'user_id', because we need to delete all older timestamps from this list, then return the most recent timestamp.\n\nSpace Complexity:\n-------------\n\n1.  `add_token(user_id)` : O(1) - Constant space complexity as we're storing a single timestamp.\n2.  `remove_token(user_id)` : O(n) where n is the number of tokens stored for user 'user_id', because we need to remove all older timestamps from this list.\n\n Trade-offs:\n------------\n\n*   The algorithm handles burst traffic effectively, but might be slightly less efficient than algorithms that use a queue-based or priority-based approach.\n*   The bucket size can limit the total number of requests that users can make within the time window. If the bucket size is too small for your needs, it may prevent users from making the maximum allowed number of requests during their \"burst\" time.\n\nThe proposed Rate-Limiter algorithm offers a good balance between fairness and efficiency while effectively handling burst traffic in distributed systems without a centralized coordinator.",
-        "score": 1.0
+        "tier": "paid_strong",
+        "model": "claude-opus-4-8",
+        "total_tokens": 2075,
+        "dt": 57.94,
+        "content": "Let me design this directly.\n\n## The problem, stated precisely\n\nWe want each user *u* to be limited to a rate *R_u* (requests/sec) with an allowed burst *B_u*, enforced across *N* gateway nodes, where:\n\n- **No central coordinator** — no shared Redis/counter service on the request path (that's a coordinator, even if you don't call it one).\n- **Burst-tolerant** — short spikes up to the burst budget are allowed.\n- **Fair** — one user can't starve others, and the limit is *global* (sum across nodes ≈ *R_u*), not per-node.\n\nThe tension is entirely in reconciling \"global limit\" with \"no coordinator.\" Below is the design I'd actually ship, then the complexity and trade-offs.\n\n---\n\n## Core: per-node token buckets + gossip-based budget sharing\n\n### 1. Local enforcement = token bucket\n\nEach node keeps, per active user, a token bucket enforced **lazily** (no background refill thread):\n\n```\nstruct Bucket { double tokens; uint64 last_refill_ns; }\n\nallow(bucket, rate, burst, now):\n    elapsed = now - bucket.last_refill_ns\n    bucket.tokens = min(burst, bucket.tokens + elapsed * rate)\n    bucket.last_refill_ns = now\n    if bucket.tokens >= 1:\n        bucket.tokens -= 1\n        return ALLOW\n    return DENY\n```\n\nToken bucket (not fixed/sliding window) because it's the natural model for **burst + sustained rate**: `burst` is the bucket depth, `rate` is the drip. Lazy refill makes each decision **O(1) time, O(1) state per user** with no timers.\n\n### 2. The distributed problem: how much rate does *this* node get?\n\nIf every node independently allowed the full *R_u*, the global limit becomes *N·R_u*. The naive fix — split evenly, give each node *R_u/N* — is where fairness dies: traffic is rarely balanced (sticky sessions, geo-routing, hashing skew), so a node receiving most of a user's traffic throttles them while other nodes sit on unused budget.\n\n**Solution: nodes redistribute rate shares toward where demand is, via gossip.** This is a weighted-fair-share problem solved with only *local* information plus epidemic communication.\n\n- Global budget for user *u* is *R_u*. Each node *i* holds a local share *r_i(u)*, invariant `Σ_i r_i(u) = R_u`.\n- Each node measures its recent *demand* *d_i(u)* (EWMA of arrival rate).\n- Every gossip round (say every *T* = 100–500 ms), a node picks a random peer and they **rebalance their two shares** proportional to demand:\n\n```\ntotal_r = r_i + r_j\ntotal_d = d_i + d_j + ε\nr_i' = total_r * (d_i + ε/2) / total_d\nr_j' = total_r * (d_j + ε/2) / total_d\n```\n\nThis pairwise exchange **conserves the sum** (so the global limit is never violated in aggregate) while diffusing capacity toward busy nodes. It's the continuous analog of a distributed averaging/consensus protocol, and it converges geometrically.\n\n### 3. Membership without a coordinator\n\nUse SWIM-style gossip (à la HashiCorp Serf/memberlist) for membership and failure detection. When a node dies, its share is reclaimed: peers detect the failure and, on the next rebalance, treat the dead node's last-known share as redistributable (bounded reclamation so a partition doesn't inflate the global budget — see trade-offs).\n\n---\n\n## Complexity analysis\n\nLet *N* = nodes, *U* = distinct active users **on one node**, *k* = gossip fanout (peers per round, typically 1–3).\n\n**Per request (hot path):**\n- Time: **O(1)** — one hash lookup + arithmetic. This is what matters; it's independent of *N* and *U*.\n- Space touched: **O(1)**.\n\n**Per node, steady state:**\n- Space: **O(U)** — one bucket + share + demand EWMA per active user. Inactive users are evicted (LRU / TTL), so it's *active* users, not total. Add O(N) for the membership table.\n- Gossip CPU: **O(k · U_shared)** per round, where *U_shared* is users exchanged. Cap it: gossip only the top-*m* users by demand per round → **O(k · m)**, constant per round, tunable.\n\n**Network:**\n- Per node: **O(k)** messages/round → total **O(N·k)** messages/round system-wide, each O(m) payload. Bandwidth is independent of request volume — decoupled from throughput, which is the whole point.\n\n**Convergence time** of the share rebalancing after a demand shift: **O(log N)** gossip rounds (epidemic diffusion). So with *T*=200 ms and *N*=1000, shares re-settle in ≈ 2 s.\n\n---\n\n## Trade-offs (the honest part)\n\n**1. Accuracy vs. coordination — the central trade.**\nNo coordinator ⇒ you cannot enforce an *exact* global count. You get **eventual, approximate** enforcement. During the O(log N)-round convergence window, actual global throughput can overshoot *R_u* transiently. Bound the worst case: cap per-node share at some *r_max* and cap burst, so instantaneous global ceiling ≈ min(*N·r_max*, ...). If you need *hard* exactness, you must accept a coordinator (and its latency + SPOF). This design deliberately trades a few percent of accuracy for zero coordination latency on the request path.\n\n**2. Convergence lag vs. gossip frequency.**\nFaster gossip (*T* small) → tighter tracking of demand shifts, more fairness → more CPU/network. Slower gossip → cheaper, but a user whose traffic suddenly lands on a cold node gets under-served for a few rounds. Tunable knob; there's no free lunch.\n\n**3. Partition behavior (CAP).**\nOn a network partition, each side can't know the other's usage. Two choices:\n- **AP / stay-available (recommended for a gateway):** each partition keeps enforcing with its *last-known* shares. Global limit can be exceeded by up to a factor of (#partitions) in the worst case until membership converges. Mitigate by having each node's reclaimable budget *decay* toward its fair floor *R_u/N* during suspected partition, so an isolated node can't assume it owns the whole budget.\n- **CP / fail-closed:** throttle to the conservative floor. Safer for billing-critical limits, worse for availability.\n\n**4. Fairness granularity.**\nPairwise demand-proportional rebalancing gives **weighted max-min fairness** in the limit, but only *approximately* at any instant. A bursty user can briefly borrow more than its converged share. If strict per-instant fairness matters more than burst tolerance, shrink burst depth *B* — but that directly hurts requirement #1 (burst handling). Burst tolerance and instantaneous fairness are in direct tension; the bucket depth is where you dial between them.\n\n**5. Memory vs. user cardinality.**\nO(U) per node is fine for thousands of active users; for millions of low-rate keys (e.g., per-IP limiting on a public API) the per-user bucket + gossip state gets expensive. There, switch to an approximate structure — a **Count-Min Sketch** or CBF for the counting, trading exactness for O(1) *fixed* space — and only keep full buckets for heavy hitters. Classic accuracy-for-space trade.\n\n**6. Clock dependence.**\nLazy refill uses local monotonic time only (good — no cross-node clock sync needed). But demand EWMAs compared across nodes assume roughly comparable clock *rates*; large clock skew slightly biases share allocation. Monotonic clocks + relative measurements keep this negligible.\n\n---\n\n## Summary\n\n| Concern | Choice | Cost |\n|---|---|---|\n| Local decision | Lazy token bucket | O(1) time/space, exact locally |\n| Global limit | Gossip share-rebalancing (sum-conserving) | Approximate, O(log N) convergence |\n| Burst | Bucket depth *B* | Trades against instantaneous fairness |\n| Fairness | Demand-proportional pairwise averaging | Weighted max-min *in the limit* |\n| No coordinator | SWIM gossip membership | Overshoot during convergence/partition |\n| High cardinality | CMS for tail, buckets for heavy hitters | Space vs. accuracy |\n\nThe one-line thesis: **enforce exactly and locally with token buckets; distribute the *budget* (not the counting) approximately via sum-conserving gossip.** That's what buys you O(1) request latency and zero coordinator, and the price is bounded, tunable inaccuracy during convergence and partitions.\n\nIf you tell me your regime — rough *N*, users' cardinality, and whether the limit is billing-hard or best-effort — I'll collapse the knobs to concrete numbers (gossip interval, burst depth, *r_max*) and sketch the message format.",
+        "score": 0.95
       },
       "routed": {
         "kind": "cloud_cheap",
         "tier": "paid_cheap",
         "model": "claude-haiku-4-5-20251001",
-        "frontier_tokens": 1479,
+        "frontier_tokens": 2075,
         "reason": "perfil=deep_reason (task_type=general) | elegido paid_cheap:cloud_cheap/claude-haiku-4-5-20251001 (U=-1.333)"
       },
-      "judge_reason": "Both answers are correct and provide a comprehensive overview of the proposed rate-limiting algorithm. Answer B provides a more detailed implementation with comments, which adds value to the task."
+      "judge_reason": "Answer B correctly addresses the no-coordinator distributed challenge with a sound gossip-based budget-sharing design and honest complexity/CAP trade-off analysis, while Answer A has broken code (syntax error, incomplete refill logic) and a confused 'distributed' model that never actually solves coordination-free global limiting."
     },
     {
       "axis": "reasoning",
@@ -408,27 +408,27 @@
       "local": {
         "tier": "local_free",
         "model": "llama3.2:3b",
-        "total_tokens": 272,
-        "dt": 18.58,
-        "content": "Dijkstra's algorithm is an efficient method for finding the shortest path between two nodes in a graph, but it fails when there are negative-weight edges present. This is because Dijkstra's algorithm assumes that the weight of each edge is non-negative.\n\nThe main problem with negative-weight edges is that they can lead to a situation where the shortest distance from one node to another becomes \"infinity\" or undefined, which means that the algorithm cannot determine a valid path.\n\nTo illustrate this, let's consider a counterexample:\n\nSuppose we have a graph with three nodes: A, B, and C. The edges between these nodes are as follows:\n\n- A -> B: 3 (this is positive)\n- B -> C: -2 (this is negative)\n- C -> A: 1 (this is positive)\n\nNow, if we apply Dijkstra's algorithm to this graph starting from node A, the shortest path would be A -> B -> C, with a total weight of 3 + (-2) = 1. However, the edge from C",
-        "score": 0.6
+        "total_tokens": 575,
+        "dt": 31.83,
+        "content": "Dijkstra's algorithm is an efficient method for finding the shortest paths from a source vertex to all other vertices in a weighted graph. However, it does not work well when the graph contains negative-weight edges.\n\nThe reason Dijkstra's algorithm fails on graphs with negative-weight edges lies in its basic principle: at each step, we choose the vertex that is closest to the source and has the minimum total weight from the source to itself, considering only the edges that have a non-negative weight. In other words, Dijkstra assumes that the shortest path between two vertices cannot be shorter than the straight-line distance.\n\nHowever, when there are negative-weight edges in the graph, this assumption fails because these edges can potentially connect any two vertices with a total weight less than the minimum weight of any direct edge. Specifically, for example, if we have an edge from vertex $u$ to vertex $v$ with weight -1 and another edge from $v$ to some other vertex $w$ with positive weight, then there is no way to obtain the same weighted path that goes through both edges simultaneously.\n\nTo see this more clearly, consider a simple example:\n\nSuppose we have three vertices, A, B, and C. We draw an edge between A and B with weight -1, an edge between B and C with weight 2, and an edge between C and A with weight 3. If we choose vertex A as the source vertex in Dijkstra's algorithm, then the shortest path from A to C is $A \\rightarrow C$ with total weight -1 + 3 = 2, which is less than any other possible weighted paths.\n\nThis means that Dijkstra's algorithm will not find the correct shortest path between vertices A and C. In particular, it will not notice that we can go from vertex A to vertex C through the edge A→B with negative weight, rather than going directly from A to C.\n\nIn order to address this issue, Bellman-Ford is used as a replacement for Dijkstra's algorithm when dealing with graphs containing negative-weight edges. This algorithm works by applying the following rules:\n\n1)  Start at vertex s;\n2) For each edge in graph G:\n3) Update weights of all vertices reachable from source.\n4) Repeat steps 2-3 until no further updates are needed.\n\nThe key idea behind this is that we can run Bellman-Ford a number of times equal to the maximum number of edges along the shortest path, and it will always provide an accurate result, even when dealing with negative-weight edges.",
+        "score": 0.32
       },
       "frontier": {
-        "tier": "local_free",
-        "model": "llama3.2:3b",
-        "total_tokens": 941,
-        "dt": 52.48,
-        "content": "Dijkstra's algorithm is a popular method for finding the shortest path between two nodes in a graph. However, it has a major limitation: it only works correctly if all edge weights are non-negative.\n\nThe problem arises when there are negative-weight edges in the graph. In this case, Dijkstra's algorithm will make incorrect decisions about which edges to choose at each step, leading to an incorrect shortest path.\n\nTo illustrate this, let's consider a simple counterexample:\n\nSuppose we have a graph with three nodes (A, B, and C) and two edges: AB with weight -3 and BC with weight 2. If we start at node A and try to find the shortest path to B using Dijkstra's algorithm, it will choose the edge AB, which has a negative weight, and then move to node B with a \"distance\" of -3 + 1 = -2 (since it adds the weight of BC). However, this is not the correct distance, since there is an alternative path from A to C with a total weight of -3.\n\nThe issue arises when we try to find the shortest path from A to B. Dijkstra's algorithm will choose the edge AB because it has the smallest \"distance\" (-3) so far, but this is not the correct answer. The correct answer is to go through node C, which has a total weight of -1.\n\nDijkstra's algorithm fails in this case because it relies on choosing the next edge based solely on its distance from the current node. However, when there are negative-weight edges, we can only determine the shortest path by looking at all possible paths and selecting the one with the smallest total weight.\n\nTo address this issue, we need an algorithm that can handle graphs with negative-weight edges. One such algorithm is Bellman-Ford.\n\nBellman-Ford works as follows:\n\n1.  Initialize distances to all nodes as infinity except for the starting node (source), which is set to zero.\n2.  Relax each edge repeatedly until there are no more negative-weight edges or distance updates.\n3.  If we can still relax an edge after iterating over all edges, it means that there's a negative-weight cycle in the graph.\n\nBellman-Ford has a time complexity of O((V + E) \\* E), where V is the number of vertices and E is the number of edges. This is because we need to iterate over each edge at most once for each vertex.\n\nHere is how you can implement it:\n\n```python\ndef bellman_ford(graph, source):\n    distance = {node: float('inf') for node in graph}\n\n    distance[source] = 0\n\n    for _ in range(len(graph) - 1):\n        for u, v, weight in graph:\n            if distance[u] != float('inf') and distance[v] > distance[u] + weight:\n                distance[v] = distance[u] + weight\n\n    # Check for negative-weight cycles\n    for u, v, weight in graph:\n        if distance[u] != float('inf') and distance[v] > distance[u] + weight:\n            raise ValueError(\"Graph contains a negative-weight cycle\")\n\n    return distance\n\n\n# Example usage\ngraph = [\n    (0, 1, -3),\n    (0, 2, 5),\n    (1, 2, 2)\n]\n\nsource_node = 0\n\ntry:\n    distances = bellman_ford(graph, source_node)\n    print(distances)  # Output: {0: 0, 1: 2, 2: -2}\nexcept ValueError as e:\n    print(e)\n\n\n```\n\nIn this example, we define a graph with three nodes and two edges. The `bellman_ford` function takes the graph and source node as input and returns a dictionary of shortest distances from the source to all other nodes in the graph.\n\nWhen you run this code, it will correctly compute the shortest path from the source node to all other nodes and detect negative-weight cycles if they exist.\n\nIn conclusion, Dijkstra's algorithm fails when there are negative-weight edges because it relies on finding the next edge with the smallest weight. However, Bellman-Ford can handle graphs with negative-weight edges by relaxing each edge repeatedly until no more updates can be made or a cycle is detected.",
-        "score": 0.7
+        "tier": "paid_strong",
+        "model": "claude-opus-4-8",
+        "total_tokens": 1739,
+        "dt": 43.17,
+        "content": "# Why Dijkstra Fails on Negative Edges\n\n## The root cause: the greedy invariant\n\nDijkstra's correctness rests on one key claim:\n\n> When a vertex `u` is extracted from the priority queue with the minimum tentative distance, that distance is **final** — no shorter path to `u` can ever be found later.\n\nThis is proven by a **greedy exchange argument** that assumes edge weights are non-negative. The logic: any other path to `u` must exit the set of already-finalized vertices at some point through a frontier vertex `v`. Since `dist[v] ≥ dist[u]` (that's why `u` was picked first), and the remaining edges on that path add **non-negative** weight, the alternative path can only be `≥ dist[u]`.\n\nThe moment an edge can be **negative**, that final step collapses: \"the rest of the path adds non-negative weight\" is false. A path that looks longer at the frontier can be dragged *below* `dist[u]` by a negative edge encountered later. Dijkstra has already committed `u` as final and will never revisit it.\n\n## Counterexample\n\nConsider this tiny directed graph, source `A`:\n\n```\n        A\n      /   \\\n   1 /     \\ 4\n    v       v\n    B  ----> C\n        -3\n```\n\nEdges: `A→B = 1`, `A→C = 4`, `B→C = -3`.\n\nThe true shortest path to `C` is `A→B→C = 1 + (-3) = -2`.\n\n**Trace of Dijkstra:**\n\n| Step | Extract | Action | `dist[A]` | `dist[B]` | `dist[C]` |\n|------|---------|--------|-----------|-----------|-----------|\n| init |         |        | 0         | ∞         | ∞         |\n| 1    | **A** (0) | relax A→B, A→C | 0 | 1 | 4 |\n| 2    | **B** (1) | relax B→C: `1 + (−3) = −2 < 4` → update | 0 | 1 | **−2** |\n| 3    | **C** (4→−2) | — | 0 | 1 | −2 |\n\nWait — this small graph actually *survives*, because `C` hadn't been finalized yet when `B` relaxed it. The failure needs `C` to be **extracted before** the improving relaxation happens. Make `A→C` cheaper than `A→B`:\n\nEdges: `A→B = 2`, `A→C = 3`, `B→C = -2`. True `dist[C] = A→B→C = 2 + (−2) = 0`.\n\n| Step | Extract | Action | `dist[B]` | `dist[C]` |\n|------|---------|--------|-----------|-----------|\n| init |         |        | ∞ | ∞ |\n| 1 | **A** (0) | relax A→B=2, A→C=3 | 2 | 3 |\n| 2 | **B** (2) | relax B→C: `2 + (−2) = 0 < 3` → update | 2 | **0** |\n| 3 | **C** (0) | finalize | 2 | 0 |\n\nStill correct here because `B (2) < C (3)`, so `B` is processed first. The **true** failure requires the negative edge to originate from a vertex Dijkstra finalizes *after* the destination. Use:\n\nEdges: `A→B = 5`, `A→C = 1`, `C→B = -4`, and target `B`. True `dist[B] = A→C→B = 1 + (−4) = −3`.\n\n| Step | Extract | `dist[B]` | `dist[C]` | Note |\n|------|---------|-----------|-----------|------|\n| init | | ∞ | ∞ | |\n| 1 | **A** (0) | 5 | 1 | relax A→B=5, A→C=1 |\n| 2 | **C** (1) | `1 + (−4) = −3` | 1 | relax C→B, update B to −3 |\n| 3 | **B** (−3) | −3 | 1 | ✓ correct here |\n\nThe subtlety: in these three-node cases, whichever vertex feeds the negative edge tends to get extracted first anyway (small positive distance), so the update lands in time. The **canonical guaranteed-wrong example** needs the negative edge to fire *after* the victim is finalized:\n\nEdges: `A→B = 1`, `A→C = 2`, `B→D = 3`, `C→D = 1`, `B→C = -5`. Source `A`.\n\n- True `dist[C] = A→B→C = 1 + (−5) = −4`.\n- Dijkstra extracts: `A(0)` → relax B=1, C=2. Extract `B(1)` → relax D=4, and **B→C = 1 + (−5) = −4 < 2**, update C to −4. Extract `C(−4)`... \n\nArgh — again saved because `B(1) < C(2)`.\n\n**The airtight rule:** Dijkstra breaks *iff* a shorter path to some vertex `v` is discovered only through relaxations that occur **after `v` is popped**. To force it, the improving vertex must have a *larger* key than `v` at extraction time:\n\nEdges: `A→C = 1`, `A→B = 3`, `B→C = -4`. Target `C`, but note `A→B (3) > A→C (1)`.\n\n| Step | Extract | `dist[B]` | `dist[C]` |\n|------|---------|-----------|-----------|\n| 1 | **A** (0) | 3 | 1 |\n| 2 | **C** (1) — *finalized as 1* | 3 | **1 (WRONG)** |\n| 3 | **B** (3) | 3 | tries `3 + (−4) = −1`, but `C` already finalized/popped |\n\nDijkstra outputs `dist[C] = 1`. The true answer is `A→B→C = 3 − 4 = −1`. **This is the failure.** `C` was extracted at key `1` and declared final; the negative edge `B→C` that would have corrected it fires only afterward, and Dijkstra never reopens a finalized vertex.\n\n## Bellman-Ford as the fix\n\nBellman-Ford drops the greedy \"finalize once\" assumption. Instead it **relaxes every edge, repeatedly**, `|V| − 1` times.\n\n```\nfor i in 1 .. |V|-1:\n    for each edge (u, v, w):\n        if dist[u] + w < dist[v]:\n            dist[v] = dist[u] + w\n\n# negative-cycle detection: one more pass\nfor each edge (u, v, w):\n    if dist[u] + w < dist[v]:\n        report \"negative cycle reachable from source\"\n```\n\n**Why `|V| − 1` passes suffice:** any shortest path in a graph with no negative cycle is *simple* (no repeated vertices), so it has at most `|V| − 1` edges. Each full pass over all edges guarantees that the correct distance propagates **one more edge deeper** along every shortest path (this is a clean induction: after pass `k`, every vertex reachable by a shortest path of `≤ k` edges has its final distance). After `|V| − 1` passes, every simple shortest path is fully relaxed.\n\n**Negative-cycle handling:** if a `|V|`-th pass still improves something, a negative cycle is reachable — shortest paths are then undefined (−∞), and Bellman-Ford correctly *reports* this rather than silently returning garbage. Dijkstra can't even detect this condition.\n\n### Complexity analysis\n\n| | Dijkstra (binary heap) | Bellman-Ford |\n|---|---|---|\n| **Time** | `O((V + E) log V)` | `O(V · E)` |\n| **Space** | `O(V)` | `O(V)` |\n| **Negative edges** | ❌ incorrect | ✅ correct |\n| **Negative cycles** | ❌ undefined | ✅ detected |\n\n**Deriving Bellman-Ford's `O(V·E)`:** the outer loop runs `V − 1` times; each iteration scans all `E` edges doing `O(1)` work → `(V − 1) · E = O(V·E)`. On a dense graph where `E ≈ V²`, that's `O(V³)` versus Dijkstra's `O(V² log V)`.\n\n### The trade-off\n\nBellman-Ford buys correctness on negative weights at a real cost — roughly a factor of `V / log V` slower. The lesson is that **Dijkstra's speed comes precisely from the greedy commitment that negative edges invalidate.** Bellman-Ford refuses to commit early, re-examining every edge until distances stabilize, and pays for that generality in asymptotic time.\n\nTwo practical middle grounds worth knowing:\n- **SPFA / queue-based Bellman-Ford:** only re-relax edges out of vertices whose distance changed; same `O(V·E)` worst case but much faster in practice.\n- **Johnson's algorithm:** run Bellman-Ford *once* to compute a reweighting that makes all edges non-negative, then run Dijkstra from every source — giving `O(V·E + V·E log V)` all-pairs shortest paths that tolerates negative edges. It's the elegant reconciliation of the two.",
+        "score": 0.95
       },
       "routed": {
         "kind": "cloud_cheap",
         "tier": "paid_cheap",
         "model": "claude-haiku-4-5-20251001",
-        "frontier_tokens": 941,
+        "frontier_tokens": 1739,
         "reason": "perfil=deep_reason (task_type=general) | elegido paid_cheap:cloud_cheap/claude-haiku-4-5-20251001 (U=-1.333)"
       },
-      "judge_reason": "Answer B provides a good explanation of why Dijkstra's algorithm fails when there are negative-weight edges. However, it does not provide a practical example or an analysis of the complexity of Bellman-Ford as the fix."
+      "judge_reason": "Answer A rigorously explains the greedy-invariant failure, honestly works toward a valid counterexample, and correctly derives Bellman-Ford's O(VE) complexity with cycle detection, whereas Answer B contains a broken counterexample (its own numbers show Dijkstra getting the right answer) and a vague, partly incorrect algorithm description."
     },
     {
       "axis": "multilingual",
@@ -437,27 +437,27 @@
       "local": {
         "tier": "local_free",
         "model": "llama3.2:3b",
-        "total_tokens": 167,
-        "dt": 13.88,
-        "content": "Here are the translations:\n\n* French: \"Bonjour, comment allez-vous aujourd'hui?\" (Note: A more casual way to say this is \"Bon matin!\" or \"Bonne journée!\")\n* German: \"Guten Morgen! Wie geht es Ihnen heute?\"\n* Japanese: (Ohayou gozaimasu!) - Note that in Japan, it's common to use a polite verb form and a suffix (-masu) when greeting someone. The literal translation of this phrase is \"Good morning!\", but the more formal way to say it is \"Good morning, may I have your permission?\"",
+        "total_tokens": 243,
+        "dt": 12.57,
+        "content": "Here are the translations:\n\n1. French:\n Bonjour, comment allez-vous aujourd'hui?\n\nBreakdown:\n- Bonjour = Good morning/Hello\n- Comment = How\n- allez-vous = Are you\n- aujourd'hui = Today\n\n2. German:\n Guten Morgen, wie geht es Ihnen heute?\n\nBreakdown:\n- Guten Morgen = Good morning\n- Wie = How\n- geht es = Are you doing/well\n- Ihnen = To you (formal)\n- heute = Today\n\n3. Japanese:\n ohayou gozaimasu, o genki desu ka?\n\nBreakdown:\n- ohayou = Good morning\n- gozaimasu = (literally \"you say\") but often used as a polite way to greet someone\n- o = honorific particle indicating respect and politeness\n- genki = Are you doing/well\n- desu = (verb ending for stating or describing)\n- ka = question particle",
         "score": null
       },
       "frontier": {
-        "tier": "local_free",
-        "model": "llama3.2:3b",
-        "total_tokens": 274,
-        "dt": 13.17,
-        "content": "Here are the translations:\n\n1. French:\n\"Bonjour, comment allez-vous aujourd'hui?\"\n\nBreakdown:\n\n* \"Bonjour\" means \"good morning\"\n* \"Comment\" is a polite way of asking \"how are you\"\n* \"allez-vous\" means \"you are\"\n* \"aujourd'hui\" means \"today\"\n\n2. German:\n\"Guten Morgen, wie geht es Ihnen heute?\"\n\nBreakdown:\n\n* \"Guten Morgen\" means \"good morning\"\n* \"Wie\" is a polite way of asking \"how are you\"\n* \"geht es\" means \"things are going\"\n* \"Ihnen\" means \"to you\"\n* \"heute\" means \"today\"\n\n3. Japanese:\n (Konnichiwa o kudasai, irasshaimase!)\n Breakdown:\n\n* \"Konnichiwa\" is a polite greeting that can be used in the morning\n* \"o kudasai\" is a polite way of asking \"how are you\"\n* \"irasshaimase\" means \"welcome\" (in this context, it's used to acknowledge someone's presence)",
+        "tier": "paid_strong",
+        "model": "claude-opus-4-8",
+        "total_tokens": 158,
+        "dt": 10.58,
+        "content": "Here are the translations of *\"Good morning, how are you today?\"*:\n\n- **French:** Bonjour, comment allez-vous aujourd'hui ?\n- **German:** Guten Morgen, wie geht es Ihnen heute?\n- **Japanese:** おはようございます、今日はお元気ですか？ (*Ohayō gozaimasu, kyō wa o-genki desu ka?*)\n\nThese use the polite/formal register. If you'd like casual versions (for friends or peers), let me know:\n- French informal: *Bonjour, comment vas-tu aujourd'hui ?*\n- German informal: *Guten Morgen, wie geht es dir heute?*\n- Japanese casual: *おはよう、今日は元気？ (Ohayō, kyō wa genki?)*",
         "score": null
       },
       "routed": {
         "kind": "cloud_cheap",
         "tier": "paid_cheap",
         "model": "claude-haiku-4-5-20251001",
-        "frontier_tokens": 274,
+        "frontier_tokens": 158,
         "reason": "perfil=translate (task_type=translate) | elegido paid_cheap:cloud_cheap/claude-haiku-4-5-20251001 (U=-1.343)"
       },
-      "judge_reason": "judge failed: 'score_b'"
+      "judge_reason": "judge failed: Expecting value: line 1 column 1 (char 0)"
     },
     {
       "axis": "multilingual",
@@ -466,27 +466,27 @@
       "local": {
         "tier": "local_free",
         "model": "llama3.2:3b",
-        "total_tokens": 130,
-        "dt": 10.77,
-        "content": "Una buena opción sería:\n\n\"The follow-up meeting is scheduled for Tuesday at 3 pm.\"\n\nOtra forma podría ser:\n\n\"Please note that the follow-up meeting is on Tuesday, 3 pm.\"\n\nAmbas opciones son precisas y claras. La primera opción es más directa y concisa, mientras que la segunda opción añade un toque de formalidad con \"Please note\".",
-        "score": 0.8
+        "total_tokens": 71,
+        "dt": 2.23,
+        "content": "La traducción al inglés sería:\n\n\"The follow-up meeting is on Tuesday at 3 pm.\"",
+        "score": 0.95
       },
       "frontier": {
-        "tier": "local_free",
-        "model": "llama3.2:3b",
-        "total_tokens": 71,
-        "dt": 1.46,
-        "content": "La traducción al inglés sería:\n\n\"The follow-up meeting is on Tuesday at 3 pm.\"",
-        "score": 0.8
+        "tier": "paid_strong",
+        "model": "claude-opus-4-8",
+        "total_tokens": 41,
+        "dt": 8.36,
+        "content": "\"The follow-up meeting is on Tuesday at three in the afternoon.\"",
+        "score": 1.0
       },
       "routed": {
         "kind": "cloud_cheap",
         "tier": "paid_cheap",
         "model": "claude-haiku-4-5-20251001",
-        "frontier_tokens": 71,
+        "frontier_tokens": 41,
         "reason": "perfil=translate (task_type=translate) | elegido paid_cheap:cloud_cheap/claude-haiku-4-5-20251001 (U=-1.343)"
       },
-      "judge_reason": "Both answers are accurate and clear, with only minor differences in tone and style."
+      "judge_reason": "Both are accurate English translations; B renders 'las tres de la tarde' more literally and completely while A's '3 pm' is correct but slightly more condensed."
     },
     {
       "axis": "multilingual",
@@ -495,27 +495,27 @@
       "local": {
         "tier": "local_free",
         "model": "llama3.2:3b",
-        "total_tokens": 384,
-        "dt": 25.08,
-        "content": "\"La reducción de entrenamiento de la quantización reduce el peso del modelo desde la representación de punto flotante de 32 bits hasta enteros de 4 bits, logrando una reducción en el tamaño de memoria de 4 a 8 veces con una pérdida de precisión menos del 2% en la mayoría de los benchmarks.\"\n\nNote:\n\n* \"Post-training\" se traduce literalmente como \"después del entrenamiento\", pero para evitar confusiones, se puede mantener la expresión original o reemplazarla por \"entrenamiento posterior\".\n* \"Quantization\" es un término técnico que se mantiene sin cambiar en la traducción.\n* \"Floating point\" se traduce como \"punto flotante\" y \"32-bit floating point\" se traduce como \"punto flotante de 32 bits\".\n* \"4-8x reduction\" se traduce literalmente como \"reducción del 4 al 8 veces\", pero para mantener el sentido original, se puede reemplazar por la expresión \"reducción en el tamaño de memoria del 4 al 8 veces\".\n* \"Accuracy loss\" se traduce como \"pérdida de precisión\".\n\nPlease note that machine translation may not always preserve the exact technical tone and nuance of the original text. If you need a more precise translation, it's recommended to consult with a native Spanish speaker or a professional translator.",
-        "score": 0.8
+        "total_tokens": 232,
+        "dt": 10.41,
+        "content": "Here is the translation of the paragraph:\n\n\"La reducción de pesos postentrenamiento de la quantización reduce los pesos del modelo desde puntos flotantes de 32 bits hasta enteros de 4 bits, logrando una reducción en el espacio de memoria de 4-8 veces con una pérdida de precisión menor del 2% en la mayoría de las benchmarkas.\"\n\nNote that I've tried to preserve the technical terms \"post-training quantization\", \"32-bit floating point\" and \"4-bit integers\" as they are, although it's worth noting that Spanish speakers might use slightly different wording (e.g. \"puntos flotantes de 32 bits\" instead of \"32 bits floating point\").",
+        "score": 0.55
       },
       "frontier": {
-        "tier": "local_free",
-        "model": "llama3.2:3b",
-        "total_tokens": 188,
-        "dt": 6.23,
-        "content": "Here is the translation:\n\nLa reducción de entrenamiento con cuantización reduce los pesos del modelo desde el punto flotante de 32 bits hasta los enteros de 4 bits, logrando una reducción en la memoria del 4-8x con una pérdida de precisión menor de 2% en la mayoría de las benchmarkas.\n\nI've preserved the technical terms and translated them exactly as they appeared in the original paragraph. Let me know if you'd like me to make any adjustments!",
-        "score": 0.9
+        "tier": "paid_strong",
+        "model": "claude-opus-4-8",
+        "total_tokens": 364,
+        "dt": 11.18,
+        "content": "Here's the translation, preserving the technical terms:\n\n> La cuantización post-entrenamiento (*post-training quantization*) reduce los pesos del modelo de punto flotante de 32 bits a enteros de 4 bits, logrando una reducción de 4-8x en el consumo de memoria (*memory footprint*) con una pérdida de precisión (*accuracy*) inferior al 2% en la mayoría de los benchmarks.\n\nNotes on the technical terms kept:\n- **Post-training quantization** → *cuantización post-entrenamiento* (with the English term in parentheses, as it's the standard term in the literature).\n- **32-bit floating point / 4-bit integers** → *punto flotante de 32 bits / enteros de 4 bits* (standard Spanish technical usage).\n- **Memory footprint** → *consumo de memoria*, with the English term noted.\n- **Accuracy** → *precisión*, with the English term noted (in ML, *accuracy* is sometimes left untranslated).\n- **Benchmarks** → kept as-is; it's used untranslated in Spanish technical contexts.\n\nIf this is for a formal publication and you'd prefer the technical terms translated fully (without the English in parentheses) or left entirely in English, let me know and I'll adjust the style.",
+        "score": 0.97
       },
       "routed": {
         "kind": "cloud_cheap",
         "tier": "paid_cheap",
         "model": "claude-haiku-4-5-20251001",
-        "frontier_tokens": 188,
+        "frontier_tokens": 364,
         "reason": "perfil=translate (task_type=translate) | elegido paid_cheap:cloud_cheap/claude-haiku-4-5-20251001 (U=-1.343)"
       },
-      "judge_reason": "Both answers are correct but A preserves more technical terms and maintains the original meaning."
+      "judge_reason": "B is accurate, idiomatic, and preserves technical terms correctly, while A has awkward errors like 'quantización' (should be cuantización) and the invented word 'benchmarkas' plus a garbled opening clause."
     }
   ]
 }

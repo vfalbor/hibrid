@@ -159,6 +159,10 @@ def pick_backend(backends: list[Backend], model: str) -> Backend | None:
 # ------------------------------ ejecución ---------------------------------------
 
 def _messages_to_prompt(messages: list[dict]) -> str:
+    # Un único mensaje de usuario va tal cual: el andamiaje "USER:/ASSISTANT:" hace que
+    # algunos modelos "completen la transcripción" (meta-texto, razonamiento visible).
+    if len(messages) == 1 and messages[0].get("role", "user") == "user":
+        return messages[0].get("content", "")
     parts = []
     for m in messages:
         role = m.get("role", "user").upper()
